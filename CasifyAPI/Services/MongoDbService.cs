@@ -1,8 +1,8 @@
-using CasifyAPI.Models;
+using CluifyAPI.Models;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 
-namespace CasifyAPI.Services
+namespace CluifyAPI.Services
 {
     public class MongoDbService
     {

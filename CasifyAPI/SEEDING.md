@@ -1,6 +1,6 @@
-# Casify Case Seeding Philosophy
+# Cluify Case Seeding Philosophy
 
-This document outlines the principles and definitions used when creating new cases for Casify. Following these guidelines ensures a consistent and enjoyable experience for players.
+This document outlines the principles and definitions used when creating new cases for Cluify. Following these guidelines ensures a consistent and enjoyable experience for players.
 
 ## Case Components
 

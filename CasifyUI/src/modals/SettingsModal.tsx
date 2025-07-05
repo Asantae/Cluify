@@ -39,7 +39,7 @@ const SettingsModal = ({ open, onClose, darkMode, setDarkMode }: {
       </Box>
     </DialogContent>
     <Box sx={{ textAlign: 'center', fontSize: 12, color: darkMode ? '#888' : '#888', py: 1 }}>
-      © {new Date().getFullYear()} Casify
+      © {new Date().getFullYear()} Cluify
     </Box>
   </Dialog>
 );

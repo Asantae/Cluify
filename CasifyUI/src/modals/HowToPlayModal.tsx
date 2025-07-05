@@ -23,10 +23,11 @@ const HowToPlayModal = ({ open, onClose, darkMode }: {
         Solve the daily case by analyzing reports, searching databases, and submitting evidence to identify the culprit.
       </Typography>
       <ul style={{ margin: 0, paddingLeft: 20, marginBottom: 16 }}>
-        <li>Review the suspicious person report for clues.</li>
-        <li>Search police, DMV, and social media databases to gather evidence.</li>
-        <li>Cross-reference findings to narrow down suspects.</li>
-        <li>Submit your accusation with supporting evidence to solve the case.</li>
+        <li>Review all available clues and reports to understand the case.</li>
+        <li>Search through evidence records to connect clues to potential suspects.</li>
+        <li>When you've identified the guilty party, submit an accusation with your strongest evidence.</li>
+        <li>You must use between one and four pieces of evidence for each accusation.</li>
+        <li>Be careful—you only have three attempts to correctly identify the suspect!</li>
       </ul>
       <Typography sx={{ fontWeight: 600, mt: 2, mb: 1 }}>Tips</Typography>
       <ul style={{ margin: 0, paddingLeft: 20 }}>

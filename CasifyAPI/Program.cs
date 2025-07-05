@@ -1,4 +1,4 @@
-using CasifyAPI.Services;
+using CluifyAPI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 

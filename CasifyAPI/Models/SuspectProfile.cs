@@ -2,7 +2,7 @@ using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using System.Collections.Generic;
 
-namespace CasifyAPI.Models
+namespace CluifyAPI.Models
 {
     public class SuspectProfile
     {

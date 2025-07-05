@@ -1,6 +1,6 @@
-# Casify
+# Cluify
 
-Casify is a browser-based investigative puzzle game inspired by titles like Scrutinized and Wordle. Players analyze suspicious person reports, search databases, and gather evidence to identify a daily culprit. Every decision matters, and critical thinking is key to solving each case.
+Cluify is a browser-based investigative puzzle game inspired by titles like Scrutinized and Wordle. Players analyze suspicious person reports, search databases, and gather evidence to identify a daily culprit. Every decision matters, and critical thinking is key to solving each case.
 
 ## Game Overview
 - **Genre:** Investigative Puzzle
@@ -58,4 +58,4 @@ Casify is a browser-based investigative puzzle game inspired by titles like Scru
 - An optional mode allows players to practice outside the daily challenge.
 
 ## Summary
-Casify challenges players to think critically, manage risk, and make tough decisions with incomplete information. Every choice impacts the investigation, making each case a unique and engaging puzzle.
+Cluify challenges players to think critically, manage risk, and make tough decisions with incomplete information. Every choice impacts the investigation, making each case a unique and engaging puzzle.

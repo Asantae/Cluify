@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Asantae\\desktop\\dev\\casify\\casifyapi\\CasifyAPI.csproj": {}
+    "C:\\Users\\Asantae\\desktop\\dev\\Cluify\\Cluifyapi\\CluifyAPI.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Asantae\\desktop\\dev\\casify\\casifyapi\\CasifyAPI.csproj": {
+    "C:\\Users\\Asantae\\desktop\\dev\\Cluify\\Cluifyapi\\CluifyAPI.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Asantae\\desktop\\dev\\casify\\casifyapi\\CasifyAPI.csproj",
-        "projectName": "CasifyAPI",
-        "projectPath": "C:\\Users\\Asantae\\desktop\\dev\\casify\\casifyapi\\CasifyAPI.csproj",
+        "projectUniqueName": "C:\\Users\\Asantae\\desktop\\dev\\Cluify\\Cluifyapi\\CluifyAPI.csproj",
+        "projectName": "CluifyAPI",
+        "projectPath": "C:\\Users\\Asantae\\desktop\\dev\\Cluify\\Cluifyapi\\CluifyAPI.csproj",
         "packagesPath": "C:\\Users\\Asantae\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Asantae\\desktop\\dev\\casify\\casifyapi\\obj\\",
+        "outputPath": "C:\\Users\\Asantae\\desktop\\dev\\Cluify\\Cluifyapi\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

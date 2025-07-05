@@ -1,12 +1,12 @@
-using CasifyAPI.Models;
-using CasifyAPI.Services;
+using CluifyAPI.Models;
+using CluifyAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using System.Threading.Tasks;
 using MongoDB.Driver;
 
-namespace CasifyAPI.Controllers
+namespace CluifyAPI.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]

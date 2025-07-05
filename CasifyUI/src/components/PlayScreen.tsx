@@ -22,7 +22,7 @@ const PlayScreen = ({ onPlay, darkMode }: { onPlay: () => void; darkMode: boolea
       🕵️‍♂️
     </Typography>
     <Typography variant="h2" sx={{ fontWeight: 700, fontSize: 36, mb: 0, letterSpacing: 1, textAlign: 'center' }}>
-      Casify
+      Cluify
     </Typography>
     <Typography sx={{ fontSize: 18, mt: 2, mb: 4, textAlign: 'center', maxWidth: 320 }}>
       Investigate clues and solve the daily case. Every choice matters.

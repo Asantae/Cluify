@@ -25,7 +25,7 @@ const Footer = ({ darkMode }: { darkMode: boolean }) => (
     p: 0.5
   }}>
     <Typography component="span" sx={{ fontSize: 11 }}>
-      © {new Date().getFullYear()} Casify. All rights reserved.
+      © {new Date().getFullYear()} Cluify. All rights reserved.
     </Typography>
     <Typography component="span" sx={{ mx: 0.5, opacity: 0.7 }}>|</Typography>
     <Link href="https://asantaems.com" underline="hover" color="inherit" sx={{ fontSize: 11, mx: 0.5 }} target="_blank" rel="noopener noreferrer">

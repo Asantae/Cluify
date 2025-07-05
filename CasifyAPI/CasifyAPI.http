@@ -1,6 +1,6 @@
-@CasifyAPI_HostAddress = http://localhost:5096
+@CluifyAPI_HostAddress = http://localhost:5096
 
-GET {{CasifyAPI_HostAddress}}/weatherforecast/
+GET {{CluifyAPI_HostAddress}}/weatherforecast/
 Accept: application/json
 
 ###

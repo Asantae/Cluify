@@ -1,7 +1,7 @@
-using CasifyAPI.Services;
+using CluifyAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 
-namespace CasifyAPI.Controllers
+namespace CluifyAPI.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]

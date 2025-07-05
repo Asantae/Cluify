@@ -1,7 +1,7 @@
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
-namespace CasifyAPI.Models
+namespace CluifyAPI.Models
 {
     public class User
     {

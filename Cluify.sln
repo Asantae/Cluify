@@ -2,7 +2,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.2.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CasifyAPI", "CasifyAPI\CasifyAPI.csproj", "{072FEFD9-395B-B71A-628D-8B9B7DDC3952}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CluifyAPI", "CluifyAPI\CluifyAPI.csproj", "{072FEFD9-395B-B71A-628D-8B9B7DDC3952}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

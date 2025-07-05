@@ -6,14 +6,14 @@
   "compilationOptions": {},
   "targets": {
     ".NETCoreApp,Version=v9.0": {
-      "CasifyAPI/1.0.0": {
+      "CluifyAPI/1.0.0": {
         "dependencies": {
           "Microsoft.AspNetCore.OpenApi": "9.0.5",
           "MongoDB.Driver": "3.4.0",
           "Swashbuckle.AspNetCore": "9.0.1"
         },
         "runtime": {
-          "CasifyAPI.dll": {}
+          "CluifyAPI.dll": {}
         }
       },
       "DnsClient/1.6.1": {
@@ -159,7 +159,7 @@
     }
   },
   "libraries": {
-    "CasifyAPI/1.0.0": {
+    "CluifyAPI/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
