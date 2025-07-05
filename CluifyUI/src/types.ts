@@ -2,7 +2,11 @@ export interface Case {
   id: string;
   caseNumber: number;
   title: string;
-  description?: string;
+  victimName?: string[];
+  dateOfIncident?: string; // Storing as string to match JSON, will be parsed to Date
+  location?: string;
+  details: string;
+  objective: string;
   difficulty: string;
   reportIds: string[];
   isActive: boolean;
@@ -14,6 +18,7 @@ export interface Report {
   personId: string;
   details: string;
   reportDate: string; 
+  suspect?: SuspectProfile;
 }
 
 export interface SuspectProfile {
@@ -27,4 +32,21 @@ export interface SuspectProfile {
   sex?: string;
   occupation?: string;
   isGuilty: boolean;
+  hairColor: string;
+  eyeColor: string;
+}
+
+export interface DmvRecord {
+  id: string;
+  personId: string;
+  firstName: string;
+  lastName: string;
+  age: number;
+  sex: string;
+  height: string;
+  weight: number;
+  licenseNumber: string;
+  eyeColor: string;
+  hairColor: string;
+  dateOfBirth: string;
 } 

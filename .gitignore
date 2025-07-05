@@ -1,0 +1,29 @@
+# Cursor
+.cursor/
+
+# IDE-specific
+.idea/
+.vscode/
+
+# Dependency directories
+node_modules/
+/CluifyUI/dist/
+
+# Build results
+[Bb]in/
+[Oo]bj/
+
+# Don't commit user-specific files
+/CluifyAPI/Properties/launchSettings.json
+/CluifyAPI/appsettings.Development.json
+/CluifyAPI/CluifyAPI.http
+
+# Rider
+.idea.rider/
+*.sln.DotSettings.user
+
+# Mac
+.DS_Store
+
+# Windows
+Thumbs.db 

@@ -10,13 +10,21 @@ namespace CluifyAPI.Models
         [BsonRepresentation(BsonType.ObjectId)]
         public string? Id { get; set; }
 
-        public int CaseNumber { get; set; }
+        public required int CaseNumber { get; set; }
         
-        public string Title { get; set; } = null!;
+        public required string Title { get; set; }
 
-        public string? Description { get; set; }
+        public List<string>? VictimName { get; set; }
 
-        public string Difficulty { get; set; } = "Easy";
+        public DateTime? DateOfIncident { get; set; }
+
+        public string? Location { get; set; }
+
+        public required string Details { get; set; }
+
+        public required string Objective { get; set; }
+
+        public required string Difficulty { get; set; }
 
         [BsonRepresentation(BsonType.ObjectId)]
         public List<string> ReportIds { get; set; } = new List<string>();

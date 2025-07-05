@@ -1,3 +1,11 @@
+C:\Users\Asantae\Desktop\dev\Cluify\CluifyAPI\obj\Debug\net9.0\CluifyAPI.csproj.AssemblyReference.cache
+C:\Users\Asantae\Desktop\dev\Cluify\CluifyAPI\obj\Debug\net9.0\CluifyAPI.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Asantae\Desktop\dev\Cluify\CluifyAPI\obj\Debug\net9.0\CluifyAPI.AssemblyInfoInputs.cache
+C:\Users\Asantae\Desktop\dev\Cluify\CluifyAPI\obj\Debug\net9.0\CluifyAPI.AssemblyInfo.cs
+C:\Users\Asantae\Desktop\dev\Cluify\CluifyAPI\obj\Debug\net9.0\CluifyAPI.csproj.CoreCompileInputs.cache
+C:\Users\Asantae\Desktop\dev\Cluify\CluifyAPI\obj\Debug\net9.0\CluifyAPI.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\Asantae\Desktop\dev\Cluify\CluifyAPI\obj\Debug\net9.0\CluifyAPI.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\Asantae\Desktop\dev\Cluify\CluifyAPI\obj\Debug\net9.0\CluifyAPI.sourcelink.json
 C:\Users\Asantae\Desktop\dev\Cluify\CluifyAPI\bin\Debug\net9.0\appsettings.Development.json
 C:\Users\Asantae\Desktop\dev\Cluify\CluifyAPI\bin\Debug\net9.0\appsettings.json
 C:\Users\Asantae\Desktop\dev\Cluify\CluifyAPI\bin\Debug\net9.0\CluifyAPI.staticwebassets.endpoints.json
@@ -17,14 +25,6 @@ C:\Users\Asantae\Desktop\dev\Cluify\CluifyAPI\bin\Debug\net9.0\Swashbuckle.AspNe
 C:\Users\Asantae\Desktop\dev\Cluify\CluifyAPI\bin\Debug\net9.0\Swashbuckle.AspNetCore.SwaggerGen.dll
 C:\Users\Asantae\Desktop\dev\Cluify\CluifyAPI\bin\Debug\net9.0\Swashbuckle.AspNetCore.SwaggerUI.dll
 C:\Users\Asantae\Desktop\dev\Cluify\CluifyAPI\bin\Debug\net9.0\ZstdSharp.dll
-C:\Users\Asantae\Desktop\dev\Cluify\CluifyAPI\obj\Debug\net9.0\CluifyAPI.csproj.AssemblyReference.cache
-C:\Users\Asantae\Desktop\dev\Cluify\CluifyAPI\obj\Debug\net9.0\CluifyAPI.GeneratedMSBuildEditorConfig.editorconfig
-C:\Users\Asantae\Desktop\dev\Cluify\CluifyAPI\obj\Debug\net9.0\CluifyAPI.AssemblyInfoInputs.cache
-C:\Users\Asantae\Desktop\dev\Cluify\CluifyAPI\obj\Debug\net9.0\CluifyAPI.AssemblyInfo.cs
-C:\Users\Asantae\Desktop\dev\Cluify\CluifyAPI\obj\Debug\net9.0\CluifyAPI.csproj.CoreCompileInputs.cache
-C:\Users\Asantae\Desktop\dev\Cluify\CluifyAPI\obj\Debug\net9.0\CluifyAPI.MvcApplicationPartsAssemblyInfo.cs
-C:\Users\Asantae\Desktop\dev\Cluify\CluifyAPI\obj\Debug\net9.0\CluifyAPI.MvcApplicationPartsAssemblyInfo.cache
-C:\Users\Asantae\Desktop\dev\Cluify\CluifyAPI\obj\Debug\net9.0\CluifyAPI.sourcelink.json
 C:\Users\Asantae\Desktop\dev\Cluify\CluifyAPI\obj\Debug\net9.0\scopedcss\bundle\CluifyAPI.styles.css
 C:\Users\Asantae\Desktop\dev\Cluify\CluifyAPI\obj\Debug\net9.0\staticwebassets.build.json
 C:\Users\Asantae\Desktop\dev\Cluify\CluifyAPI\obj\Debug\net9.0\staticwebassets.build.json.cache

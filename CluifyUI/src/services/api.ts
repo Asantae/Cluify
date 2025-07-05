@@ -1,4 +1,4 @@
-import { Case, Report } from '../types';
+import { Case, Report, SuspectProfile, DmvRecord } from '../types';
 
 const API_BASE_URL = 'http://localhost:5096/api'; // Make sure this matches your .NET backend port
 
@@ -34,5 +34,21 @@ export async function getReportsForCase(caseId: string): Promise<Report[]> {
     if (!response.ok) {
         throw new Error(`Failed to fetch reports for case ${caseId}`);
     }
+    return response.json();
+}
+
+export async function searchDmvRecords(query: any): Promise<DmvRecord[]> {
+    const response = await fetch(`${API_BASE_URL}/dmv/search`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(query),
+    });
+
+    if (!response.ok) {
+        throw new Error('Failed to search DMV records');
+    }
+
     return response.json();
 } 

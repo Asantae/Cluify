@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using MongoDB.Driver;
 using System.Collections.Generic;
 using System.Linq;
+using CluifyAPI.DTOs;
 
 namespace CluifyAPI.Controllers
 {
@@ -53,24 +54,38 @@ namespace CluifyAPI.Controllers
         }
 
         [HttpGet("{caseId}/reports")]
-        public async Task<ActionResult<List<Report>>> GetReportsForCase(string caseId)
+        public async Task<ActionResult<List<DTOs.ReportDto>>> GetReportsForCase(string caseId)
         {
-            var aCase = await _mongoDbService.Cases.Find(c => c.Id == caseId).FirstOrDefaultAsync();
+            var reports = await _mongoDbService.GetPopulatedReportsForCaseAsync(caseId);
 
-            if (aCase == null)
+            if (reports == null)
             {
-                return NotFound("Case not found.");
+                return NotFound("Case not found or no reports available.");
             }
 
-            if (aCase.ReportIds == null || !aCase.ReportIds.Any())
+            var reportDtos = reports.Select(report => new DTOs.ReportDto
             {
-                return Ok(new List<Report>());
-            }
+                Id = report.Id,
+                PersonId = report.PersonId,
+                Details = report.Details,
+                ReportDate = report.ReportDate,
+                Suspect = report.Suspect == null ? null : new DTOs.SuspectProfileDto
+                {
+                    Id = report.Suspect.Id,
+                    FirstName = report.Suspect.FirstName,
+                    LastName = report.Suspect.LastName,
+                    Aliases = report.Suspect.Aliases,
+                    Height = report.Suspect.Height,
+                    Weight = report.Suspect.Weight,
+                    Age = report.Suspect.Age,
+                    Sex = report.Suspect.Sex,
+                    Occupation = report.Suspect.Occupation,
+                    HairColor = report.Suspect.HairColor,
+                    EyeColor = report.Suspect.EyeColor,
+                }
+            }).ToList();
 
-            var filter = Builders<Report>.Filter.In(r => r.Id, aCase.ReportIds);
-            var reports = await _mongoDbService.Reports.Find(filter).ToListAsync();
-
-            return Ok(reports);
+            return Ok(reportDtos);
         }
     }
 } 

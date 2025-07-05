@@ -9,7 +9,7 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import { Box, Typography } from '@mui/material';
 import HowToPlayModal from '../modals/HowToPlayModal';
 
-const Header = ({ onSettings, onPractice }: { onSettings: () => void; onPractice: () => void; }) => {
+const Header = ({ onSettings, onPractice, darkMode }: { onSettings: () => void; onPractice: () => void; darkMode: boolean; }) => {
   const [howToOpen, setHowToOpen] = useState(false);
   // Placeholder user logic
   const user: { username: string } | null = null;
@@ -73,7 +73,7 @@ const Header = ({ onSettings, onPractice }: { onSettings: () => void; onPractice
           </Box>
         </Toolbar>
       </AppBar>
-      <HowToPlayModal open={howToOpen} onClose={() => setHowToOpen(false)} />
+      <HowToPlayModal open={howToOpen} onClose={() => setHowToOpen(false)} darkMode={darkMode} />
     </>
   );
 };

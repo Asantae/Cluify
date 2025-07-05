@@ -12,6 +12,7 @@ import { useLocalStorage } from "./hooks/useLocalStorage";
 import { getActiveCase, getReportsForCase, getCaseById } from "./services/api";
 import { Case, Report } from "./types";
 import PracticeCasesModal from "./modals/PracticeCasesModal";
+import { ModalStackProvider } from "./contexts/ModalStackContext";
 
 interface UserStats {
   gamesPlayed: number;
@@ -110,6 +111,7 @@ const MainPage = ({ darkMode, setDarkMode, settingsOpen, setSettingsOpen, howToP
             reports={reports} 
             isLoading={isLoading} 
             error={error} 
+            darkMode={darkMode}
         />
         <Footer darkMode={darkMode} />
       </>
@@ -143,26 +145,28 @@ const App = () => {
 
   return (
     <Router>
-      <div style={{ minHeight: "100vh", width: "100vw", background: darkMode ? "#181818" : "#fff", transition: "background 0.2s", position: "relative", overflow: "hidden", outline: "none", border: "none", boxShadow: "none" }}>
-        <Routes>
-          <Route 
-            path="/" 
-            element={
-              <MainPage 
-                darkMode={darkMode}
-                setDarkMode={setDarkMode}
-                settingsOpen={settingsOpen}
-                setSettingsOpen={setSettingsOpen}
-                howToPlayOpen={howToPlayOpen}
-                setHowToPlayOpen={setHowToPlayOpen}
-                isLoggedIn={isLoggedIn}
-                stats={stats}
-              />
-            } 
-          />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </div>
+      <ModalStackProvider>
+        <div style={{ minHeight: "100vh", width: "100vw", background: darkMode ? "#181818" : "#fff", color: darkMode ? "#fff" : "#000", transition: "background 0.2s, color 0.2s", position: "relative", overflow: "hidden", outline: "none", border: "none", boxShadow: "none" }}>
+          <Routes>
+            <Route 
+              path="/" 
+              element={
+                <MainPage 
+                  darkMode={darkMode}
+                  setDarkMode={setDarkMode}
+                  settingsOpen={settingsOpen}
+                  setSettingsOpen={setSettingsOpen}
+                  howToPlayOpen={howToPlayOpen}
+                  setHowToPlayOpen={setHowToPlayOpen}
+                  isLoggedIn={isLoggedIn}
+                  stats={stats}
+                />
+              } 
+            />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </div>
+      </ModalStackProvider>
     </Router>
   );
 };

@@ -10,11 +10,11 @@ namespace CluifyAPI.Models
         [BsonRepresentation(BsonType.ObjectId)]
         public string? Id { get; set; }
 
-        public string FirstName { get; set; } = null!;
+        public string? FirstName { get; set; }
 
-        public string LastName { get; set; } = null!;
+        public string? LastName { get; set; }
         
-        public List<string> Aliases { get; set; } = new List<string>();
+        public List<string>? Aliases { get; set; }
 
         public string? Height { get; set; }
 
@@ -26,8 +26,12 @@ namespace CluifyAPI.Models
 
         public string? Occupation { get; set; }
 
+        public string HairColor { get; set; } = string.Empty;
+
+        public string EyeColor { get; set; } = string.Empty;
+
         public bool IsGuilty { get; set; }
         
-        public int TimesUsedInCase { get; set; } = 0;
+        public int? TimesUsedInCase { get; set; }
     }
 } 

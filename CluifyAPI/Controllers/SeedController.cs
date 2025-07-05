@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using System.Threading.Tasks;
 using MongoDB.Driver;
+using System.Collections.Generic;
 
 namespace CluifyAPI.Controllers
 {
@@ -513,17 +514,11 @@ namespace CluifyAPI.Controllers
             {
                 CaseNumber = 0,
                 Title = "Practice",
-                Description =
-                    "**INCIDENT REPORT**<br/>" +
-                    "**Case Number:** 00-01<br/>" +
-                    "**Victim Name:** Hayes, Arthur<br/>" +
-                    "**Date of Death:** Approx. July 6, 2024<br/>" +
-                    "**Location:** 123 Hayes Residence, Home Office<br/><br/>" +
-                    "**Details:** Victim was discovered by household staff, deceased, in a locked room " +
-                    "with no signs of forced entry. Preliminary M.E. report indicates poisoning " +
-                    "via a fast-acting neurotoxin, likely administered through the victim's evening tea. " +
-                    "The victim's known associates and recent activities are under investigation.<br/><br/>" +
-                    "**Objective:** Analyze anonymous reports to identify the primary suspect.",
+                VictimName = new List<string> { "Hayes, Arthur" },
+                DateOfIncident = caseDate,
+                Location = "123 Hayes Residence",
+                Details = "Victim was discovered by household staff, deceased, in a locked room with no signs of forced entry. Preliminary M.E. report indicates poisoning via a fast-acting neurotoxin, likely administered through the victim's evening tea. The victim's known associates and recent activities are under investigation.",
+                Objective = "Analyze anonymous reports to identify the primary suspect.",
                 Difficulty = "Easy",
                 IsActive = false,
                 CanBePractice = true,
@@ -534,7 +529,7 @@ namespace CluifyAPI.Controllers
 
             await _mongoDbService.Cases.InsertOneAsync(case0);
 
-            return Ok(new { message = "Case 0 shell created successfully.", caseId = case0.Id });
+            return Ok(new { message = "Practice case created successfully.", caseId = case0.Id });
         }
     }
 }
