@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Asantae\\Desktop\\dev\\Cluify\\CluifyAPI\\CluifyAPI.csproj": {}
+    "C:\\Users\\Asantae\\desktop\\dev\\cluify\\cluifyapi\\CluifyAPI.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Asantae\\Desktop\\dev\\Cluify\\CluifyAPI\\CluifyAPI.csproj": {
+    "C:\\Users\\Asantae\\desktop\\dev\\cluify\\cluifyapi\\CluifyAPI.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Asantae\\Desktop\\dev\\Cluify\\CluifyAPI\\CluifyAPI.csproj",
+        "projectUniqueName": "C:\\Users\\Asantae\\desktop\\dev\\cluify\\cluifyapi\\CluifyAPI.csproj",
         "projectName": "CluifyAPI",
-        "projectPath": "C:\\Users\\Asantae\\Desktop\\dev\\Cluify\\CluifyAPI\\CluifyAPI.csproj",
+        "projectPath": "C:\\Users\\Asantae\\desktop\\dev\\cluify\\cluifyapi\\CluifyAPI.csproj",
         "packagesPath": "C:\\Users\\Asantae\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Asantae\\Desktop\\dev\\Cluify\\CluifyAPI\\obj\\",
+        "outputPath": "C:\\Users\\Asantae\\desktop\\dev\\cluify\\cluifyapi\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

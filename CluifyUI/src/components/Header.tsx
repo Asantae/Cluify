@@ -8,6 +8,7 @@ import BarChartIcon from '@mui/icons-material/BarChart';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { Box, Typography } from '@mui/material';
 import HowToPlayModal from '../modals/HowToPlayModal';
+import investigatorIcon from '../assets/cluify_investigator_icon.png';
 
 const Header = ({ onSettings, onPractice, darkMode }: { onSettings: () => void; onPractice: () => void; darkMode: boolean; }) => {
   const [howToOpen, setHowToOpen] = useState(false);
@@ -19,7 +20,7 @@ const Header = ({ onSettings, onPractice, darkMode }: { onSettings: () => void; 
       <AppBar position="static" color="transparent" elevation={0} sx={{ border: 0, boxShadow: 'none', borderBottom: 1, borderColor: 'divider' }}>
         <Toolbar sx={{ minHeight: 56, px: { xs: 1, sm: 2 }, display: 'flex', justifyContent: 'space-between' }}>
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Typography sx={{ fontSize: { xs: 24, sm: 32 }, mr: 1 }} role="img" aria-label="game icon">🕵️‍♂️</Typography>
+            <img src={investigatorIcon} alt="Cluify Investigator" style={{ width: '32px', height: '32px', marginRight: '8px' }} />
           </Box>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 0.5, sm: 1 } }}>
             <IconButton aria-label="How to play" color="inherit" size="large" onClick={() => setHowToOpen(true)} sx={{ p: { xs: 0.5, sm: 1 } }}>

@@ -11,4 +11,7 @@ public class DmvSearchQuery
     public string? Gender { get; set; }
     public string? HairColor { get; set; }
     public string? EyeColor { get; set; }
+    public string? FirstName { get; set; }
+    public string? LastName { get; set; }
+    public string? LicensePlate { get; set; }
 } 

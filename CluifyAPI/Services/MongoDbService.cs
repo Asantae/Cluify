@@ -45,39 +45,54 @@ namespace CluifyAPI.Services
             var reportFilter = Builders<Report>.Filter.In(r => r.Id, aCase.ReportIds);
             var reports = await Reports.Find(reportFilter).ToListAsync();
 
-            var suspectIds = reports.Select(r => r.PersonId).Distinct();
-            var suspectFilter = Builders<SuspectProfile>.Filter.In(s => s.Id, suspectIds);
-            var suspects = await SuspectProfiles.Find(suspectFilter).ToListAsync();
-            var suspectsById = suspects.Where(s => s.Id != null).ToDictionary(s => s.Id!);
+            var populatedReports = new List<ReportDto>();
 
-            var populatedReports = reports.Select(r => new DTOs.ReportDto
+            foreach (var report in reports)
             {
-                Id = r.Id,
-                PersonId = r.PersonId,
-                Details = r.Details,
-                ReportDate = r.ReportDate,
-                Suspect = suspectsById.TryGetValue(r.PersonId, out var suspect) 
-                    ? new DTOs.SuspectProfileDto 
-                    {
-                        Id = suspect.Id,
-                        FirstName = suspect.FirstName,
-                        LastName = suspect.LastName,
-                        Aliases = suspect.Aliases.ToArray(),
-                        Height = suspect.Height,
-                        Weight = suspect.Weight,
-                        Age = suspect.Age,
-                        Sex = suspect.Sex,
-                        Occupation = suspect.Occupation,
-                        HairColor = suspect.HairColor,
-                        EyeColor = suspect.EyeColor
-                    } 
-                    : null
-            }).ToList();
+                var reportDto = new DTOs.ReportDto
+                {
+                    Id = report.Id,
+                    PersonId = report.PersonId,
+                    Details = report.Details,
+                    ReportDate = report.ReportDate,
+                    Suspect = await GetSuspectProfileDtoAsync(report.PersonId)
+                };
+
+                populatedReports.Add(reportDto);
+            }
 
             // Shuffle the reports using a more robust method
             var shuffledReports = populatedReports.OrderBy(r => Guid.NewGuid()).ToList();
 
             return shuffledReports;
+        }
+
+        private async Task<SuspectProfileDto?> GetSuspectProfileDtoAsync(string personId)
+        {
+            var suspect = await SuspectProfiles.Find(s => s.Id == personId).FirstOrDefaultAsync();
+            if (suspect == null)
+            {
+                return null;
+            }
+
+            var dmvRecord = await DmvRecords.Find(r => r.PersonId == personId).FirstOrDefaultAsync();
+            suspect.LicensePlate = dmvRecord?.LicensePlate ?? "";
+
+            return new SuspectProfileDto
+            {
+                Id = suspect.Id,
+                FirstName = suspect.FirstName,
+                LastName = suspect.LastName,
+                Aliases = suspect.Aliases?.ToArray() ?? Array.Empty<string>(),
+                Height = suspect.Height ?? "",
+                Weight = suspect.Weight ?? "",
+                Age = suspect.Age ?? "",
+                Sex = suspect.Sex,
+                Occupation = suspect.Occupation,
+                HairColor = suspect.HairColor,
+                EyeColor = suspect.EyeColor,
+                LicensePlate = suspect.LicensePlate
+            };
         }
 
         public async Task<List<DmvRecord>> SearchDmvRecordsAsync(DmvSearchQuery query)
@@ -111,6 +126,20 @@ namespace CluifyAPI.Services
             
             if (!string.IsNullOrEmpty(query.EyeColor))
                 filter &= filterBuilder.Eq(r => r.EyeColor, query.EyeColor);
+
+            if (!string.IsNullOrEmpty(query.FirstName))
+                filter &= filterBuilder.Regex(r => r.FirstName, new MongoDB.Bson.BsonRegularExpression($"^{query.FirstName}$", "i"));
+            if (!string.IsNullOrEmpty(query.LastName))
+                filter &= filterBuilder.Regex(r => r.LastName, new MongoDB.Bson.BsonRegularExpression($"^{query.LastName}$", "i"));
+            if (!string.IsNullOrEmpty(query.LicensePlate))
+            {
+                var normalizedInput = new string(query.LicensePlate.Where(c => !char.IsWhiteSpace(c) && c != '-' ).ToArray()).ToUpperInvariant();
+                var all = await DmvRecords.Find(filter).ToListAsync();
+                return all.Where(r =>
+                    !string.IsNullOrEmpty(r.LicensePlate) &&
+                    new string(r.LicensePlate.Where(c => !char.IsWhiteSpace(c) && c != '-').ToArray()).ToUpperInvariant().StartsWith(normalizedInput)
+                ).ToList();
+            }
 
             return await DmvRecords.Find(filter).ToListAsync();
         }

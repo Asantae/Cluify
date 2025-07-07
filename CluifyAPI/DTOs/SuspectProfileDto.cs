@@ -23,5 +23,7 @@ namespace CluifyAPI.DTOs
         public string HairColor { get; set; } = string.Empty;
 
         public string EyeColor { get; set; } = string.Empty;
+
+        public string LicensePlate { get; set; } = "";
     }
 } 

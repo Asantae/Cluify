@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("CluifyAPI")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+64f31c245d6a28ca3ab81286c808c4689d5fb303")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d8ecd2c95b0d3ed3687d87c6de649aa86ad0bf7e")]
 [assembly: System.Reflection.AssemblyProductAttribute("CluifyAPI")]
 [assembly: System.Reflection.AssemblyTitleAttribute("CluifyAPI")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

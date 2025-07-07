@@ -23,6 +23,9 @@ const GameScreen: React.FC<GameScreenProps> = ({ activeCase, reports, isLoading,
   const [isCaseViewerOpen, setCaseViewerOpen] = useState(false);
   const [isReportViewerOpen, setReportViewerOpen] = useState(false);
   const [isDmvSearchOpen, setDmvSearchOpen] = useState(false);
+  const [currentReportIndex, setCurrentReportIndex] = useState(0);
+  const [linkedDmvRecords, setLinkedDmvRecords] = useState<{ [reportId: string]: any | null }>({});
+  const currentReportId = reports && reports.length > 0 ? reports[currentReportIndex]?.id : undefined;
 
   useEffect(() => {
     if (activeCase) {
@@ -111,6 +114,10 @@ const GameScreen: React.FC<GameScreenProps> = ({ activeCase, reports, isLoading,
                 onClose={() => setReportViewerOpen(false)}
                 reports={reports}
                 darkMode={darkMode}
+                currentReportIndex={currentReportIndex}
+                setCurrentReportIndex={setCurrentReportIndex}
+                linkedDmvRecords={linkedDmvRecords}
+                setLinkedDmvRecords={setLinkedDmvRecords}
             />
         )}
 
@@ -119,6 +126,16 @@ const GameScreen: React.FC<GameScreenProps> = ({ activeCase, reports, isLoading,
                 open={isDmvSearchOpen}
                 onClose={() => setDmvSearchOpen(false)}
                 darkMode={darkMode}
+                currentReportId={reports && reports.length > 0 ? reports[currentReportIndex]?.id : undefined}
+                onSelectDmvRecord={(record) => {
+                  const reportId = reports && reports.length > 0 ? reports[currentReportIndex]?.id : undefined;
+                  if (reportId) {
+                    setLinkedDmvRecords(prev => ({ ...prev, [reportId]: record }));
+                  }
+                  if (!isReportViewerOpen) setReportViewerOpen(true);
+                }}
+                currentReportIndex={currentReportIndex}
+                setCurrentReportIndex={setCurrentReportIndex}
             />
         )}
     </Box>

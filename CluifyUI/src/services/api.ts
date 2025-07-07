@@ -51,4 +51,16 @@ export async function searchDmvRecords(query: any): Promise<DmvRecord[]> {
     }
 
     return response.json();
+}
+
+export async function submitReport(reportId: string, dmvRecordId: string, evidenceIds: string[]) {
+    const response = await fetch(`${API_BASE_URL}/reports/submit`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ reportId, dmvRecordId, evidenceIds })
+    });
+    if (!response.ok) {
+        throw new Error('Failed to submit report');
+    }
+    return response.json();
 } 

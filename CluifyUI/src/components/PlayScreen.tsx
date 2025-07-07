@@ -1,4 +1,5 @@
 import { Box, Typography, Button } from '@mui/material';
+import investigatorIcon from '../assets/cluify_investigator_icon.png';
 
 const PlayScreen = ({ onPlay, darkMode }: { onPlay: () => void; darkMode: boolean }) => (
   <Box sx={{
@@ -16,14 +17,33 @@ const PlayScreen = ({ onPlay, darkMode }: { onPlay: () => void; darkMode: boolea
     boxSizing: 'border-box',
     touchAction: 'manipulation'
   }}>
-    <Typography variant="h1" sx={{ fontSize: 64, mb: 2 }} role="img" aria-label="game icon">
-      🕵️‍♂️
-    </Typography>
+    <Box
+      component="img"
+      src={investigatorIcon}
+      alt="Cluify Investigator"
+      sx={{
+        width: { xs: 96, sm: 128 },
+        height: { xs: 96, sm: 128 },
+        mb: 2,
+      }}
+    />
     <Typography variant="h2" sx={{ fontWeight: 700, fontSize: 36, mb: 0, letterSpacing: 1, textAlign: 'center' }}>
       Cluify
     </Typography>
     <Typography sx={{ fontSize: 18, mt: 2, mb: 4, textAlign: 'center', maxWidth: 320 }}>
       Investigate clues and solve the daily case. Every choice matters.
+    </Typography>
+    <Typography
+      variant="subtitle2"
+      sx={{
+        color: darkMode ? '#fff' : '#222',
+        fontWeight: 600,
+        letterSpacing: 1,
+        mb: 3,
+        textAlign: 'center',
+      }}
+    >
+      Inspired by Wordle and Scrutinized!
     </Typography>
     <Button
       variant="outlined"

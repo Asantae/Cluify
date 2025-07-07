@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "YQ05l5xzqik=",
+  "dgSpecHash": "YYRG4MAfcyo=",
   "success": true,
-  "projectFilePath": "C:\\Users\\Asantae\\Desktop\\dev\\Cluify\\CluifyAPI\\CluifyAPI.csproj",
+  "projectFilePath": "C:\\Users\\Asantae\\desktop\\dev\\cluify\\cluifyapi\\CluifyAPI.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Asantae\\.nuget\\packages\\dnsclient\\1.6.1\\dnsclient.1.6.1.nupkg.sha512",
     "C:\\Users\\Asantae\\.nuget\\packages\\microsoft.aspnetcore.openapi\\9.0.5\\microsoft.aspnetcore.openapi.9.0.5.nupkg.sha512",

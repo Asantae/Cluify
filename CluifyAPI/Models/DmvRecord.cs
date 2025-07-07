@@ -25,7 +25,9 @@ namespace CluifyAPI.Models
         
         public int Weight { get; set; }
         
-        public string LicenseNumber { get; set; } = string.Empty;
+        [BsonElement("licensePlate")]
+        [BsonIgnoreIfNull]
+        public string LicensePlate { get; set; } = "";
         
         public string EyeColor { get; set; } = string.Empty;
         

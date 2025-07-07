@@ -82,6 +82,7 @@ namespace CluifyAPI.Controllers
                     Occupation = report.Suspect.Occupation,
                     HairColor = report.Suspect.HairColor,
                     EyeColor = report.Suspect.EyeColor,
+                    LicensePlate = report.Suspect.LicensePlate
                 }
             }).ToList();
 

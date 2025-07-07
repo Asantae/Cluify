@@ -16,11 +16,11 @@ namespace CluifyAPI.Models
         
         public List<string>? Aliases { get; set; }
 
-        public string? Height { get; set; }
+        public string Height { get; set; } = "";
 
-        public string? Weight { get; set; }
+        public string Weight { get; set; } = "";
 
-        public string? Age { get; set; }
+        public string Age { get; set; } = "";
 
         public string? Sex { get; set; }
 
@@ -33,5 +33,7 @@ namespace CluifyAPI.Models
         public bool IsGuilty { get; set; }
         
         public int? TimesUsedInCase { get; set; }
+
+        public string LicensePlate { get; set; } = "";
     }
 } 

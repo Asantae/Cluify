@@ -17,9 +17,10 @@ interface DmvResultsModalProps {
     onClose: () => void;
     results: DmvRecord[];
     darkMode: boolean;
+    onRowClick?: (record: DmvRecord) => void;
 }
 
-const DmvResultsModal: React.FC<DmvResultsModalProps> = ({ isOpen, onClose, results, darkMode }) => {
+const DmvResultsModal: React.FC<DmvResultsModalProps> = ({ isOpen, onClose, results, darkMode, onRowClick }) => {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
 
@@ -54,7 +55,8 @@ const DmvResultsModal: React.FC<DmvResultsModalProps> = ({ isOpen, onClose, resu
                 sx={{
                     display: 'flex',
                     flexDirection: 'column',
-                    width: 'clamp(300px, 90vw, 1200px)',
+                    width: 'clamp(300px, 90vw, 700px)',
+                    maxWidth: 700,
                     maxHeight: '80vh',
                     overflow: 'hidden',
                     border: `1px solid ${borderColor}`,
@@ -80,7 +82,7 @@ const DmvResultsModal: React.FC<DmvResultsModalProps> = ({ isOpen, onClose, resu
                         minHeight: 0,
                     }}
                 >
-                    <DmvSearchResultsTable results={paginatedResults} darkMode={darkMode} />
+                    <DmvSearchResultsTable results={paginatedResults} darkMode={darkMode} onRowClick={onRowClick || (() => {})} />
                 </Box>
                 {results.length > 10 && (
                     <TablePagination

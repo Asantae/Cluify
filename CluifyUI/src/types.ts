@@ -45,7 +45,7 @@ export interface DmvRecord {
   sex: string;
   height: string;
   weight: number;
-  licenseNumber: string;
+  licensePlate: string;
   eyeColor: string;
   hairColor: string;
   dateOfBirth: string;

@@ -25,7 +25,7 @@ const Footer = ({ darkMode }: { darkMode: boolean }) => (
     outline: 'none',
     boxShadow: 'none',
     p: 0.5,
-    maxHeight: { xs: '4.5em', sm: 'auto' },
+    maxHeight: { xs: '2.5em', sm: 'auto' },
     overflowY: { xs: 'auto', sm: 'visible' },
   }}>
     <Typography component="span" sx={{ fontSize: 'inherit' }}>

@@ -43,25 +43,31 @@ namespace CluifyAPI.Controllers
             // We create and insert all suspects first so we can get their generated IDs for linking evidence.
             var guiltyPerson = new SuspectProfile
             {
-                FirstName = "Ethan",
-                LastName = "Hayes",
+                FirstName = "E",
+                LastName = "",
                 Age = "20-25",
                 Occupation = "",
                 Sex = "Male",
-                Height = "5'11\"",
-                Weight = "150-160",
+                Height = "",
+                Weight = "",
+                HairColor = "",
+                EyeColor = "",
+                LicensePlate = "",
                 IsGuilty = true
             };
 
             var redHerring = new SuspectProfile
             {
-                FirstName = "Marcus",
-                LastName = "Thorne",
-                Age = "52",
-                Occupation = "Investor",
+                FirstName = "Arthur",
+                LastName = "Finch",
+                Age = "35",
+                Occupation = "Business Partner",
                 Sex = "Male",
-                Height = "5'11\" - 6'1\"",
-                Weight = "180-200",
+                Height = "5'10\"",
+                Weight = "160",
+                HairColor = "Brown",
+                EyeColor = "Green",
+                LicensePlate = "6HFD432",
                 IsGuilty = false
             };
 
@@ -72,68 +78,86 @@ namespace CluifyAPI.Controllers
                 Age = "50s",
                 Occupation = "Investor",
                 Sex = "Female",
-                Height = "", // Missing
-                Weight = "130-150 lbs",
-                IsGuilty = false
+                Height = "",
+                Weight = "",
+                IsGuilty = false,
+                HairColor = "",
+                EyeColor = "",
+                LicensePlate = ""
             };
 
             var deliveryDriver = new SuspectProfile
             {
-                FirstName = "Leo",
-                LastName = "Martinez",
-                Age = "Early 20s",
-                Occupation = "", // Missing
-                Sex = "Male",
-                Height = "5'9\"",
-                Weight = "150-170 lbs",
-                IsGuilty = false
+                FirstName = "",
+                LastName = "",
+                Age = "",
+                Occupation = "Delivery Driver",
+                Sex = "",
+                Height = "",
+                Weight = "",
+                IsGuilty = false,
+                HairColor = "",
+                EyeColor = "",
+                LicensePlate = ""
             };
 
             var exEmployee = new SuspectProfile
             {
-                FirstName = "Ben",
-                LastName = "Carter",
-                Age = "Late 30s",
-                Occupation = "Programmer",
-                Sex = "Male",
-                Height = "6'0\" - 6'2\"",
-                Weight = "", // Missing
-                IsGuilty = false
+                FirstName = "",
+                LastName = "",
+                Age = "",
+                Occupation = "Ex-Employee",
+                Sex = "",
+                Height = "",
+                Weight = "",
+                IsGuilty = false,
+                HairColor = "",
+                EyeColor = "",
+                LicensePlate = ""
             };
 
             var personalTrainer = new SuspectProfile
             {
-                FirstName = "Jessica",
-                LastName = "Crane",
-                Age = "35",
+                FirstName = "",
+                LastName = "",
+                Age = "",
                 Occupation = "Personal Trainer",
-                Sex = "Female",
-                Height = "5'7\"",
-                Weight = "Athletic build",
-                IsGuilty = false
+                Sex = "",
+                Height = "",
+                Weight = "",
+                IsGuilty = false,
+                HairColor = "",
+                EyeColor = "",
+                LicensePlate = ""
             };
 
             var nosyNeighbor = new SuspectProfile
             {
-                FirstName = "Clara",
-                LastName = "Evans",
-                Age = "60-65",
-                Occupation = "Retired",
-                Sex = "Female",
-                Height = "5'4\"",
-                Weight = "", // Missing
-                IsGuilty = false
+                FirstName = "",
+                LastName = "",
+                Age = "",
+                Occupation = "Neighbor",
+                Sex = "",
+                Height = "",
+                Weight = "",
+                IsGuilty = false,
+                HairColor = "",
+                EyeColor = "",
+                LicensePlate = ""
             };
 
             var barista = new SuspectProfile
             {
-                FirstName = "Arthur",
-                LastName = "Finch",
-                Age = "24",
+                FirstName = "Elias",
+                LastName = "Moreno",
+                Age = "28",
                 Occupation = "Barista / Student",
                 Sex = "Male",
-                Height = "5'9\" - 5'11\"",
-                Weight = "Average",
+                Height = "5'8\"",
+                Weight = "150",
+                HairColor = "Black",
+                EyeColor = "Hazel",
+                LicensePlate = "7BRC912",
                 IsGuilty = false
             };
 
@@ -142,22 +166,19 @@ namespace CluifyAPI.Controllers
 
             // --- 2. Define and Group Evidence & Reports by Suspect ---
             
-            // --- Guilty: Ethan Hayes ---
+            // --- Guilty: E. Hayes ---
             var reportGuilty = new Report
             {
                 PersonId = guiltyPerson.Id!,
-                Details = "I couldn't help but overhear a phone call the other day. It was some young guy, " +
-                          "sounded desperate, begging for money from an 'Arthur'. He kept saying 'you're " +
-                          "my last chance.' The person on the other end just laughed and hung up. The kid " +
-                          "sounded like he was about to snap.",
-                ReportDate = caseDate.AddDays(-2)
+                Details = "I couldn't help but overhear a phone call the other day. It was some young guy, sounded desperate, begging for money from an 'Arthur'. He kept saying 'you're my last chance.' The person on the other end just laughed and hung up. The kid sounded like he was about to snap. I think I heard his name and it started with an E or something.",
+                ReportDate = caseDate.AddDays(-2).AddHours(15).AddMinutes(17)
             };
             var purchaseRecordGuilty = new PurchaseRecord
             {
                 PersonId = guiltyPerson.Id!,
                 ItemBought = "Advanced Pest Control Formula",
                 Price = 125.50m,
-                PurchaseDate = caseDate.AddDays(-7),
+                PurchaseDate = caseDate.AddDays(-7).AddHours(15), // 3 PM
                 EvidenceValue = 95
             };
             var dmvRecordGuilty = new DmvRecord
@@ -169,7 +190,7 @@ namespace CluifyAPI.Controllers
                 Sex = "Male",
                 Height = "5'11\"",
                 Weight = 165,
-                LicenseNumber = "H4Y3S-3TH4N-28",
+                LicensePlate = "",
                 EyeColor = "Brown",
                 HairColor = "Black",
                 DateOfBirth = new System.DateTime(2001, 4, 12)
@@ -178,7 +199,7 @@ namespace CluifyAPI.Controllers
             {
                 PersonId = guiltyPerson.Id!,
                 Query = "how to get away with poisoning",
-                SearchDate = caseDate.AddDays(-5),
+                SearchDate = caseDate.AddDays(-5).AddHours(20), // 8 PM
                 EvidenceValue = 85
             };
             var textMessageGuilty = new PhoneRecord
@@ -186,7 +207,7 @@ namespace CluifyAPI.Controllers
                 PersonId = guiltyPerson.Id!,
                 ToName = "Friend",
                 MessageContent = "Hey man, you still up for grabbing a bite later? I'm starving.",
-                MessageDateTime = caseDate.AddHours(-12),
+                MessageDateTime = caseDate.AddHours(-12).AddHours(17), // 5 PM
                 EvidenceValue = 0
             };
             var purchaseRecordGuilty2 = new PurchaseRecord
@@ -194,18 +215,18 @@ namespace CluifyAPI.Controllers
                 PersonId = guiltyPerson.Id!,
                 ItemBought = "Video Game: 'Chrono Trigger'",
                 Price = 59.99m,
-                PurchaseDate = caseDate.AddDays(-1),
+                PurchaseDate = caseDate.AddDays(-1).AddHours(18), // 6 PM
                 EvidenceValue = 0
             };
 
-            // --- Red Herring: Marcus Thorne ---
+            // --- Red Herring: Arthur Finch ---
             var reportRedHerring = new Report
             {
                 PersonId = redHerring.Id!,
                 Details = "I saw one of Hayes's business partners leaving the office building a few days ago. " +
                           "He looked furious, muttering to himself. I think I heard him say 'you'll get what's " +
                           "coming to you,' or something like that. It was kinda scary.",
-                ReportDate = caseDate.AddDays(-3)
+                ReportDate = caseDate.AddDays(-3).AddHours(18).AddMinutes(41)
             };
             var policeRecordRedHerring = new PoliceRecord
             {
@@ -218,16 +239,16 @@ namespace CluifyAPI.Controllers
             var dmvRecordRedHerring = new DmvRecord
             {
                 PersonId = redHerring.Id!,
-                FirstName = "Marcus",
-                LastName = "Thorne",
-                Age = 52,
+                FirstName = "Arthur",
+                LastName = "Finch",
+                Age = 35,
                 Sex = "Male",
-                Height = "6'2\"",
-                Weight = 210,
-                LicenseNumber = "T40RN-M4RC-52",
-                EyeColor = "Blue",
-                HairColor = "Gray",
-                DateOfBirth = new System.DateTime(1972, 8, 21)
+                Height = "5'10\"",
+                Weight = 160,
+                LicensePlate = "6HFD432",
+                EyeColor = "Green",
+                HairColor = "Brown",
+                DateOfBirth = new System.DateTime(1989, 5, 25)
             };
             var socialPostRedHerring = new SocialMediaPost
             {
@@ -260,7 +281,7 @@ namespace CluifyAPI.Controllers
                 Details = "I saw that investor, Brenda Miller, at a charity gala last month. She was complaining " +
                           "to someone that Hayes had 'muscled her out' of a big deal. She did not sound happy " +
                           "about it, believe me.",
-                ReportDate = caseDate.AddDays(-30)
+                ReportDate = caseDate.AddDays(-30).AddHours(14).AddMinutes(29)
             };
             var rivalPost = new SocialMediaPost
             {
@@ -285,7 +306,7 @@ namespace CluifyAPI.Controllers
                 Sex = "Female",
                 Height = "5'5\"",
                 Weight = 145,
-                LicenseNumber = "M1LLR-8R3ND-55",
+                LicensePlate = "",
                 EyeColor = "Hazel",
                 HairColor = "Blonde",
                 DateOfBirth = new System.DateTime(1969, 3, 15)
@@ -298,7 +319,7 @@ namespace CluifyAPI.Controllers
                 Details = "Yeah I delivered food to that house all the time. Rich dude. The night he died a lady " +
                           "I'd never seen before answered the door, just grabbed the food and slammed it shut. " +
                           "Very weird vibe.",
-                ReportDate = caseDate.AddHours(-10)
+                ReportDate = caseDate.AddHours(-10).AddHours(19).AddMinutes(55)
             };
             var driverPurchase = new PurchaseRecord
             {
@@ -325,7 +346,7 @@ namespace CluifyAPI.Controllers
                 Sex = "Male",
                 Height = "5'9\"",
                 Weight = 160,
-                LicenseNumber = "M4RTZ-L3O-22",
+                LicensePlate = "5QRT921",
                 EyeColor = "Brown",
                 HairColor = "Black",
                 DateOfBirth = new System.DateTime(2002, 1, 20)
@@ -338,7 +359,7 @@ namespace CluifyAPI.Controllers
                 Details = "I was on a local tech message board and someone who said they got laid off from that " +
                           "startup Hayes took over was going off. Said Hayes ruined his life and that powerful " +
                           "people need to be 'put in their place.'",
-                ReportDate = caseDate.AddDays(-15)
+                ReportDate = caseDate.AddDays(-15).AddHours(16).AddMinutes(3)
             };
             var exEmployeeSearch = new SearchHistory
             {
@@ -363,7 +384,7 @@ namespace CluifyAPI.Controllers
                 Sex = "Male",
                 Height = "6'1\"",
                 Weight = 195,
-                LicenseNumber = "C4RTR-B3N-38",
+                LicensePlate = "", // No car
                 EyeColor = "Green",
                 HairColor = "Brown",
                 DateOfBirth = new System.DateTime(1986, 11, 5)
@@ -376,7 +397,7 @@ namespace CluifyAPI.Controllers
                 Details = "I work out at the same gym as Hayes. I heard one of the trainers saying he cancelled " +
                           "his session on the day he died, which she said was really weird for him. Said he " +
                           "never cancels.",
-                ReportDate = caseDate.AddHours(-12)
+                ReportDate = caseDate.AddHours(-12).AddHours(20).AddMinutes(11)
             };
             var trainerText = new PhoneRecord
             {
@@ -403,7 +424,7 @@ namespace CluifyAPI.Controllers
                 Sex = "Female",
                 Height = "5'7\"",
                 Weight = 130,
-                LicenseNumber = "CR4N3-J355-35",
+                LicensePlate = "8VXC201",
                 EyeColor = "Blue",
                 HairColor = "Red",
                 DateOfBirth = new System.DateTime(1989, 5, 25)
@@ -416,7 +437,7 @@ namespace CluifyAPI.Controllers
                 Details = "A black sedan was parked out front of Arthur's place for nearly an hour that night. " +
                           "I didn't see who it was, but it peeled out of there real fast around 10 PM. My " +
                           "security camera might've caught the plates.",
-                ReportDate = caseDate.AddHours(-14)
+                ReportDate = caseDate.AddHours(-14).AddHours(21).AddMinutes(37)
             };
             var neighborPurchase = new PurchaseRecord
             {
@@ -443,7 +464,7 @@ namespace CluifyAPI.Controllers
                 Sex = "Female",
                 Height = "5'4\"",
                 Weight = 155,
-                LicenseNumber = "3V4N5-CL4R-62",
+                LicensePlate = "3WPL678",
                 EyeColor = "Brown",
                 HairColor = "Gray",
                 DateOfBirth = new System.DateTime(1962, 7, 10)
@@ -453,10 +474,8 @@ namespace CluifyAPI.Controllers
             var reportBarista = new Report
             {
                 PersonId = barista.Id!,
-                Details = "I'm a regular at the same coffee shop as Mr. Hayes. The last few times I saw him " +
-                          "in there, he kept taking these hushed phone calls and looked really stressed out. " +
-                          "More than usual.",
-                ReportDate = caseDate.AddDays(-1)
+                Details = "I work at a coffee shop and the other day my coworker was acting strange before mentioning Mr. Hayes. He seemed really on edge. After our shift, he said something about 'people getting what they deserve' and then left in a hurry. It was out of character for him, and it made me uneasy.",
+                ReportDate = caseDate.AddDays(-1).AddHours(13).AddMinutes(23)
             };
             var baristaPurchase = new PurchaseRecord
             {
@@ -469,16 +488,16 @@ namespace CluifyAPI.Controllers
             var dmvRecordBarista = new DmvRecord
             {
                 PersonId = barista.Id!,
-                FirstName = "Arthur",
-                LastName = "Finch",
-                Age = 24,
+                FirstName = "Elias",
+                LastName = "Moreno",
+                Age = 28,
                 Sex = "Male",
-                Height = "5'10\"",
-                Weight = 160,
-                LicenseNumber = "F1NCH-4RTH-24",
-                EyeColor = "Green",
-                HairColor = "Brown",
-                DateOfBirth = new System.DateTime(2000, 2, 2)
+                Height = "5'8\"",
+                Weight = 150,
+                LicensePlate = "7BRC912",
+                EyeColor = "Hazel",
+                HairColor = "Black",
+                DateOfBirth = new System.DateTime(1996, 3, 12)
             };
             
             // --- 3. Insert All Evidence and Reports ---
