@@ -1,5 +1,6 @@
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using System;
 
 namespace CluifyAPI.Models
 {
@@ -9,9 +10,17 @@ namespace CluifyAPI.Models
         [BsonRepresentation(BsonType.ObjectId)]
         public string? Id { get; set; }
 
+        [BsonElement("username")]
         public string Username { get; set; } = null!;
-        
-        public string HashedPassword { get; set; } = null!;
+
+        [BsonElement("email")]
+        public string Email { get; set; } = null!;
+
+        [BsonElement("passwordHash")]
+        public string PasswordHash { get; set; } = null!;
+
+        [BsonElement("dateCreated")]
+        public DateTime DateCreated { get; set; } = DateTime.UtcNow;
 
         [BsonRepresentation(BsonType.ObjectId)]
         public string? ActiveCaseId { get; set; }

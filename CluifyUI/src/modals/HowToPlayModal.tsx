@@ -4,7 +4,6 @@ import DialogContent from '@mui/material/DialogContent';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import CloseIcon from '@mui/icons-material/Close';
-import Box from '@mui/material/Box';
 
 const HowToPlayModal = ({ open, onClose, darkMode }: {
   open: boolean;
@@ -15,7 +14,7 @@ const HowToPlayModal = ({ open, onClose, darkMode }: {
   const textColor = darkMode ? '#fff' : '#000';
 
   return (
-    <Dialog open={open} onClose={onClose} maxWidth="xs" fullWidth PaperProps={{ sx: { borderRadius: 3, boxShadow: '0 2px 16px rgba(0,0,0,0.2)', border: 'none', outline: 'none', backgroundColor: bgColor, color: textColor } }}>
+    <Dialog open={open} onClose={onClose} maxWidth="xs" fullWidth PaperProps={{ sx: { borderRadius: 3, boxShadow: '0 2px 16px rgba(0,0,0,0.2)', border: 'none', outline: 'none', backgroundColor: bgColor, color: textColor, maxHeight: { xs: '70vh', sm: '70vh', md: '90vh' } } }}>
       <DialogTitle sx={{ fontWeight: 700, textAlign: 'center', p: 2, pb: 1, fontSize: 20 }}>
         How To Play
         <IconButton aria-label="close" onClick={onClose} size="small" sx={{ position: 'absolute', right: 12, top: 12, color: textColor }}>

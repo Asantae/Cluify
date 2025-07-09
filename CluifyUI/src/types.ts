@@ -19,6 +19,7 @@ export interface Report {
   details: string;
   reportDate: string; 
   suspect?: SuspectProfile;
+  caseId: string;
 }
 
 export interface SuspectProfile {

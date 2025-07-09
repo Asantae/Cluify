@@ -1,6 +1,6 @@
 // If you haven't already, run: npm install @tanstack/react-table
 import { useReactTable, getCoreRowModel, flexRender, ColumnDef, HeaderGroup, Row } from '@tanstack/react-table';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, useTheme } from '@mui/material';
 import { DmvRecord } from '../types';
 
 interface DmvSearchResultsTableProps {
@@ -18,10 +18,10 @@ const columns: ColumnDef<DmvRecord, any>[] = [
   { accessorKey: 'weight', header: 'Weight', cell: (info: any) => info.row.original.weight, meta: { align: 'right', width: '10%' } },
   { accessorKey: 'hairColor', header: 'Hair', cell: (info: any) => info.row.original.hairColor, meta: { width: '10%' } },
   { accessorKey: 'eyeColor', header: 'Eyes', cell: (info: any) => info.row.original.eyeColor, meta: { width: '10%' } },
-  { accessorKey: 'licensePlate', header: 'License #', cell: (info: any) => info.row.original.licensePlate, meta: { width: '15%' } },
+  { accessorKey: 'licensePlate', header: 'License Plate', cell: (info: any) => info.row.original.licensePlate, meta: { width: '15%' } },
 ];
 
-const DmvSearchResultsTable = ({ results, darkMode, onRowClick, selectedRecordId }: DmvSearchResultsTableProps) => {
+const DmvSearchResultsTable = ({ results, darkMode, onRowClick }: DmvSearchResultsTableProps) => {
   const table = useReactTable<DmvRecord>({
     data: results,
     columns,
@@ -29,11 +29,12 @@ const DmvSearchResultsTable = ({ results, darkMode, onRowClick, selectedRecordId
     debugTable: false,
   });
 
+  const theme = useTheme();
+
   const tableHeaderBgColor = darkMode ? '#444' : '#f8f8f8';
   const textColor = darkMode ? '#fff' : '#000';
   const tableBorderColor = darkMode ? '#555' : '#ddd';
   const rowHoverColor = darkMode ? '#333' : '#f0f0f0';
-  const rowSelectedColor = darkMode ? '#222' : '#e0e0e0';
 
   return (
     <TableContainer component={Paper} sx={{ flexGrow: 1, overflow: 'auto', backgroundColor: 'transparent', boxShadow: 'none' }}>
@@ -54,19 +55,18 @@ const DmvSearchResultsTable = ({ results, darkMode, onRowClick, selectedRecordId
           ))}
         </TableHead>
         <TableBody>
-          {table.getRowModel().rows.map((row: Row<DmvRecord>) => {
-            const isSelected = selectedRecordId === row.original.licensePlate;
+          {table.getRowModel().rows.map((row: Row<DmvRecord>, idx: number) => {
+            const darkRowColor = darkMode ? '#222' : theme.palette.action.selected;
             return (
               <TableRow
                 key={row.id}
-                hover
-                onClick={() => onRowClick(row.original)}
                 sx={{
                   cursor: 'pointer',
-                  backgroundColor: isSelected ? rowSelectedColor : undefined,
+                  backgroundColor: idx % 2 === 0 ? darkRowColor : undefined,
                   '&:hover': { backgroundColor: rowHoverColor },
-                  '& .MuiTableCell-root': { color: textColor, borderBottom: `1px solid ${tableBorderColor}` },
+                  '& .MuiTableCell-root': { color: textColor, borderBottom: 'none' },
                 }}
+                onClick={() => onRowClick(row.original)}
               >
                 {row.getVisibleCells().map((cell: any) => (
                   <TableCell key={cell.id} align={cell.column.columnDef.meta?.align || 'left'}>

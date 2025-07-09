@@ -1,4 +1,4 @@
-import { useState, Dispatch, SetStateAction, useEffect } from "react";
+import { useState, Dispatch, SetStateAction } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
@@ -13,13 +13,8 @@ import { getActiveCase, getReportsForCase, getCaseById } from "./services/api";
 import { Case, Report } from "./types";
 import PracticeCasesModal from "./modals/PracticeCasesModal";
 import { ModalStackProvider } from "./contexts/ModalStackContext";
-
-interface UserStats {
-  gamesPlayed: number;
-  wins: number;
-  currentStreak: number;
-  maxStreak: number;
-}
+import RegisterPage from "./pages/RegisterPage";
+import LoginPage from "./pages/LoginPage";
 
 interface MainPageProps {
   darkMode: boolean;
@@ -29,10 +24,9 @@ interface MainPageProps {
   howToPlayOpen: boolean;
   setHowToPlayOpen: Dispatch<SetStateAction<boolean>>;
   isLoggedIn: boolean;
-  stats: UserStats;
 }
 
-const MainPage = ({ darkMode, setDarkMode, settingsOpen, setSettingsOpen, howToPlayOpen, setHowToPlayOpen, isLoggedIn, stats }: MainPageProps) => {
+const MainPage = ({ darkMode, setDarkMode, settingsOpen, setSettingsOpen, howToPlayOpen, setHowToPlayOpen, isLoggedIn }: MainPageProps) => {
   const [showGame, setShowGame] = useState(false);
   const [showContentWarning, setShowContentWarning] = useState(false);
   const [practiceModalOpen, setPracticeModalOpen] = useState(false);
@@ -40,6 +34,16 @@ const MainPage = ({ darkMode, setDarkMode, settingsOpen, setSettingsOpen, howToP
   const [reports, setReports] = useState<Report[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [attemptsUsed, setAttemptsUsed] = useState(0);
+  const maxAttempts = 5;
+
+  // Helper to build AttemptStatus array
+  const getAttemptStatusArray = () => {
+    return [
+      ...Array(attemptsUsed).fill('incorrect'),
+      ...Array(maxAttempts - attemptsUsed).fill('empty')
+    ];
+  };
 
   const startGame = async (caseId: string) => {
     setIsLoading(true);
@@ -48,7 +52,8 @@ const MainPage = ({ darkMode, setDarkMode, settingsOpen, setSettingsOpen, howToP
       const caseData = await getCaseById(caseId);
       setActiveCase(caseData);
       const reportData = await getReportsForCase(caseData.id);
-      setReports(reportData);
+      const reportsWithCaseId = reportData.map(r => ({ ...r, caseId: caseData.id }));
+      setReports(reportsWithCaseId);
       setShowGame(true);
       if (!isLoggedIn) {
         setHowToPlayOpen(true);
@@ -102,7 +107,7 @@ const MainPage = ({ darkMode, setDarkMode, settingsOpen, setSettingsOpen, howToP
   if (showGame) {
     return (
       <>
-        <Header darkMode={darkMode} onSettings={() => setSettingsOpen(true)} onPractice={() => setPracticeModalOpen(true)} />
+        <Header darkMode={darkMode} onSettings={() => setSettingsOpen(true)} onPractice={() => setPracticeModalOpen(true)} attempts={getAttemptStatusArray()} />
         <SettingsModal open={settingsOpen} onClose={() => setSettingsOpen(false)} darkMode={darkMode} setDarkMode={setDarkMode} />
         <HowToPlayModal open={howToPlayOpen} onClose={() => setHowToPlayOpen(false)} darkMode={darkMode} />
         <PracticeCasesModal open={practiceModalOpen} onClose={() => setPracticeModalOpen(false)} onSelectCase={handleSelectPracticeCase} darkMode={darkMode} />
@@ -112,6 +117,7 @@ const MainPage = ({ darkMode, setDarkMode, settingsOpen, setSettingsOpen, howToP
             isLoading={isLoading} 
             error={error} 
             darkMode={darkMode}
+            setAttemptsUsed={setAttemptsUsed}
         />
         <Footer darkMode={darkMode} />
       </>
@@ -128,15 +134,9 @@ const MainPage = ({ darkMode, setDarkMode, settingsOpen, setSettingsOpen, howToP
 
 const App = () => {
   const [darkMode, setDarkMode] = useLocalStorage<boolean>('darkMode', true);
-  const [stats, setStats] = useLocalStorage<UserStats>('userStats', {
-    gamesPlayed: 0,
-    wins: 0,
-    currentStreak: 0,
-    maxStreak: 0,
-  });
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [howToPlayOpen, setHowToPlayOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn] = useState(false);
 
   if (typeof window !== 'undefined') {
     document.body.style.overflow = 'hidden';
@@ -159,10 +159,11 @@ const App = () => {
                   howToPlayOpen={howToPlayOpen}
                   setHowToPlayOpen={setHowToPlayOpen}
                   isLoggedIn={isLoggedIn}
-                  stats={stats}
                 />
               } 
             />
+            <Route path="/register" element={<RegisterPage darkMode={darkMode} />} />
+            <Route path="/login" element={<LoginPage darkMode={darkMode} />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </div>

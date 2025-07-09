@@ -8,11 +8,10 @@ interface DraggablePaperProps {
   handleId: string;
   modalId: string;
   centerOnMount?: boolean;
-  maxHeight?: string | number;
   PaperProps?: PaperProps;
 }
 
-const DraggablePaper: React.FC<DraggablePaperProps> = ({ children, handleId, modalId, centerOnMount = false, maxHeight = '85vh', PaperProps = {} }) => {
+const DraggablePaper: React.FC<DraggablePaperProps> = ({ children, handleId, modalId, centerOnMount = false, PaperProps = {} }) => {
   const nodeRef = useRef(null);
   const [initialPosition, setInitialPosition] = useState<{ x: number; y: number } | undefined>(undefined);
   const [isMounted, setIsMounted] = useState(false);
@@ -42,7 +41,6 @@ const DraggablePaper: React.FC<DraggablePaperProps> = ({ children, handleId, mod
   const zIndex = getZIndex(modalId);
 
   return (
-    // @ts-ignore
     <Draggable
       nodeRef={nodeRef}
       handle={`#${handleId}`}
@@ -50,20 +48,21 @@ const DraggablePaper: React.FC<DraggablePaperProps> = ({ children, handleId, mod
       defaultPosition={initialPosition}
       onStart={() => bringToFront(modalId)}
     >
-      <Paper
-        {...PaperProps}
-        ref={nodeRef}
-        elevation={8}
-        onMouseDown={() => bringToFront(modalId)}
-        sx={{
-          position: 'absolute',
-          zIndex: zIndex, 
-          ...PaperProps?.sx,
-          ...(!initialPosition && centerOnMount ? { visibility: 'hidden' } : {}),
-        }}
-      >
-        {children}
-      </Paper>
+      <div ref={nodeRef}>
+        <Paper
+          {...PaperProps}
+          elevation={8}
+          onMouseDown={() => bringToFront(modalId)}
+          sx={{
+            position: 'absolute',
+            zIndex: zIndex, 
+            ...PaperProps?.sx,
+            ...(!initialPosition && centerOnMount ? { visibility: 'hidden' } : {}),
+          }}
+        >
+          {children}
+        </Paper>
+      </div>
     </Draggable>
   );
 };

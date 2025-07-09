@@ -11,7 +11,7 @@ namespace CluifyAPI.Models
         public string? Id { get; set; }
 
         [BsonRepresentation(BsonType.ObjectId)]
-        public string PersonId { get; set; } = null!;
+        public string SuspectProfileId { get; set; } = null!;
 
         public string FirstName { get; set; } = string.Empty;
 

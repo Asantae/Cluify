@@ -50,9 +50,9 @@ const PlayScreen = ({ onPlay, darkMode }: { onPlay: () => void; darkMode: boolea
       size="large"
       onClick={onPlay}
       sx={{
-        fontSize: 20,
-        px: 5,
-        py: 1.5,
+        fontSize: 16,
+        px: 3,
+        py: 1,
         borderRadius: 50,
         fontWeight: 600,
         boxShadow: '0 2px 8px rgba(0,0,0,0.08)',

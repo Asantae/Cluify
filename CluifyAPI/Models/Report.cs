@@ -11,10 +11,15 @@ namespace CluifyAPI.Models
         public string? Id { get; set; }
 
         [BsonRepresentation(BsonType.ObjectId)]
-        public string PersonId { get; set; } = null!;
+        public string SuspectProfileId { get; set; } = null!;
 
         public string Details { get; set; } = null!;
 
         public DateTime ReportDate { get; set; } = DateTime.UtcNow;
+
+        [BsonRepresentation(BsonType.ObjectId)]
+        public string CaseId { get; set; } = null!;
+
+        public bool Guilty { get; set; }
     }
 } 

@@ -21,26 +21,27 @@ const CaseViewerModal = ({ open, onClose, caseData, darkMode }: CaseViewerModalP
 
   return (
     <DraggablePaper handleId={handleId} centerOnMount modalId="caseViewer">
-      <DialogTitle 
-        style={{ cursor: 'move', backgroundColor: titleBgColor, color: titleTextColor }} 
-        id={handleId}
-        sx={{ borderBottom: '1px solid rgba(0, 0, 0, 0.2)' }}
-      >
-        <Typography component="span">Case Viewer</Typography>
-        <IconButton
-          aria-label="close"
-          onClick={onClose}
-          sx={{
-            position: 'absolute',
-            right: 8,
-            top: 8,
-            color: titleTextColor
-          }}
+      <div>
+        <DialogTitle
+          style={{ cursor: 'move', backgroundColor: titleBgColor, color: titleTextColor }}
+          id={handleId}
+          sx={{ borderBottom: '1px solid rgba(0, 0, 0, 0.2)' }}
         >
-          <CloseIcon />
-        </IconButton>
-      </DialogTitle>
-      <DialogContent sx={{ 
+          <Typography component="span">Case #{caseData.caseNumber}</Typography>
+          <IconButton
+            aria-label="close"
+            onClick={onClose}
+            sx={{
+              position: 'absolute',
+              right: 8,
+              top: 8,
+              color: titleTextColor
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
+        <DialogContent sx={{
           backgroundColor: contentBgColor,
           color: contentTextColor,
           border: '1px solid rgba(0, 0, 0, 0.2)',
@@ -51,12 +52,13 @@ const CaseViewerModal = ({ open, onClose, caseData, darkMode }: CaseViewerModalP
           maxHeight: '60vh',
           overflowY: 'auto',
         }}>
-        <Typography variant="body2" sx={{ position: 'absolute', top: 38, right: 16, color: contentTextColor }}>
+          <Typography variant="body2" sx={{ position: 'absolute', top: 38, right: 16, color: contentTextColor }}>
             Difficulty: {caseData.difficulty}
-        </Typography>
-        <Box sx={{ pt: 2 }}>
-            <Typography gutterBottom><strong>Case Number:</strong> {caseData.caseNumber}</Typography>
-            <Typography gutterBottom><strong>Title:</strong> {caseData.title}</Typography>
+          </Typography>
+          <Box sx={{ pt: 2 }}>
+            {caseData.canBePractice && caseData.title && (
+              <Typography gutterBottom><strong>Title:</strong> {caseData.title}</Typography>
+            )}
             <Typography gutterBottom><strong>Victim(s):</strong> {caseData.victimName?.join(', ') || '—'}</Typography>
             <Typography gutterBottom><strong>Date of Incident:</strong> {caseData.dateOfIncident ? new Date(caseData.dateOfIncident).toLocaleDateString() : '—'}</Typography>
             <Typography gutterBottom><strong>Location:</strong> {caseData.location || '—'}</Typography>
@@ -64,10 +66,11 @@ const CaseViewerModal = ({ open, onClose, caseData, darkMode }: CaseViewerModalP
             <Typography gutterBottom variant="body2">{caseData.details}</Typography>
             <Typography sx={{ mt: 2 }} gutterBottom><strong>Objective:</strong></Typography>
             <Typography gutterBottom variant="body2">{caseData.objective}</Typography>
-        </Box>
-      </DialogContent>
+          </Box>
+        </DialogContent>
+      </div>
     </DraggablePaper>
   );
 };
 
-export default CaseViewerModal; 
+export default CaseViewerModal;

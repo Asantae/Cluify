@@ -1,5 +1,8 @@
 using CluifyAPI.Services;
 using Microsoft.AspNetCore.Mvc;
+using CluifyAPI.Models;
+using MongoDB.Driver;
+using System.Threading.Tasks;
 
 namespace CluifyAPI.Controllers
 {

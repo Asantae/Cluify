@@ -4,6 +4,7 @@ using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using System.Linq;
 using System;
+using Microsoft.Extensions.Configuration;
 
 namespace CluifyAPI.Services
 {
@@ -11,23 +12,43 @@ namespace CluifyAPI.Services
     {
         private readonly IMongoDatabase _database;
 
-        public MongoDbService(IOptions<MongoDbSettings> mongoDbSettings)
+        public IMongoCollection<Case> Cases { get; }
+        public IMongoCollection<Report> Reports { get; }
+        public IMongoCollection<DmvRecord> DmvRecords { get; }
+        public IMongoCollection<Note> Notes { get; }
+        public IMongoCollection<CaseProgress> CaseProgress { get; }
+        public IMongoCollection<User> Users { get; }
+
+        public MongoDbService(IConfiguration config)
         {
-            MongoClient client = new MongoClient(mongoDbSettings.Value.ConnectionString);
-            _database = client.GetDatabase(mongoDbSettings.Value.DatabaseName);
+            string? connectionString;
+            var env = config["ASPNETCORE_ENVIRONMENT"] ?? "Production";
+            if (env == "Development")
+            {
+                connectionString = config.GetSection("MongoDB:ConnectionString").Value;
+            }
+            else
+            {
+                connectionString = Environment.GetEnvironmentVariable("MONGODB_CONNECTION_STRING");
+            }
+            if (string.IsNullOrEmpty(connectionString))
+                throw new ArgumentNullException("connectionString", "MongoDB connection string is not set.");
+            var client = new MongoClient(connectionString);
+            _database = client.GetDatabase(config.GetSection("MongoDB:DatabaseName").Value ?? "CluifyDb");
+            Cases = _database.GetCollection<Case>("cases");
+            Reports = _database.GetCollection<Report>("reports");
+            DmvRecords = _database.GetCollection<DmvRecord>("dmvrecords");
+            Notes = _database.GetCollection<Note>("notes");
+            CaseProgress = _database.GetCollection<CaseProgress>("caseprogress");
+            Users = _database.GetCollection<User>("users");
         }
 
-        public IMongoCollection<User> Users => _database.GetCollection<User>("users");
-        public IMongoCollection<Case> Cases => _database.GetCollection<Case>("cases");
         public IMongoCollection<SuspectProfile> SuspectProfiles => _database.GetCollection<SuspectProfile>("suspectProfiles");
-        public IMongoCollection<Report> Reports => _database.GetCollection<Report>("reports");
-        public IMongoCollection<DmvRecord> DmvRecords => _database.GetCollection<DmvRecord>("dmvRecords");
         public IMongoCollection<SocialMediaPost> SocialMediaPosts => _database.GetCollection<SocialMediaPost>("socialMediaPosts");
         public IMongoCollection<PoliceRecord> PoliceRecords => _database.GetCollection<PoliceRecord>("policeRecords");
         public IMongoCollection<PhoneRecord> PhoneRecords => _database.GetCollection<PhoneRecord>("phoneRecords");
         public IMongoCollection<PurchaseRecord> PurchaseRecords => _database.GetCollection<PurchaseRecord>("purchaseRecords");
         public IMongoCollection<SearchHistory> SearchHistories => _database.GetCollection<SearchHistory>("searchHistories");
-        public IMongoCollection<Note> Notes => _database.GetCollection<Note>("notes");
 
         public async Task<List<SuspectProfile>> GetSuspectsAsync()
         {
@@ -52,10 +73,10 @@ namespace CluifyAPI.Services
                 var reportDto = new DTOs.ReportDto
                 {
                     Id = report.Id,
-                    PersonId = report.PersonId,
+                    SuspectProfileId = report.SuspectProfileId,
                     Details = report.Details,
                     ReportDate = report.ReportDate,
-                    Suspect = await GetSuspectProfileDtoAsync(report.PersonId)
+                    Suspect = await GetSuspectProfileDtoAsync(report.SuspectProfileId)
                 };
 
                 populatedReports.Add(reportDto);
@@ -67,15 +88,15 @@ namespace CluifyAPI.Services
             return shuffledReports;
         }
 
-        private async Task<SuspectProfileDto?> GetSuspectProfileDtoAsync(string personId)
+        private async Task<SuspectProfileDto?> GetSuspectProfileDtoAsync(string suspectProfileId)
         {
-            var suspect = await SuspectProfiles.Find(s => s.Id == personId).FirstOrDefaultAsync();
+            var suspect = await SuspectProfiles.Find(s => s.Id == suspectProfileId).FirstOrDefaultAsync();
             if (suspect == null)
             {
                 return null;
             }
 
-            var dmvRecord = await DmvRecords.Find(r => r.PersonId == personId).FirstOrDefaultAsync();
+            var dmvRecord = await DmvRecords.Find(r => r.SuspectProfileId == suspectProfileId).FirstOrDefaultAsync();
             suspect.LicensePlate = dmvRecord?.LicensePlate ?? "";
 
             return new SuspectProfileDto
@@ -105,14 +126,6 @@ namespace CluifyAPI.Services
             if (query.AgeEnd.HasValue)
                 filter &= filterBuilder.Lte(r => r.Age, query.AgeEnd.Value);
 
-            // Note: Height is stored as a string.
-            // This logic assumes height is stored in a format that can be compared lexicographically (e.g., "5'11\"").
-            // Adjust if your data model is different.
-            if (!string.IsNullOrEmpty(query.HeightStart))
-                filter &= filterBuilder.Gte(r => r.Height, query.HeightStart);
-            if (!string.IsNullOrEmpty(query.HeightEnd))
-                filter &= filterBuilder.Lte(r => r.Height, query.HeightEnd);
-
             if (query.WeightStart.HasValue)
                 filter &= filterBuilder.Gte(r => r.Weight, query.WeightStart.Value);
             if (query.WeightEnd.HasValue)
@@ -141,7 +154,35 @@ namespace CluifyAPI.Services
                 ).ToList();
             }
 
-            return await DmvRecords.Find(filter).ToListAsync();
+            var results = await DmvRecords.Find(filter).ToListAsync();
+
+            // Height filtering in C#
+            if (!string.IsNullOrEmpty(query.HeightStart) || !string.IsNullOrEmpty(query.HeightEnd))
+            {
+                int? start = ParseHeightToInches(query.HeightStart);
+                int? end = ParseHeightToInches(query.HeightEnd);
+                results = results.Where(r =>
+                {
+                    int? h = ParseHeightToInches(r.Height);
+                    if (h == null) return false;
+                    bool gte = !start.HasValue || h.Value >= start.Value;
+                    bool lte = !end.HasValue || h.Value <= end.Value;
+                    return gte && lte;
+                }).ToList();
+            }
+
+            return results;
+        }
+
+        // Helper to parse height strings like "5'10\"" to inches
+        private static int? ParseHeightToInches(string? height)
+        {
+            if (string.IsNullOrWhiteSpace(height)) return null;
+            var match = System.Text.RegularExpressions.Regex.Match(height.Trim(), @"^(\d+)'(\d+)");
+            if (!match.Success) return null;
+            if (!int.TryParse(match.Groups[1].Value, out int feet)) return null;
+            if (!int.TryParse(match.Groups[2].Value, out int inches)) return null;
+            return feet * 12 + inches;
         }
     }
 

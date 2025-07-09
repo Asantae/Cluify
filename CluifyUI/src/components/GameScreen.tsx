@@ -5,6 +5,11 @@ import DesktopIcon from './DesktopIcon';
 import CaseViewerModal from '../modals/CaseViewerModal';
 import SuspiciousPersonReportModal from '../modals/SuspiciousPersonReportModal';
 import DmvSearchModal from '../modals/DmvSearchModal';
+import { useLocalStorage } from '../hooks/useLocalStorage';
+import { getCaseProgress, isLoggedIn } from '../services/api';
+import WinOverlay from './WinOverlay';
+import LockoutOverlay from './LockoutOverlay';
+import CaseInactiveOverlay from './CaseInactiveOverlay';
 
 // Import your icons
 import caseViewerIcon from '../assets/case_viewer_icon.png';
@@ -17,21 +22,64 @@ interface GameScreenProps {
   isLoading: boolean;
   error: string | null;
   darkMode: boolean;
+  setAttemptsUsed: (attempts: number) => void;
 }
 
-const GameScreen: React.FC<GameScreenProps> = ({ activeCase, reports, isLoading, error, darkMode }) => {
+const GameScreen: React.FC<GameScreenProps> = ({ activeCase, reports, isLoading, error, darkMode, setAttemptsUsed }) => {
   const [isCaseViewerOpen, setCaseViewerOpen] = useState(false);
   const [isReportViewerOpen, setReportViewerOpen] = useState(false);
   const [isDmvSearchOpen, setDmvSearchOpen] = useState(false);
   const [currentReportIndex, setCurrentReportIndex] = useState(0);
   const [linkedDmvRecords, setLinkedDmvRecords] = useState<{ [reportId: string]: any | null }>({});
-  const currentReportId = reports && reports.length > 0 ? reports[currentReportIndex]?.id : undefined;
+
+  const maxAttempts = 5;
+  const userId = isLoggedIn() ? localStorage.getItem('userId') : null;
+  const [localAttempts, setLocalAttempts] = useLocalStorage<number>(`case_attempts_${activeCase?.id || ''}`, 0);
+  const [progress, setProgress] = useState<{ attempts: number; hasWon: boolean } | null>(null);
+
+  useEffect(() => {
+    if (activeCase && isLoggedIn() && userId) {
+      getCaseProgress(userId, String(activeCase.id)).then((data) => {
+        if (data && typeof data.attempts === 'number') {
+          setProgress({ attempts: data.attempts, hasWon: !!data.hasWon });
+          setAttemptsUsed(data.attempts);
+        } else {
+          setProgress({ attempts: 0, hasWon: false });
+          setAttemptsUsed(0);
+        }
+      }).catch(() => {
+        setProgress({ attempts: 0, hasWon: false });
+        setAttemptsUsed(0);
+      });
+    } else if (activeCase && !isLoggedIn()) {
+      setProgress(null);
+      setAttemptsUsed(0);
+      setLocalAttempts(0);
+    }
+  }, [activeCase?.id]);
 
   useEffect(() => {
     if (activeCase) {
       setCaseViewerOpen(true);
     }
   }, [activeCase]);
+
+  // Only show overlays for tracked (active) cases (not practice)
+  const isTrackedCase = !!activeCase && !activeCase.canBePractice;
+  const showWin = isTrackedCase && !!progress?.hasWon;
+  const showLockout = isTrackedCase && (isLoggedIn() ? (progress?.attempts ?? 0) >= maxAttempts : localAttempts >= maxAttempts) && !progress?.hasWon;
+  const showInactive = isTrackedCase && !activeCase.isActive;
+
+  // Navigation handler for 'Return' button
+  const goToPlayView = () => {
+    window.location.href = '/'; // Replace with your actual play view route if different
+  };
+
+  useEffect(() => {
+    if (isLoading || error) {
+      setAttemptsUsed(0);
+    }
+  }, [isLoading, error, setAttemptsUsed]);
 
   if (isLoading) {
     return (
@@ -77,7 +125,7 @@ const GameScreen: React.FC<GameScreenProps> = ({ activeCase, reports, isLoading,
                 </Typography>
             </Box>
         ) : (
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4, alignItems: 'center' }}>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, alignItems: 'center' }}>
                 <DesktopIcon
                     icon={caseViewerIcon}
                     label="Case Viewer"
@@ -118,6 +166,24 @@ const GameScreen: React.FC<GameScreenProps> = ({ activeCase, reports, isLoading,
                 setCurrentReportIndex={setCurrentReportIndex}
                 linkedDmvRecords={linkedDmvRecords}
                 setLinkedDmvRecords={setLinkedDmvRecords}
+                onReportSubmitted={() => {
+                  if (activeCase && isLoggedIn() && userId) {
+                    getCaseProgress(userId, String(activeCase.id)).then((data) => {
+                      if (data && typeof data.attempts === 'number') {
+                        setProgress({ attempts: data.attempts, hasWon: !!data.hasWon });
+                        setAttemptsUsed(data.attempts);
+                      } else {
+                        setProgress({ attempts: 0, hasWon: false });
+                        setAttemptsUsed(0);
+                      }
+                    });
+                  } else if (activeCase && !isLoggedIn()) {
+                    setLocalAttempts(prev => {
+                      setAttemptsUsed(prev + 1);
+                      return prev + 1;
+                    });
+                  }
+                }}
             />
         )}
 
@@ -126,7 +192,7 @@ const GameScreen: React.FC<GameScreenProps> = ({ activeCase, reports, isLoading,
                 open={isDmvSearchOpen}
                 onClose={() => setDmvSearchOpen(false)}
                 darkMode={darkMode}
-                currentReportId={reports && reports.length > 0 ? reports[currentReportIndex]?.id : undefined}
+                currentReportId={String(reports && reports.length > 0 ? reports[currentReportIndex]?.id : '')}
                 onSelectDmvRecord={(record) => {
                   const reportId = reports && reports.length > 0 ? reports[currentReportIndex]?.id : undefined;
                   if (reportId) {
@@ -134,10 +200,12 @@ const GameScreen: React.FC<GameScreenProps> = ({ activeCase, reports, isLoading,
                   }
                   if (!isReportViewerOpen) setReportViewerOpen(true);
                 }}
-                currentReportIndex={currentReportIndex}
-                setCurrentReportIndex={setCurrentReportIndex}
             />
         )}
+
+        {showWin && <WinOverlay />}
+        {showLockout && <LockoutOverlay onReturn={goToPlayView} />}
+        {showInactive && <CaseInactiveOverlay onClose={goToPlayView} />}
     </Box>
   );
 };

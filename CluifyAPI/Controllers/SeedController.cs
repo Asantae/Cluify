@@ -6,6 +6,7 @@ using Microsoft.Extensions.Hosting;
 using System.Threading.Tasks;
 using MongoDB.Driver;
 using System.Collections.Generic;
+using MongoDB.Bson;
 
 namespace CluifyAPI.Controllers
 {
@@ -48,9 +49,9 @@ namespace CluifyAPI.Controllers
                 Age = "20-25",
                 Occupation = "",
                 Sex = "Male",
-                Height = "",
+                Height = "5'10\"-6'0\"",
                 Weight = "",
-                HairColor = "",
+                HairColor = "Black",
                 EyeColor = "",
                 LicensePlate = "",
                 IsGuilty = true
@@ -169,7 +170,8 @@ namespace CluifyAPI.Controllers
             // --- Guilty: E. Hayes ---
             var reportGuilty = new Report
             {
-                PersonId = guiltyPerson.Id!,
+                Id = MongoDB.Bson.ObjectId.GenerateNewId().ToString(),
+                SuspectProfileId = guiltyPerson.Id!,
                 Details = "I couldn't help but overhear a phone call the other day. It was some young guy, sounded desperate, begging for money from an 'Arthur'. He kept saying 'you're my last chance.' The person on the other end just laughed and hung up. The kid sounded like he was about to snap. I think I heard his name and it started with an E or something.",
                 ReportDate = caseDate.AddDays(-2).AddHours(15).AddMinutes(17)
             };
@@ -183,7 +185,7 @@ namespace CluifyAPI.Controllers
             };
             var dmvRecordGuilty = new DmvRecord
             {
-                PersonId = guiltyPerson.Id!,
+                SuspectProfileId = guiltyPerson.Id!,
                 FirstName = "Ethan",
                 LastName = "Hayes",
                 Age = 24,
@@ -222,7 +224,8 @@ namespace CluifyAPI.Controllers
             // --- Red Herring: Arthur Finch ---
             var reportRedHerring = new Report
             {
-                PersonId = redHerring.Id!,
+                Id = MongoDB.Bson.ObjectId.GenerateNewId().ToString(),
+                SuspectProfileId = redHerring.Id!,
                 Details = "I saw one of Hayes's business partners leaving the office building a few days ago. " +
                           "He looked furious, muttering to himself. I think I heard him say 'you'll get what's " +
                           "coming to you,' or something like that. It was kinda scary.",
@@ -238,7 +241,7 @@ namespace CluifyAPI.Controllers
             };
             var dmvRecordRedHerring = new DmvRecord
             {
-                PersonId = redHerring.Id!,
+                SuspectProfileId = redHerring.Id!,
                 FirstName = "Arthur",
                 LastName = "Finch",
                 Age = 35,
@@ -277,7 +280,8 @@ namespace CluifyAPI.Controllers
             // --- Noise: Brenda Miller (Rival Investor) ---
             var reportRival = new Report
             {
-                PersonId = rivalInvestor.Id!,
+                Id = MongoDB.Bson.ObjectId.GenerateNewId().ToString(),
+                SuspectProfileId = rivalInvestor.Id!,
                 Details = "I saw that investor, Brenda Miller, at a charity gala last month. She was complaining " +
                           "to someone that Hayes had 'muscled her out' of a big deal. She did not sound happy " +
                           "about it, believe me.",
@@ -299,7 +303,7 @@ namespace CluifyAPI.Controllers
             };
             var dmvRecordRival = new DmvRecord
             {
-                PersonId = rivalInvestor.Id!,
+                SuspectProfileId = rivalInvestor.Id!,
                 FirstName = "Brenda",
                 LastName = "Miller",
                 Age = 55,
@@ -315,7 +319,8 @@ namespace CluifyAPI.Controllers
             // --- Noise: Leo Martinez (Delivery Driver) ---
             var reportDriver = new Report
             {
-                PersonId = deliveryDriver.Id!,
+                Id = MongoDB.Bson.ObjectId.GenerateNewId().ToString(),
+                SuspectProfileId = deliveryDriver.Id!,
                 Details = "Yeah I delivered food to that house all the time. Rich dude. The night he died a lady " +
                           "I'd never seen before answered the door, just grabbed the food and slammed it shut. " +
                           "Very weird vibe.",
@@ -339,7 +344,7 @@ namespace CluifyAPI.Controllers
             };
             var dmvRecordDriver = new DmvRecord
             {
-                PersonId = deliveryDriver.Id!,
+                SuspectProfileId = deliveryDriver.Id!,
                 FirstName = "Leo",
                 LastName = "Martinez",
                 Age = 22,
@@ -355,7 +360,8 @@ namespace CluifyAPI.Controllers
             // --- Noise: Ben Carter (Ex-Employee) ---
             var reportExEmployee = new Report
             {
-                PersonId = exEmployee.Id!,
+                Id = MongoDB.Bson.ObjectId.GenerateNewId().ToString(),
+                SuspectProfileId = exEmployee.Id!,
                 Details = "I was on a local tech message board and someone who said they got laid off from that " +
                           "startup Hayes took over was going off. Said Hayes ruined his life and that powerful " +
                           "people need to be 'put in their place.'",
@@ -377,7 +383,7 @@ namespace CluifyAPI.Controllers
             };
             var dmvRecordExEmployee = new DmvRecord
             {
-                PersonId = exEmployee.Id!,
+                SuspectProfileId = exEmployee.Id!,
                 FirstName = "Ben",
                 LastName = "Carter",
                 Age = 38,
@@ -393,7 +399,8 @@ namespace CluifyAPI.Controllers
             // --- Noise: Jessica Crane (Personal Trainer) ---
             var reportTrainer = new Report
             {
-                PersonId = personalTrainer.Id!,
+                Id = MongoDB.Bson.ObjectId.GenerateNewId().ToString(),
+                SuspectProfileId = personalTrainer.Id!,
                 Details = "I work out at the same gym as Hayes. I heard one of the trainers saying he cancelled " +
                           "his session on the day he died, which she said was really weird for him. Said he " +
                           "never cancels.",
@@ -417,7 +424,7 @@ namespace CluifyAPI.Controllers
             };
             var dmvRecordTrainer = new DmvRecord
             {
-                PersonId = personalTrainer.Id!,
+                SuspectProfileId = personalTrainer.Id!,
                 FirstName = "Jessica",
                 LastName = "Crane",
                 Age = 35,
@@ -433,7 +440,8 @@ namespace CluifyAPI.Controllers
             // --- Noise: Clara Evans (Nosy Neighbor) ---
             var reportNeighbor = new Report
             {
-                PersonId = nosyNeighbor.Id!,
+                Id = MongoDB.Bson.ObjectId.GenerateNewId().ToString(),
+                SuspectProfileId = nosyNeighbor.Id!,
                 Details = "A black sedan was parked out front of Arthur's place for nearly an hour that night. " +
                           "I didn't see who it was, but it peeled out of there real fast around 10 PM. My " +
                           "security camera might've caught the plates.",
@@ -457,7 +465,7 @@ namespace CluifyAPI.Controllers
             };
             var dmvRecordNeighbor = new DmvRecord
             {
-                PersonId = nosyNeighbor.Id!,
+                SuspectProfileId = nosyNeighbor.Id!,
                 FirstName = "Clara",
                 LastName = "Evans",
                 Age = 62,
@@ -473,7 +481,8 @@ namespace CluifyAPI.Controllers
             // --- Noise: Arthur Finch (Barista) ---
             var reportBarista = new Report
             {
-                PersonId = barista.Id!,
+                Id = MongoDB.Bson.ObjectId.GenerateNewId().ToString(),
+                SuspectProfileId = barista.Id!,
                 Details = "I work at a coffee shop and the other day my coworker was acting strange before mentioning Mr. Hayes. He seemed really on edge. After our shift, he said something about 'people getting what they deserve' and then left in a hurry. It was out of character for him, and it made me uneasy.",
                 ReportDate = caseDate.AddDays(-1).AddHours(13).AddMinutes(23)
             };
@@ -487,7 +496,7 @@ namespace CluifyAPI.Controllers
             };
             var dmvRecordBarista = new DmvRecord
             {
-                PersonId = barista.Id!,
+                SuspectProfileId = barista.Id!,
                 FirstName = "Elias",
                 LastName = "Moreno",
                 Age = 28,
@@ -500,6 +509,44 @@ namespace CluifyAPI.Controllers
                 DateOfBirth = new System.DateTime(1996, 3, 12)
             };
             
+            // --- 4. Create the Final Case ---
+            var case0 = new Case
+            {
+                CaseNumber = 0,
+                Title = "Practice",
+                VictimName = new List<string> { "Hayes, Arthur" },
+                DateOfIncident = caseDate,
+                Location = "123 Hayes Residence",
+                Details = "Victim was discovered by household staff, deceased, in a locked room with no signs of forced entry. Preliminary M.E. report indicates poisoning via a fast-acting neurotoxin, likely administered through the victim's evening tea. The victim's known associates and recent activities are under investigation.",
+                Objective = "Analyze anonymous reports to identify the primary suspect.",
+                Difficulty = "Easy",
+                IsActive = false,
+                CanBePractice = true,
+                ReportIds = new System.Collections.Generic.List<string> {
+                    reportGuilty.Id!, reportRedHerring.Id!, reportRival.Id!, reportDriver.Id!, reportExEmployee.Id!, reportTrainer.Id!, reportNeighbor.Id!, reportBarista.Id!
+                }
+            };
+
+            await _mongoDbService.Cases.InsertOneAsync(case0);
+
+            // Set CaseId and Guilty flag for each report
+            reportGuilty.CaseId = case0.Id!;
+            reportGuilty.Guilty = true;
+            reportRedHerring.CaseId = case0.Id!;
+            reportRedHerring.Guilty = false;
+            reportRival.CaseId = case0.Id!;
+            reportRival.Guilty = false;
+            reportDriver.CaseId = case0.Id!;
+            reportDriver.Guilty = false;
+            reportExEmployee.CaseId = case0.Id!;
+            reportExEmployee.Guilty = false;
+            reportTrainer.CaseId = case0.Id!;
+            reportTrainer.Guilty = false;
+            reportNeighbor.CaseId = case0.Id!;
+            reportNeighbor.Guilty = false;
+            reportBarista.CaseId = case0.Id!;
+            reportBarista.Guilty = false;
+
             // --- 3. Insert All Evidence and Reports ---
             // Group inserts by collection for efficiency
             await _mongoDbService.Reports.InsertManyAsync(new[] { 
@@ -527,26 +574,6 @@ namespace CluifyAPI.Controllers
             await _mongoDbService.SocialMediaPosts.InsertManyAsync(new[] {
                 socialPostRedHerring, rivalPost, exEmployeePost
             });
-            
-            // --- 4. Create the Final Case ---
-            var case0 = new Case
-            {
-                CaseNumber = 0,
-                Title = "Practice",
-                VictimName = new List<string> { "Hayes, Arthur" },
-                DateOfIncident = caseDate,
-                Location = "123 Hayes Residence",
-                Details = "Victim was discovered by household staff, deceased, in a locked room with no signs of forced entry. Preliminary M.E. report indicates poisoning via a fast-acting neurotoxin, likely administered through the victim's evening tea. The victim's known associates and recent activities are under investigation.",
-                Objective = "Analyze anonymous reports to identify the primary suspect.",
-                Difficulty = "Easy",
-                IsActive = false,
-                CanBePractice = true,
-                ReportIds = new System.Collections.Generic.List<string> { 
-                    reportGuilty.Id!, reportRedHerring.Id!, reportRival.Id!, reportDriver.Id!, reportExEmployee.Id!, reportTrainer.Id!, reportNeighbor.Id!, reportBarista.Id!
-                }
-            };
-
-            await _mongoDbService.Cases.InsertOneAsync(case0);
 
             return Ok(new { message = "Practice case created successfully.", caseId = case0.Id });
         }

@@ -24,13 +24,7 @@ namespace CluifyAPI.Controllers
         public async Task<ActionResult<Case>> GetActiveCase()
         {
             var activeCase = await _mongoDbService.Cases.Find(c => c.IsActive).FirstOrDefaultAsync();
-
-            if (activeCase == null)
-            {
-                return NotFound("No active case found.");
-            }
-
-            return Ok(activeCase);
+            return Ok(new { caseData = activeCase, message = activeCase == null ? "No active case found." : null });
         }
 
         [HttpGet("practice")]
@@ -66,7 +60,7 @@ namespace CluifyAPI.Controllers
             var reportDtos = reports.Select(report => new DTOs.ReportDto
             {
                 Id = report.Id,
-                PersonId = report.PersonId,
+                SuspectProfileId = report.SuspectProfileId,
                 Details = report.Details,
                 ReportDate = report.ReportDate,
                 Suspect = report.Suspect == null ? null : new DTOs.SuspectProfileDto
