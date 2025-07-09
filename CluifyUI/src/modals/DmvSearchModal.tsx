@@ -9,6 +9,7 @@ import { searchDmvRecords } from '../services/api';
 import { DmvRecord } from '../types';
 import DmvResultsModal from './DmvResultsModal';
 import Snackbar from '@mui/material/Snackbar';
+import Grid from '@mui/material/Grid';
 
 interface DmvSearchModalProps {
     open: boolean;
@@ -30,16 +31,21 @@ const FormField = ({ label, children, textColor }: FormFieldProps) => (
         alignItems: 'center',
         mb: 2,
         justifyContent: 'space-between',
-        width: '100%'
+        width: '100%',
+        minHeight: { xs: '32px', sm: '36px' },
+        gap: 1
     }}>
         <Box sx={{
-            minWidth: { sm: '80px' },
+            minWidth: { xs: '90px', sm: '110px' },
             pr: { sm: 2 },
-            mr: { xs: 1, sm: 2 }
+            mr: { xs: 1, sm: 2 },
+            flexShrink: 0
         }}>
-            <Typography variant="body2" sx={{ fontWeight: 500, color: textColor }}>{label}</Typography>
+            <Typography variant="body2" sx={{ fontWeight: 500, color: textColor }} noWrap>
+                {label}
+            </Typography>
         </Box>
-        <Box>
+        <Box sx={{ flexGrow: 1, minWidth: 0, display: 'flex', alignItems: 'center' }}>
             {children}
         </Box>
     </Box>
@@ -141,15 +147,40 @@ const DmvSearchModal: React.FC<DmvSearchModalProps> = ({ open, onClose, darkMode
         const startIndex = start ? options.indexOf(Number(start) || start) : -1;
         const endOptions = startIndex !== -1 ? options.slice(startIndex) : options;
 
+        // Custom style to center text and hide arrow if value is present
+        const selectSx = (hasValue: boolean) => ({
+            borderRadius: 0,
+            minWidth: { xs: '32px', sm: '40px' },
+            maxWidth: { xs: '32px', sm: '40px' },
+            backgroundColor: inputBgColor,
+            color: textColor,
+            height: { xs: '28px', sm: '32px' },
+            fontSize: { xs: '0.82rem', sm: '0.92rem' },
+            textAlign: 'center',
+            '& .MuiOutlinedInput-root': {
+                borderRadius: 0,
+                height: { xs: '28px', sm: '32px' },
+                fontSize: { xs: '0.82rem', sm: '0.92rem' },
+                paddingLeft: 0,
+                paddingRight: 0,
+            },
+            '& .MuiSelect-select': {
+                overflow: 'visible',
+                paddingLeft: '.4rem',
+                paddingRight: 0,
+            },
+            '& .MuiOutlinedInput-notchedOutline': { borderRadius: 0 },
+            // Hide arrow if value is present
+            '& .MuiSelect-icon': hasValue ? { display: 'none' } : {},
+        });
+
         return (
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                <Select value={start} name={`${name}Start`} onChange={handleSelectChange} displayEmpty sx={{ borderRadius: 0, minWidth: { xs: '47px', sm: '56px' }, maxWidth: { xs: '47px', sm: '56px' }, backgroundColor: inputBgColor, color: textColor }}>
-                    <MenuItem value="">—</MenuItem>
+                <Select value={start} name={`${name}Start`} onChange={handleSelectChange} displayEmpty size="small" sx={selectSx(!!start)}>
                     {options.map(o => <MenuItem key={o} value={o}>{o}</MenuItem>)}
                 </Select>
                 <Typography sx={{ color: textColor }}>–</Typography>
-                <Select value={end} name={`${name}End`} onChange={handleSelectChange} displayEmpty disabled={isEndDisabled} sx={{ borderRadius: 0, minWidth: { xs: '47px', sm: '56px' }, maxWidth: { xs: '47px', sm: '56px' }, backgroundColor: inputBgColor, color: textColor }}>
-                    <MenuItem value="">—</MenuItem>
+                <Select value={end} name={`${name}End`} onChange={handleSelectChange} displayEmpty disabled={isEndDisabled} size="small" sx={selectSx(!!end)}>
                     {endOptions.map(o => <MenuItem key={o} value={o}>{o}</MenuItem>)}
                 </Select>
             </Box>
@@ -157,7 +188,7 @@ const DmvSearchModal: React.FC<DmvSearchModalProps> = ({ open, onClose, darkMode
     };
 
     const renderSingleSelect = (name: string, value: string, options: string[]) => (
-        <Select name={name} value={value} onChange={handleSelectChange} displayEmpty sx={{ borderRadius: 0, minWidth: { xs: '120px', sm: '148px' }, maxWidth: { xs: '120px', sm: '148px' }, backgroundColor: inputBgColor, color: textColor }}>
+        <Select name={name} value={value} onChange={handleSelectChange} displayEmpty size="small" sx={{ borderRadius: 0, minWidth: { xs: '90px', sm: '110px' }, maxWidth: { xs: '90px', sm: '110px' }, backgroundColor: inputBgColor, color: textColor, height: { xs: '28px', sm: '32px' }, fontSize: { xs: '0.9rem', sm: '1rem' }, '& .MuiOutlinedInput-root': { borderRadius: 0, height: { xs: '28px', sm: '32px' }, fontSize: { xs: '0.9rem', sm: '1rem' } }, '& .MuiOutlinedInput-notchedOutline': { borderRadius: 0 } }}>
             <MenuItem value="">—</MenuItem>
             {options.map(o => <MenuItem key={o} value={o}>{o}</MenuItem>)}
         </Select>
@@ -185,28 +216,42 @@ const DmvSearchModal: React.FC<DmvSearchModalProps> = ({ open, onClose, darkMode
                         </IconButton>
                     </DialogTitle>
 
-                    <Box sx={{ flexGrow: 1, minHeight: 0, overflowY: 'auto', p: { xs: 2, sm: 3 } }}>
+                    <Box sx={{ flexGrow: 1, minHeight: 0, overflowY: 'auto', p: { xs: 2, sm: 3 }, maxHeight: { xs: '60vh', sm: 'none' } }}>
                         <Box sx={{ mx: 'auto', maxWidth: '350px' }}>
                             <FormField label="First Name:" textColor={textColor}>
-                                <TextField name="firstName" value={searchQuery.firstName} onChange={handleInputChange} variant="outlined" size="small" fullWidth placeholder="Enter first name" />
+                                <TextField name="firstName" value={searchQuery.firstName} onChange={handleInputChange} variant="outlined" size="small" fullWidth placeholder="Enter first name" sx={{ borderRadius: 0, '& .MuiOutlinedInput-root': { borderRadius: 0, height: { xs: '28px', sm: '32px' }, fontSize: { xs: '0.9rem', sm: '1rem' } }, input: { height: { xs: '28px', sm: '32px' }, fontSize: { xs: '0.9rem', sm: '1rem' }, padding: '0 8px' } }} />
                             </FormField>
                             <FormField label="Last Name:" textColor={textColor}>
-                                <TextField name="lastName" value={searchQuery.lastName} onChange={handleInputChange} variant="outlined" size="small" fullWidth placeholder="Enter last name" />
+                                <TextField name="lastName" value={searchQuery.lastName} onChange={handleInputChange} variant="outlined" size="small" fullWidth placeholder="Enter last name" sx={{ borderRadius: 0, '& .MuiOutlinedInput-root': { borderRadius: 0, height: { xs: '28px', sm: '32px' }, fontSize: { xs: '0.9rem', sm: '1rem' } }, input: { height: { xs: '28px', sm: '32px' }, fontSize: { xs: '0.9rem', sm: '1rem' }, padding: '0 8px' } }} />
                             </FormField>
-                            <FormField label="Age:" textColor={textColor}>{renderRangeSelect('age', searchQuery.ageStart, searchQuery.ageEnd, ageOptions)}</FormField>
-                            <FormField label="Height:" textColor={textColor}>{renderRangeSelect('height', searchQuery.heightStart, searchQuery.heightEnd, heightOptions)}</FormField>
-                            <FormField label="Weight:" textColor={textColor}>{renderRangeSelect('weight', searchQuery.weightStart, searchQuery.weightEnd, weightOptions)}</FormField>
-                            <FormField label="Gender:" textColor={textColor}>{renderSingleSelect('gender', searchQuery.gender, ['Male', 'Female'])}</FormField>
-                            <FormField label="Hair Color:" textColor={textColor}>{renderSingleSelect('hairColor', searchQuery.hairColor, ['Black', 'Brown', 'Blonde', 'Red', 'Gray', 'Bald', 'Other'])}</FormField>
-                            <FormField label="Eye Color:" textColor={textColor}>{renderSingleSelect('eyeColor', searchQuery.eyeColor, ['Brown', 'Blue', 'Green', 'Hazel', 'Other'])}</FormField>
+                            <Grid spacing={1} sx={{ mb: 1 }}>
+                                <Grid size={{ xs: 12, sm: 6 }}>
+                                    <FormField label="Age:" textColor={textColor}>{renderRangeSelect('age', searchQuery.ageStart, searchQuery.ageEnd, ageOptions)}</FormField>
+                                </Grid>
+                                <Grid size={{ xs: 12, sm: 6 }}>
+                                    <FormField label="Height:" textColor={textColor}>{renderRangeSelect('height', searchQuery.heightStart, searchQuery.heightEnd, heightOptions)}</FormField>
+                                </Grid>
+                                <Grid size={{ xs: 12, sm: 6 }}>
+                                    <FormField label="Weight:" textColor={textColor}>{renderRangeSelect('weight', searchQuery.weightStart, searchQuery.weightEnd, weightOptions)}</FormField>
+                                </Grid>
+                                <Grid size={{ xs: 12, sm: 6 }}>
+                                    <FormField label="Gender:" textColor={textColor}>{renderSingleSelect('gender', searchQuery.gender, ['Male', 'Female'])}</FormField>
+                                </Grid>
+                                <Grid size={{ xs: 12, sm: 6 }}>
+                                    <FormField label="Hair Color:" textColor={textColor}>{renderSingleSelect('hairColor', searchQuery.hairColor, ['Black', 'Brown', 'Blonde', 'Red', 'Gray', 'Bald', 'Other'])}</FormField>
+                                </Grid>
+                                <Grid size={{ xs: 12, sm: 6 }}>
+                                    <FormField label="Eye Color:" textColor={textColor}>{renderSingleSelect('eyeColor', searchQuery.eyeColor, ['Brown', 'Blue', 'Green', 'Hazel', 'Other'])}</FormField>
+                                </Grid>
+                            </Grid>
                             <FormField label="License Plate:" textColor={textColor}>
-                                <TextField name="licensePlate" value={searchQuery.licensePlate} onChange={handleInputChange} variant="outlined" size="small" fullWidth placeholder="Enter license plate" inputProps={{ maxLength: 12, style: { textTransform: 'uppercase' } }} />
+                                <TextField name="licensePlate" value={searchQuery.licensePlate} onChange={handleInputChange} variant="outlined" size="small" fullWidth placeholder="Enter license plate" inputProps={{ maxLength: 12, style: { textTransform: 'uppercase' } }} sx={{ borderRadius: 0, '& .MuiOutlinedInput-root': { borderRadius: 0, height: { xs: '28px', sm: '32px' }, fontSize: { xs: '0.9rem', sm: '1rem' } }, input: { height: { xs: '28px', sm: '32px' }, fontSize: { xs: '0.9rem', sm: '1rem' }, padding: '0 8px' } }} />
                             </FormField>
                         </Box>
                     </Box>
 
-                    <Box sx={{ p: { xs: 1, sm: 2 }, pt: 0.5, borderTop: `1px solid ${borderColor}`, minHeight: 40, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'stretch' }}>
-                        <Button fullWidth variant="contained" onClick={handleSearch} disabled={!isSearchable || isLoading}>
+                    <Box sx={{ p: { xs: 1, sm: 2 }, pt: 0.5, borderTop: `1px solid ${borderColor}`, minHeight: 40, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'stretch', borderRadius: 0 }}>
+                        <Button fullWidth variant="contained" onClick={handleSearch} disabled={!isSearchable || isLoading} sx={{ borderRadius: 0 }}>
                             {isLoading ? <CircularProgress size={20} color="inherit" /> : 'SEARCH'}
                         </Button>
                         {error && <Typography color="error" sx={{ mt: 2, textAlign: 'center' }}>{error}</Typography>}

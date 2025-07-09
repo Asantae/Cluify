@@ -133,7 +133,7 @@ const SuspiciousPersonReportModal = ({ open, onClose, reports, darkMode, current
                 <CloseIcon />
               </IconButton>
             </Box>
-            <Box sx={{ position: 'relative', overflowY: 'auto', p: { xs: 2, sm: 3 }, pt: 0, flexGrow: 1 }}>
+            <Box sx={{ position: 'relative', overflowY: 'auto', p: { xs: 2, sm: 3 }, pt: 0, flexGrow: 1, maxHeight: { xs: '60vh', sm: '70vh' } }}>
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 1, position: 'relative' }}>
                 <Typography variant="body2" sx={{ fontWeight: 600, fontSize: '0.85rem' }} gutterBottom>
                   <span style={{ fontWeight: 600 }}>Suspect Name:</span> <span style={{ fontWeight: 400 }}>{suspectName}</span>
@@ -181,43 +181,44 @@ const SuspiciousPersonReportModal = ({ open, onClose, reports, darkMode, current
                       whiteSpace: 'nowrap',
                     }}
                   >
-                    {submitLoading ? 'Submitting...' : 'Submit Report'}
+                    {submitLoading ? 'Submitting...' : 'Submit'}
                   </Button>
                 </Box>
               </Box>
-              <Typography variant="caption" sx={{ fontSize: '0.7rem', color: '#444' }} gutterBottom>
-                <strong>DATE:</strong> {currentReport?.reportDate 
-                  ? new Date(currentReport.reportDate).toLocaleString('en-US', { month: 'numeric', day: 'numeric', hour: 'numeric', minute: '2-digit' }) 
-                  : '—'}
-              </Typography>
-              <Grid spacing={1} sx={{ mt: 1 }}>
-                <Grid size={{ xs: 12, sm: 6 }}>
-                  <Typography variant="body2" sx={{ fontWeight: 500, fontSize: '0.82rem' }}><strong>Alias:</strong> {currentSuspect?.aliases?.join(', ') || '—'}</Typography>
+              <Grid >
+                <Typography variant="body2" sx={{ fontWeight: 500, fontSize: '0.82rem' }} gutterBottom>
+                  <strong>DATE:</strong> {currentReport?.reportDate 
+                    ? new Date(currentReport.reportDate).toLocaleString('en-US', { month: 'numeric', day: 'numeric', hour: 'numeric', minute: '2-digit' }) 
+                    : '—'}
+                </Typography>
+              </Grid>
+              <Grid container columns={{ xs: 3, md: 4 }} spacing={{xs: 0, md: 1}} sx={{ mt: 1}}>
+                <Grid size={{ xs: 1, md: 2 }}>
+                  <Typography variant="body2" sx={{ fontWeight: 500, fontSize: '0.75rem' }}><strong>Alias:</strong> {currentSuspect?.aliases?.join(', ') || '—'}</Typography>
                 </Grid>
-                <Grid size={{ xs: 12, sm: 6 }}>
-                  <Typography variant="body2" sx={{ fontWeight: 500, fontSize: '0.82rem' }}><strong>SEX:</strong> {currentSuspect?.sex || '—'}</Typography>
+                <Grid size={{ xs: 1, md: 2 }}>
+                  <Typography variant="body2" sx={{ fontWeight: 500, fontSize: '0.75rem' }}><strong>SEX:</strong> {currentSuspect?.sex || '—'}</Typography>
                 </Grid>
-                <Grid size={{ xs: 12, sm: 6 }}>
-                  <Typography variant="body2" sx={{ fontWeight: 500, fontSize: '0.82rem' }}><strong>HEIGHT:</strong> {currentSuspect?.height || '—'}</Typography>
+                <Grid size={{ xs: 1, md: 2 }}>
+                  <Typography variant="body2" sx={{ fontWeight: 500, fontSize: '0.75rem' }}><strong>HEIGHT:</strong> {currentSuspect?.height || '—'}</Typography>
                 </Grid>
-                <Grid size={{ xs: 12, sm: 6 }}>
-                  <Typography variant="body2" sx={{ fontWeight: 500, fontSize: '0.82rem' }}><strong>HAIR:</strong> {currentSuspect?.hairColor || '—'}</Typography>
+                <Grid size={{ xs: 1, md: 2 }}>
+                  <Typography variant="body2" sx={{ fontWeight: 500, fontSize: '0.75rem' }}><strong>HAIR:</strong> {currentSuspect?.hairColor || '—'}</Typography>
                 </Grid>
-                <Grid size={{ xs: 12, sm: 6 }}>
-                  <Typography variant="body2" sx={{ fontWeight: 500, fontSize: '0.82rem' }}><strong>AGE:</strong> {currentSuspect?.age || '—'}</Typography>
+                <Grid size={{ xs: 1, md: 2 }}>
+                  <Typography variant="body2" sx={{ fontWeight: 500, fontSize: '0.75rem' }}><strong>AGE:</strong> {currentSuspect?.age || '—'}</Typography>
                 </Grid>
-                <Grid size={{ xs: 12, sm: 6 }}>
-                  <Typography variant="body2" sx={{ fontWeight: 500, fontSize: '0.82rem' }}><strong>WEIGHT:</strong> {currentSuspect?.weight || '—'}</Typography>
+                <Grid size={{ xs: 1, md: 2 }}>
+                  <Typography variant="body2" sx={{ fontWeight: 500, fontSize: '0.75rem' }}><strong>WEIGHT:</strong> {currentSuspect?.weight || '—'}</Typography>
                 </Grid>
-                <Grid size={{ xs: 12, sm: 6 }}>
-                  <Typography variant="body2" sx={{ fontWeight: 500, fontSize: '0.82rem' }}><strong>EYES:</strong> {currentSuspect?.eyeColor || '—'}</Typography>
+                <Grid size={{ xs: 1, md: 2 }}>
+                  <Typography variant="body2" sx={{ fontWeight: 500, fontSize: '0.75rem' }}><strong>EYES:</strong> {currentSuspect?.eyeColor || '—'}</Typography>
                 </Grid>
-                <Grid size={{ xs: 12, sm: 6 }}>
-                  <Typography variant="body2" sx={{ fontWeight: 500, fontSize: '0.82rem' }}><strong>LICENSE PLATE:</strong> {linkedDmvRecords[reports[currentReportIndex]?.id]?.licensePlate || '—'}</Typography>
+                <Grid size={{ xs: 1, md: 2 }}>
+                  <Typography variant="body2" sx={{ fontWeight: 500, fontSize: '0.70rem' }}><strong>LICENSE PLATE:</strong> {linkedDmvRecords[reports[currentReportIndex]?.id]?.licensePlate || '—'}</Typography>
                 </Grid>
               </Grid>
-              <Box sx={{ borderBottom: '1px solid #555', mb: 1, pb: 1 }} />
-              <Box sx={{ mb: 2 }}>
+              <Box sx={{ mb: 1 , mt: .5}}>
                 <Typography variant="subtitle2" sx={{ mb: 1, textTransform: 'uppercase', fontWeight: 'bold', fontSize: '0.95rem' }}>Report:</Typography>
                 {currentReport?.details && currentReport.details.length > 220 ? (
                   <Box sx={{ maxHeight: { xs: 90, sm: 'none' }, overflowY: { xs: 'auto', sm: 'visible' }, borderRadius: 1, background: 'transparent', p: { xs: 0.5, sm: 0 } }}>

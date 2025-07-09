@@ -56,6 +56,7 @@ const DraggablePaper: React.FC<DraggablePaperProps> = ({ children, handleId, mod
           sx={{
             position: 'absolute',
             zIndex: zIndex, 
+            borderRadius: 0,
             ...PaperProps?.sx,
             ...(!initialPosition && centerOnMount ? { visibility: 'hidden' } : {}),
           }}
