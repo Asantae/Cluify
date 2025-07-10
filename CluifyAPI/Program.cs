@@ -5,7 +5,20 @@ using System.Text;
 
 var port = Environment.GetEnvironmentVariable("PORT") ?? "5096";
 var builder = WebApplication.CreateBuilder(args);
-builder.WebHost.UseUrls($"http://*:{port}");
+
+// Use ApplicationUrl from config in development, otherwise use PORT env var for production
+if (builder.Environment.IsDevelopment())
+{
+    var appUrl = builder.Configuration["ApplicationUrl"];
+    if (!string.IsNullOrEmpty(appUrl))
+    {
+        builder.WebHost.UseUrls(appUrl);
+    }
+}
+else
+{
+    builder.WebHost.UseUrls($"http://*:{port}");
+}
 
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
@@ -32,15 +45,18 @@ builder.Services.AddAuthentication(options =>
 })
 .AddJwtBearer(options =>
 {
+    // Always use configuration, but allow env vars to override if set
     var jwtConfig = builder.Configuration.GetSection("Jwt");
+    var issuer = Environment.GetEnvironmentVariable("JWT_ISSUER") ?? jwtConfig["Issuer"];
+    var key = Environment.GetEnvironmentVariable("JWT_KEY") ?? jwtConfig["Key"];
     options.TokenValidationParameters = new TokenValidationParameters
     {
         ValidateIssuer = true,
         ValidateAudience = false,
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
-        ValidIssuer = jwtConfig["Issuer"],
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtConfig["Key"] ?? "supersecretkey"))
+        ValidIssuer = issuer,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key))
     };
 });
 
