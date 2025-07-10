@@ -3,7 +3,9 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
+var port = Environment.GetEnvironmentVariable("PORT") ?? "5096";
 var builder = WebApplication.CreateBuilder(args);
+builder.WebHost.UseUrls($"http://*:{port}");
 
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
