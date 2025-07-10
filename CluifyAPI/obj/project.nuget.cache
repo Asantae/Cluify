@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "ImDb48jTOT4=",
+  "dgSpecHash": "Il8hWQx3j1U=",
   "success": true,
-  "projectFilePath": "C:\\Users\\Asantae\\Desktop\\dev\\Cluify\\CluifyAPI\\CluifyAPI.csproj",
+  "projectFilePath": "C:\\Users\\Asantae\\desktop\\dev\\cluify\\cluifyapi\\CluifyAPI.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Asantae\\.nuget\\packages\\bcrypt.net-next\\4.0.3\\bcrypt.net-next.4.0.3.nupkg.sha512",
     "C:\\Users\\Asantae\\.nuget\\packages\\dnsclient\\1.6.1\\dnsclient.1.6.1.nupkg.sha512",
