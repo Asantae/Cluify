@@ -45,7 +45,7 @@ builder.Services.AddAuthentication(options =>
 })
 .AddJwtBearer(options =>
 {
-    // Always use configuration, but allow env vars to override if set
+    // Use environment variables in production, fall back to config in development
     var jwtConfig = builder.Configuration.GetSection("Jwt");
     var issuer = Environment.GetEnvironmentVariable("JWT_ISSUER") ?? jwtConfig["Issuer"];
     var key = Environment.GetEnvironmentVariable("JWT_KEY") ?? jwtConfig["Key"];

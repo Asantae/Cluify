@@ -22,19 +22,22 @@ namespace CluifyAPI.Services
         public MongoDbService(IConfiguration config)
         {
             string? connectionString;
-            var env = config["ASPNETCORE_ENVIRONMENT"] ?? "Production";
+            string? databaseName;
+            var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Development";
             if (env == "Development")
             {
                 connectionString = config.GetSection("MongoDB:ConnectionString").Value;
+                databaseName = config.GetSection("MongoDB:DatabaseName").Value;
             }
             else
             {
                 connectionString = Environment.GetEnvironmentVariable("MONGODB_CONNECTION_STRING");
+                databaseName = Environment.GetEnvironmentVariable("MONGODB_DATABASE_NAME");
             }
             if (string.IsNullOrEmpty(connectionString))
                 throw new ArgumentNullException("connectionString", "MongoDB connection string is not set.");
             var client = new MongoClient(connectionString);
-            _database = client.GetDatabase(config.GetSection("MongoDB:DatabaseName").Value ?? "CluifyDb");
+            _database = client.GetDatabase(databaseName);
             Cases = _database.GetCollection<Case>("cases");
             Reports = _database.GetCollection<Report>("reports");
             DmvRecords = _database.GetCollection<DmvRecord>("dmvrecords");
