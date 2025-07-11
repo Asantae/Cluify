@@ -27,7 +27,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy(name: MyAllowSpecificOrigins,
                       policy =>
                       {
-                          policy.WithOrigins("http://localhost:5173", "https://Cluify.net")
+                          policy.WithOrigins("http://localhost:5173", "https://Cluify.net", "https://www.Cluify.net")
                                 .AllowAnyHeader()
                                 .AllowAnyMethod();
                       });
