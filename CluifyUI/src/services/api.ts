@@ -1,6 +1,11 @@
 import { Case, Report, DmvRecord } from '../types';
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5096/api'; // Make sure this matches your .NET backend port
+// Environment variable is injected at build time by Vite
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
+if (!API_BASE_URL) {
+  throw new Error('VITE_API_BASE_URL environment variable is required');
+}
 
 export async function getActiveCase(): Promise<Case | null> {
     const response = await fetch(`${API_BASE_URL}/cases/active`);
