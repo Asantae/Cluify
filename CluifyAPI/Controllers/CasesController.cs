@@ -23,8 +23,43 @@ namespace CluifyAPI.Controllers
         [HttpGet("active")]
         public async Task<ActionResult<Case>> GetActiveCase()
         {
-            var activeCase = await _mongoDbService.Cases.Find(c => c.IsActive).FirstOrDefaultAsync();
-            return Ok(new { caseData = activeCase, message = activeCase == null ? "No active case found." : null });
+            try
+            {
+                var activeCase = await _mongoDbService.Cases.Find(c => c.IsActive).FirstOrDefaultAsync();
+                
+                if (activeCase == null)
+                {
+                    return Ok(new { 
+                        success = false,
+                        error = new {
+                            message = "No active case is currently available",
+                            details = "There is no active case in the system at this time",
+                            type = "NoActiveCase",
+                            timestamp = DateTime.UtcNow,
+                            requestPath = "/api/cases/active"
+                        }
+                    });
+                }
+                
+                return Ok(new { 
+                    success = true,
+                    caseData = activeCase, 
+                    message = "Active case retrieved successfully" 
+                });
+            }
+            catch (Exception ex)
+            {
+                return Ok(new { 
+                    success = false,
+                    error = new {
+                        message = "Failed to retrieve active case",
+                        details = ex.Message,
+                        type = "DatabaseError",
+                        timestamp = DateTime.UtcNow,
+                        requestPath = "/api/cases/active"
+                    }
+                });
+            }
         }
 
         [HttpGet("practice")]
