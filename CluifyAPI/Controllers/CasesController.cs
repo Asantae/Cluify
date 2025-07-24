@@ -36,7 +36,7 @@ namespace CluifyAPI.Controllers
                 if (activeCase == null)
                 {
                     _logger.LogWarning("No active case found.");
-                    return Ok(new { success = false, ... });
+                    return Ok(new { success = false });
                 }
                 
                 return Ok(new { 
@@ -47,7 +47,7 @@ namespace CluifyAPI.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Exception retrieving active case.");
-                return Ok(new { success = false, ... });
+                return Ok(new { success = false });
             }
         }
 
