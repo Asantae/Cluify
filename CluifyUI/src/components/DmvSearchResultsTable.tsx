@@ -11,14 +11,14 @@ interface DmvSearchResultsTableProps {
 }
 
 const columns: ColumnDef<DmvRecord, any>[] = [
-  { accessorKey: 'name', header: 'Name', cell: (info: any) => `${info.row.original.firstName} ${info.row.original.lastName}` },
-  { accessorKey: 'age', header: 'Age', cell: (info: any) => info.row.original.age, meta: { align: 'right', width: '10%' } },
-  { accessorKey: 'sex', header: 'Sex', cell: (info: any) => info.row.original.sex, meta: { align: 'right', width: '10%' } },
-  { accessorKey: 'height', header: 'Height', cell: (info: any) => info.row.original.height, meta: { align: 'right', width: '10%' } },
-  { accessorKey: 'weight', header: 'Weight', cell: (info: any) => info.row.original.weight, meta: { align: 'right', width: '10%' } },
-  { accessorKey: 'hairColor', header: 'Hair', cell: (info: any) => info.row.original.hairColor, meta: { width: '10%' } },
-  { accessorKey: 'eyeColor', header: 'Eyes', cell: (info: any) => info.row.original.eyeColor, meta: { width: '10%' } },
-  { accessorKey: 'licensePlate', header: 'License Plate', cell: (info: any) => info.row.original.licensePlate, meta: { width: '15%' } },
+  { accessorKey: 'name', header: 'Name', cell: (info: any) => `${info.row.original.firstName} ${info.row.original.lastName}`, meta: { width: '20%' } },
+  { accessorKey: 'age', header: 'Age', cell: (info: any) => info.row.original.age, meta: { align: 'right', width: '8%' } },
+  { accessorKey: 'sex', header: 'Sex', cell: (info: any) => info.row.original.sex, meta: { align: 'right', width: '8%' } },
+  { accessorKey: 'height', header: 'Height', cell: (info: any) => info.row.original.height, meta: { align: 'right', width: '12%' } },
+  { accessorKey: 'weight', header: 'Weight', cell: (info: any) => info.row.original.weight, meta: { align: 'right', width: '12%' } },
+  { accessorKey: 'hairColor', header: 'Hair', cell: (info: any) => info.row.original.hairColor, meta: { width: '12%' } },
+  { accessorKey: 'eyeColor', header: 'Eyes', cell: (info: any) => info.row.original.eyeColor, meta: { width: '12%' } },
+  { accessorKey: 'licensePlate', header: 'License Plate', cell: (info: any) => info.row.original.licensePlate, meta: { width: '16%' } },
 ];
 
 const DmvSearchResultsTable = ({ results, darkMode, onRowClick }: DmvSearchResultsTableProps) => {
@@ -37,7 +37,13 @@ const DmvSearchResultsTable = ({ results, darkMode, onRowClick }: DmvSearchResul
   const rowHoverColor = darkMode ? '#333' : '#f0f0f0';
 
   return (
-    <TableContainer component={Paper} sx={{ flexGrow: 1, overflow: 'auto', backgroundColor: 'transparent', boxShadow: 'none' }}>
+    <TableContainer component={Paper} sx={{ 
+      flexGrow: 1, 
+      overflow: 'hidden', 
+      backgroundColor: 'transparent', 
+      boxShadow: 'none',
+      minWidth: '600px' // Reduced minimum width for better responsiveness
+    }}>
       <Table stickyHeader aria-label="dmv results table" size="small">
         <TableHead>
           {table.getHeaderGroups().map((headerGroup: HeaderGroup<DmvRecord>) => (

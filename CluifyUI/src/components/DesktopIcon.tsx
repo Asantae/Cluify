@@ -1,4 +1,5 @@
 import { Box, Typography } from '@mui/material';
+import React from 'react';
 
 interface DesktopIconProps {
   icon: string;
@@ -7,8 +8,9 @@ interface DesktopIconProps {
   darkMode: boolean;
 }
 
-const DesktopIcon = ({ icon, label, onClick, darkMode }: DesktopIconProps) => (
+const DesktopIcon = React.forwardRef<HTMLDivElement, DesktopIconProps>(({ icon, label, onClick, darkMode }, ref) => (
   <Box
+    ref={ref}
     onClick={onClick}
     sx={{
       display: 'flex',
@@ -35,6 +37,6 @@ const DesktopIcon = ({ icon, label, onClick, darkMode }: DesktopIconProps) => (
       {label}
     </Typography>
   </Box>
-);
+));
 
 export default DesktopIcon; 

@@ -6,6 +6,7 @@ using MongoDB.Driver;
 using System.Collections.Generic;
 using System.Linq;
 using CluifyAPI.DTOs;
+using Microsoft.Extensions.Logging;
 
 namespace CluifyAPI.Controllers
 {
@@ -14,51 +15,39 @@ namespace CluifyAPI.Controllers
     public class CasesController : ControllerBase
     {
         private readonly MongoDbService _mongoDbService;
+        private readonly ILogger<CasesController> _logger;
 
-        public CasesController(MongoDbService mongoDbService)
+        public CasesController(MongoDbService mongoDbService, ILogger<CasesController> logger)
         {
             _mongoDbService = mongoDbService;
+            _logger = logger;
         }
 
         [HttpGet("active")]
         public async Task<ActionResult<Case>> GetActiveCase()
         {
+
+            _logger.LogInformation("Received GET /api/cases/active request.");
+
             try
             {
                 var activeCase = await _mongoDbService.Cases.Find(c => c.IsActive).FirstOrDefaultAsync();
                 
                 if (activeCase == null)
                 {
-                    return Ok(new { 
-                        success = false,
-                        error = new {
-                            message = "No active case is currently available",
-                            details = "There is no active case in the system at this time",
-                            type = "NoActiveCase",
-                            timestamp = DateTime.UtcNow,
-                            requestPath = "/api/cases/active"
-                        }
-                    });
+                    _logger.LogWarning("No active case found.");
+                    return Ok(new { success = false, ... });
                 }
                 
                 return Ok(new { 
                     success = true,
-                    caseData = activeCase, 
-                    message = "Active case retrieved successfully" 
+                    caseData = activeCase,
                 });
             }
             catch (Exception ex)
             {
-                return Ok(new { 
-                    success = false,
-                    error = new {
-                        message = "Failed to retrieve active case",
-                        details = ex.Message,
-                        type = "DatabaseError",
-                        timestamp = DateTime.UtcNow,
-                        requestPath = "/api/cases/active"
-                    }
-                });
+                _logger.LogError(ex, "Exception retrieving active case.");
+                return Ok(new { success = false, ... });
             }
         }
 

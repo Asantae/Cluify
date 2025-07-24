@@ -43,15 +43,54 @@ const DmvResultsModal: React.FC<DmvResultsModalProps> = ({ isOpen, onClose, resu
     const borderColor = darkMode ? '#444' : '#ddd';
 
     return (
-        <DraggablePaper modalId="dmvResults" handleId={handleId} centerOnMount>
+        <DraggablePaper 
+            modalId="dmvResults" 
+            handleId={handleId} 
+            centerOnMount
+            PaperProps={{
+                sx: {
+                    width: { xs: '95vw', sm: '90vw', md: '80vw', lg: '70vw' },
+                    maxWidth: '1200px',
+                    height: { xs: '80vh', sm: '75vh' },
+                    maxHeight: '800px'
+                }
+            }}
+        >
                 <DialogTitle style={{ cursor: 'move', backgroundColor: titleBgColor, color: textColor, borderBottom: `1px solid ${borderColor}` }} id={handleId}>
                     <Typography sx={{ fontWeight: 'bold' }}>{results.length} Results</Typography>
                     <IconButton aria-label="close" onClick={onClose} sx={{ position: 'absolute', right: 8, top: 8, color: textColor }}>
                         <CloseIcon />
                     </IconButton>
                 </DialogTitle>
-                <Box sx={{ p: 2, flexGrow: 1, overflowY: 'auto', minHeight: 0 }}>
-                    <DmvSearchResultsTable results={paginatedResults} darkMode={darkMode} onRowClick={onRowClick || (() => {})} />
+                <Box sx={{ p: 2, flexGrow: 1, minHeight: 0 }}>
+                    <Typography 
+                        variant="body2" 
+                        sx={{ 
+                            color: textColor, 
+                            opacity: 0.7, 
+                            mb: 2, 
+                            textAlign: 'center',
+                            fontStyle: 'italic'
+                        }}
+                    >
+                        Click a name to add a suspect
+                    </Typography>
+                    <Box sx={{ 
+                        overflowX: 'auto', 
+                        maxWidth: '100%',
+                        '&::-webkit-scrollbar': {
+                            height: '8px'
+                        },
+                        '&::-webkit-scrollbar-track': {
+                            backgroundColor: darkMode ? '#333' : '#f0f0f0'
+                        },
+                        '&::-webkit-scrollbar-thumb': {
+                            backgroundColor: darkMode ? '#666' : '#ccc',
+                            borderRadius: '4px'
+                        }
+                    }}>
+                        <DmvSearchResultsTable results={paginatedResults} darkMode={darkMode} onRowClick={onRowClick || (() => {})} />
+                    </Box>
                 </Box>
                 {results.length > 10 && (
                     <Box sx={{ position: { xs: 'sticky', sm: 'static' }, bottom: 0, left: 0, right: 0, zIndex: 2, backgroundColor: contentBgColor, borderTop: '1px solid', borderColor: 'divider' }}>
