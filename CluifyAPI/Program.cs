@@ -18,7 +18,8 @@ builder.Services.AddCors(options =>
             policy.WithOrigins(
                 "http://localhost:5173",
                 "https://cluify.net",
-                "https://www.cluify.net"
+                "https://www.cluify.net",
+                "https://cluify.netlify.app"
             )
             .AllowAnyHeader()                     
             .AllowAnyMethod() 
