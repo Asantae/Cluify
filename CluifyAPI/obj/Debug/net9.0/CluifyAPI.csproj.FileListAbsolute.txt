@@ -45,3 +45,15 @@ C:\Users\Asantae\desktop\dev\cluify\cluifyapi\obj\Debug\net9.0\refint\CluifyAPI.
 C:\Users\Asantae\desktop\dev\cluify\cluifyapi\obj\Debug\net9.0\CluifyAPI.pdb
 C:\Users\Asantae\desktop\dev\cluify\cluifyapi\obj\Debug\net9.0\CluifyAPI.genruntimeconfig.cache
 C:\Users\Asantae\desktop\dev\cluify\cluifyapi\obj\Debug\net9.0\ref\CluifyAPI.dll
+C:\Users\Asantae\desktop\dev\cluify\cluifyapi\bin\Debug\net9.0\Microsoft.Extensions.DependencyModel.dll
+C:\Users\Asantae\desktop\dev\cluify\cluifyapi\bin\Debug\net9.0\Serilog.dll
+C:\Users\Asantae\desktop\dev\cluify\cluifyapi\bin\Debug\net9.0\Serilog.AspNetCore.dll
+C:\Users\Asantae\desktop\dev\cluify\cluifyapi\bin\Debug\net9.0\Serilog.Enrichers.Environment.dll
+C:\Users\Asantae\desktop\dev\cluify\cluifyapi\bin\Debug\net9.0\Serilog.Enrichers.Thread.dll
+C:\Users\Asantae\desktop\dev\cluify\cluifyapi\bin\Debug\net9.0\Serilog.Extensions.Hosting.dll
+C:\Users\Asantae\desktop\dev\cluify\cluifyapi\bin\Debug\net9.0\Serilog.Extensions.Logging.dll
+C:\Users\Asantae\desktop\dev\cluify\cluifyapi\bin\Debug\net9.0\Serilog.Formatting.Compact.dll
+C:\Users\Asantae\desktop\dev\cluify\cluifyapi\bin\Debug\net9.0\Serilog.Settings.Configuration.dll
+C:\Users\Asantae\desktop\dev\cluify\cluifyapi\bin\Debug\net9.0\Serilog.Sinks.Console.dll
+C:\Users\Asantae\desktop\dev\cluify\cluifyapi\bin\Debug\net9.0\Serilog.Sinks.Debug.dll
+C:\Users\Asantae\desktop\dev\cluify\cluifyapi\bin\Debug\net9.0\Serilog.Sinks.File.dll
