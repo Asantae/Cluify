@@ -6,6 +6,8 @@ using System.Text;
 var port = Environment.GetEnvironmentVariable("PORT") ?? "5096";
 var builder = WebApplication.CreateBuilder(args);
 
+builder.WebHost.UseSetting("AllowedHosts", "cluify.net,www.cluify.net,cluify.netlify.app");
+
 builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
 
 
