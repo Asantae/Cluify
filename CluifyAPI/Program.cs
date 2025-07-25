@@ -6,31 +6,22 @@ using System.Text;
 var port = Environment.GetEnvironmentVariable("PORT") ?? "5096";
 var builder = WebApplication.CreateBuilder(args);
 
-// Use ApplicationUrl from config in development, otherwise use PORT env var for production
-if (builder.Environment.IsDevelopment())
-{
-    var appUrl = builder.Configuration["ApplicationUrl"];
-    if (!string.IsNullOrEmpty(appUrl))
-    {
-        builder.WebHost.UseUrls(appUrl);
-    }
-}
-else
-{
-    builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
-}
+builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
 
-var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy(name: MyAllowSpecificOrigins,
-                      policy =>
-                      {
-                          policy.WithOrigins("http://localhost:5173", "https://cluify.net", "https://www.cluify.net")
-                                .AllowAnyHeader()
-                                .AllowAnyMethod();
-                      });
+    options.AddPolicy("AllowFrontend", policy =>
+        {
+            policy.WithOrigins(
+                "http://localhost:5173",
+                "https://cluify.net",
+                "https://www.cluify.net"
+            )
+            .AllowAnyHeader()                     
+            .AllowAnyMethod() 
+            .AllowCredentials();  
+        });
 });
 
 // Add services to the container.
@@ -45,7 +36,6 @@ builder.Services.AddAuthentication(options =>
 })
 .AddJwtBearer(options =>
 {
-    // Use environment variables in production, fall back to config in development
     var jwtConfig = builder.Configuration.GetSection("Jwt");
     var issuer = Environment.GetEnvironmentVariable("JWT_ISSUER") ?? jwtConfig["Issuer"];
     var key = Environment.GetEnvironmentVariable("JWT_KEY") ?? jwtConfig["Key"];
@@ -73,7 +63,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseCors(MyAllowSpecificOrigins);
+app.UseCors("AllowFrontend");
 
 app.UseAuthentication();
 app.UseAuthorization();
