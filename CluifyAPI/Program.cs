@@ -17,7 +17,7 @@ if (builder.Environment.IsDevelopment())
 }
 else
 {
-    builder.WebHost.UseUrls($"http:///0.0.0.0:{port}");
+    builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
 }
 
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
