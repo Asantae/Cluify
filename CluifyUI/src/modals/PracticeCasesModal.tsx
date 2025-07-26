@@ -11,9 +11,9 @@ import Typography from '@mui/material/Typography';
 import { getPracticeCases } from '../services/api';
 
 interface Case {
-  id: string;
-  caseNumber: number;
-  title: string;
+  Id: string;
+  CaseNumber: number;
+  Title: string;
 }
 
 interface PracticeCasesModalProps {
@@ -55,9 +55,9 @@ const PracticeCasesModal = ({ open, onClose, onSelectCase, darkMode }: PracticeC
         {!isLoading && !error && (
           <List>
             {cases.map((c) => (
-              <ListItem key={c.id} disablePadding>
-                <ListItemButton onClick={() => onSelectCase(c.id)}>
-                  <ListItemText primary={`Case #${c.caseNumber}: ${c.title}`} />
+              <ListItem key={c.Id} disablePadding>
+                <ListItemButton onClick={() => onSelectCase(c.Id)}>
+                  <ListItemText primary={`Case #${c.CaseNumber}: ${c.Title}`} />
                 </ListItemButton>
               </ListItem>
             ))}

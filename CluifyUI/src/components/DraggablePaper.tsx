@@ -7,14 +7,11 @@ interface DraggablePaperProps {
   children: React.ReactNode;
   handleId: string;
   modalId: string;
-  centerOnMount?: boolean;
   PaperProps?: PaperProps;
 }
 
-const DraggablePaper: React.FC<DraggablePaperProps> = ({ children, handleId, modalId, centerOnMount = false, PaperProps = {} }) => {
+const DraggablePaper: React.FC<DraggablePaperProps> = ({ children, handleId, modalId, PaperProps = {} }) => {
   const nodeRef = useRef(null);
-  const [initialPosition, setInitialPosition] = useState<{ x: number; y: number } | undefined>(undefined);
-  const [isMounted, setIsMounted] = useState(false);
   const { registerModal, unregisterModal, bringToFront, getZIndex } = useModalStack();
 
   useEffect(() => {
@@ -23,20 +20,6 @@ const DraggablePaper: React.FC<DraggablePaperProps> = ({ children, handleId, mod
       unregisterModal(modalId);
     };
   }, [modalId, registerModal, unregisterModal]);
-  
-  useEffect(() => {
-    if (centerOnMount && nodeRef.current && !isMounted) {
-      const paperElement = nodeRef.current as HTMLElement;
-      const { innerWidth, innerHeight } = window;
-      const { clientWidth, clientHeight } = paperElement;
-      
-      const x = (innerWidth - clientWidth) / 2;
-      const y = (innerHeight - clientHeight) / 2;
-      
-      setInitialPosition({ x, y });
-    }
-    setIsMounted(true);
-  }, [centerOnMount, isMounted]);
 
   const zIndex = getZIndex(modalId);
 
@@ -45,7 +28,6 @@ const DraggablePaper: React.FC<DraggablePaperProps> = ({ children, handleId, mod
       nodeRef={nodeRef}
       handle={`#${handleId}`}
       cancel={'[class*="MuiDialogContent-root"], [aria-label="close"], button'}
-      defaultPosition={initialPosition}
       onStart={() => bringToFront(modalId)}
     >
       <div ref={nodeRef}>
@@ -58,7 +40,6 @@ const DraggablePaper: React.FC<DraggablePaperProps> = ({ children, handleId, mod
             zIndex: zIndex, 
             borderRadius: 0,
             ...PaperProps?.sx,
-            ...(!initialPosition && centerOnMount ? { visibility: 'hidden' } : {}),
           }}
         >
           {children}

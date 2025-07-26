@@ -51,8 +51,8 @@ const MainPage = ({ darkMode, setDarkMode, settingsOpen, setSettingsOpen, howToP
     try {
       const caseData = await getCaseById(caseId);
       setActiveCase(caseData);
-      const reportData = await getReportsForCase(caseData.id);
-      const reportsWithCaseId = reportData.map(r => ({ ...r, caseId: caseData.id }));
+      const reportData = await getReportsForCase(caseData.Id);
+      const reportsWithCaseId = reportData.map(r => ({ ...r, caseId: caseData.Id }));
       setReports(reportsWithCaseId);
       setShowGame(true);
       if (!isLoggedIn) {
@@ -71,7 +71,7 @@ const MainPage = ({ darkMode, setDarkMode, settingsOpen, setSettingsOpen, howToP
     try {
       const caseData = await getActiveCase();
       if (caseData) {
-        await startGame(caseData.id);
+        await startGame(caseData.Id);
       } else {
         setActiveCase(null);
         setReports([]);

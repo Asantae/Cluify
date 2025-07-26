@@ -20,14 +20,14 @@ const CaseViewerModal = ({ open, onClose, caseData, darkMode }: CaseViewerModalP
   const handleId = "case-viewer-handle";
 
   return (
-    <DraggablePaper handleId={handleId} centerOnMount modalId="caseViewer">
+    <DraggablePaper handleId={handleId} modalId="caseViewer">
       <div>
         <DialogTitle
           style={{ cursor: 'move', backgroundColor: titleBgColor, color: titleTextColor }}
           id={handleId}
           sx={{ borderBottom: '1px solid rgba(0, 0, 0, 0.2)' }}
         >
-          <Typography component="span">Case #{caseData.caseNumber}</Typography>
+          <Typography component="span">Case #{caseData.CaseNumber}</Typography>
           <IconButton
             aria-label="close"
             onClick={onClose}
@@ -53,19 +53,19 @@ const CaseViewerModal = ({ open, onClose, caseData, darkMode }: CaseViewerModalP
           overflowY: 'auto',
         }}>
           <Typography variant="body2" sx={{ position: 'absolute', top: 38, right: 16, color: contentTextColor }}>
-            Difficulty: {caseData.difficulty}
+            Difficulty: {caseData.Difficulty}
           </Typography>
           <Box sx={{ pt: 2 }}>
-            {caseData.canBePractice && caseData.title && (
-              <Typography gutterBottom><strong>Title:</strong> {caseData.title}</Typography>
+            {caseData.CanBePractice && caseData.Title && (
+              <Typography gutterBottom><strong>Title:</strong> {caseData.Title}</Typography>
             )}
-            <Typography gutterBottom><strong>Victim(s):</strong> {caseData.victimName?.join(', ') || '—'}</Typography>
-            <Typography gutterBottom><strong>Date of Incident:</strong> {caseData.dateOfIncident ? new Date(caseData.dateOfIncident).toLocaleDateString() : '—'}</Typography>
-            <Typography gutterBottom><strong>Location:</strong> {caseData.location || '—'}</Typography>
+            <Typography gutterBottom><strong>Victim(s):</strong> {caseData.VictimName?.join(', ') || '—'}</Typography>
+            <Typography gutterBottom><strong>Date of Incident:</strong> {caseData.DateOfIncident ? new Date(caseData.DateOfIncident).toLocaleDateString() : '—'}</Typography>
+            <Typography gutterBottom><strong>Location:</strong> {caseData.Location || '—'}</Typography>
             <Typography sx={{ mt: 2 }} gutterBottom><strong>Details:</strong></Typography>
-            <Typography gutterBottom variant="body2">{caseData.details}</Typography>
+            <Typography gutterBottom variant="body2">{caseData.Details}</Typography>
             <Typography sx={{ mt: 2 }} gutterBottom><strong>Objective:</strong></Typography>
-            <Typography gutterBottom variant="body2">{caseData.objective}</Typography>
+            <Typography gutterBottom variant="body2">{caseData.Objective}</Typography>
           </Box>
         </DialogContent>
       </div>

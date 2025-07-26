@@ -1,45 +1,45 @@
 export interface Case {
-  id: string;
-  caseNumber: number;
-  title: string;
-  victimName?: string[];
-  dateOfIncident?: string; // Storing as string to match JSON, will be parsed to Date
-  location?: string;
-  details: string;
-  objective: string;
-  difficulty: string;
-  reportIds: string[];
-  isActive: boolean;
-  canBePractice: boolean;
+  Id: string;
+  CaseNumber: number;
+  Title: string;
+  VictimName?: string[];
+  DateOfIncident?: string; // Storing as string to match JSON, will be parsed to Date
+  Location?: string;
+  Details: string;
+  Objective: string;
+  Difficulty: string;
+  ReportIds: string[];
+  IsActive: boolean;
+  CanBePractice: boolean;
 }
 
 export interface Report {
-  id: string;
-  personId: string;
-  details: string;
-  reportDate: string; 
-  suspect?: SuspectProfile;
-  caseId: string;
+  Id: string;
+  SuspectProfileId: string;
+  Details: string;
+  ReportDate: string;
+  CaseId: string;
+  Guilty: boolean;
+  Suspect?: SuspectProfile;
 }
 
 export interface SuspectProfile {
-  id: string;
-  firstName: string;
-  lastName: string;
-  aliases: string[];
-  height?: string;
-  weight?: string;
-  age?: string;
-  sex?: string;
-  occupation?: string;
-  isGuilty: boolean;
-  hairColor: string;
-  eyeColor: string;
+  Id: string;
+  FirstName: string;
+  LastName: string;
+  Aliases: string[];
+  Height?: string;
+  Weight?: string;
+  Age?: string;
+  Sex?: string;
+  Occupation?: string;
+  IsGuilty: boolean;
+  HairColor: string;
+  EyeColor: string;
 }
 
 export interface DmvRecord {
   id: string;
-  personId: string;
   firstName: string;
   lastName: string;
   age: number;

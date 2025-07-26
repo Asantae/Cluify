@@ -46,7 +46,6 @@ const DmvResultsModal: React.FC<DmvResultsModalProps> = ({ isOpen, onClose, resu
         <DraggablePaper 
             modalId="dmvResults" 
             handleId={handleId} 
-            centerOnMount
             PaperProps={{
                 sx: {
                     width: { xs: '95vw', sm: '90vw', md: '80vw', lg: '70vw' },

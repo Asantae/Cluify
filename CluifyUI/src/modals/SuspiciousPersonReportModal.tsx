@@ -11,7 +11,7 @@ import { submitReport, isLoggedIn } from '../services/api';
 import Snackbar from '@mui/material/Snackbar';
 
 interface EvidenceItem {
-    id: string;
+    Id: string;
     type: 'Social Media Post' | 'Search History' | 'Phone Record' | 'Purchase Record' | 'Police Record';
     content: string;
   source: any;
@@ -45,17 +45,17 @@ const SuspiciousPersonReportModal = ({ open, onClose, reports, darkMode, current
   };
 
   const removeDmvRecord = () => {
-    const reportId = reports[currentReportIndex]?.id;
+    const reportId = reports[currentReportIndex]?.Id;
     if (reportId) {
       setLinkedDmvRecords(prev => ({ ...prev, [reportId]: null }));
     }
   };
 
-  const removeEvidence = (id: string) => setLinkedEvidence(prev => prev.filter(item => item.id !== id));
+  const removeEvidence = (id: string) => setLinkedEvidence(prev => prev.filter(item => item.Id !== id));
 
   const currentReport = reports[currentReportIndex];
-  const currentSuspect = currentReport?.suspect;
-  const suspectName = [currentSuspect?.firstName, currentSuspect?.lastName].filter(Boolean).join(' ') || '—';
+  const currentSuspect = currentReport?.Suspect;
+  const suspectName = [currentSuspect?.FirstName, currentSuspect?.LastName].filter(Boolean).join(' ') || '—';
     
   const handleId = "suspicious-person-report-handle";
 
@@ -65,7 +65,6 @@ const SuspiciousPersonReportModal = ({ open, onClose, reports, darkMode, current
     <Box>
       <DraggablePaper
         handleId={handleId}
-        centerOnMount
         modalId="suspiciousPersonReport"
         PaperProps={isSmallScreen ? {
           sx: {
@@ -142,7 +141,7 @@ const SuspiciousPersonReportModal = ({ open, onClose, reports, darkMode, current
                   <Button
                     variant="contained"
                     color="primary"
-                    disabled={!linkedDmvRecords[reports[currentReportIndex]?.id] || submitLoading}
+                    disabled={!linkedDmvRecords[reports[currentReportIndex]?.Id] || submitLoading}
                     onClick={async () => {
                       setSubmitLoading(true);
                       setSnackbar({ open: false, message: '' });
@@ -151,9 +150,9 @@ const SuspiciousPersonReportModal = ({ open, onClose, reports, darkMode, current
                         const currentReport = reports[currentReportIndex];
                         const result = await submitReport(
                           userId,
-                          currentReport?.id,
-                          linkedDmvRecords[currentReport?.id]?.id,
-                          currentReport?.caseId,
+                          currentReport?.Id,
+                          linkedDmvRecords[currentReport?.Id]?.Id,
+                          currentReport?.CaseId,
                           [] // evidenceIds, empty for now
                         );
                         if (onReportSubmitted) onReportSubmitted();
@@ -187,45 +186,45 @@ const SuspiciousPersonReportModal = ({ open, onClose, reports, darkMode, current
               </Box>
               <Grid >
                 <Typography variant="body2" sx={{ fontWeight: 500, fontSize: '0.82rem' }} gutterBottom>
-                  <strong>DATE:</strong> {currentReport?.reportDate 
-                    ? new Date(currentReport.reportDate).toLocaleString('en-US', { month: 'numeric', day: 'numeric', hour: 'numeric', minute: '2-digit' }) 
+                  <strong>DATE:</strong> {currentReport?.ReportDate 
+                    ? new Date(currentReport.ReportDate).toLocaleString('en-US', { month: 'numeric', day: 'numeric', hour: 'numeric', minute: '2-digit' }) 
                     : '—'}
                 </Typography>
               </Grid>
               <Grid container columns={{ xs: 3, md: 4 }} spacing={{xs: 0, md: 1}} sx={{ mt: 1}}>
                 <Grid size={{ xs: 1, md: 2 }}>
-                  <Typography variant="body2" sx={{ fontWeight: 500, fontSize: '0.75rem' }}><strong>Alias:</strong> {currentSuspect?.aliases?.join(', ') || '—'}</Typography>
+                  <Typography variant="body2" sx={{ fontWeight: 500, fontSize: '0.75rem' }}><strong>Alias:</strong> {currentSuspect?.Aliases?.join(', ') || '—'}</Typography>
                 </Grid>
                 <Grid size={{ xs: 1, md: 2 }}>
-                  <Typography variant="body2" sx={{ fontWeight: 500, fontSize: '0.75rem' }}><strong>SEX:</strong> {currentSuspect?.sex || '—'}</Typography>
+                  <Typography variant="body2" sx={{ fontWeight: 500, fontSize: '0.75rem' }}><strong>SEX:</strong> {currentSuspect?.Sex || '—'}</Typography>
                 </Grid>
                 <Grid size={{ xs: 1, md: 2 }}>
-                  <Typography variant="body2" sx={{ fontWeight: 500, fontSize: '0.75rem' }}><strong>HEIGHT:</strong> {currentSuspect?.height || '—'}</Typography>
+                  <Typography variant="body2" sx={{ fontWeight: 500, fontSize: '0.75rem' }}><strong>HEIGHT:</strong> {currentSuspect?.Height || '—'}</Typography>
                 </Grid>
                 <Grid size={{ xs: 1, md: 2 }}>
-                  <Typography variant="body2" sx={{ fontWeight: 500, fontSize: '0.75rem' }}><strong>HAIR:</strong> {currentSuspect?.hairColor || '—'}</Typography>
+                  <Typography variant="body2" sx={{ fontWeight: 500, fontSize: '0.75rem' }}><strong>HAIR:</strong> {currentSuspect?.HairColor || '—'}</Typography>
                 </Grid>
                 <Grid size={{ xs: 1, md: 2 }}>
-                  <Typography variant="body2" sx={{ fontWeight: 500, fontSize: '0.75rem' }}><strong>AGE:</strong> {currentSuspect?.age || '—'}</Typography>
+                  <Typography variant="body2" sx={{ fontWeight: 500, fontSize: '0.75rem' }}><strong>AGE:</strong> {currentSuspect?.Age || '—'}</Typography>
                 </Grid>
                 <Grid size={{ xs: 1, md: 2 }}>
-                  <Typography variant="body2" sx={{ fontWeight: 500, fontSize: '0.75rem' }}><strong>WEIGHT:</strong> {currentSuspect?.weight || '—'}</Typography>
+                  <Typography variant="body2" sx={{ fontWeight: 500, fontSize: '0.75rem' }}><strong>WEIGHT:</strong> {currentSuspect?.Weight || '—'}</Typography>
                 </Grid>
                 <Grid size={{ xs: 1, md: 2 }}>
-                  <Typography variant="body2" sx={{ fontWeight: 500, fontSize: '0.75rem' }}><strong>EYES:</strong> {currentSuspect?.eyeColor || '—'}</Typography>
+                  <Typography variant="body2" sx={{ fontWeight: 500, fontSize: '0.75rem' }}><strong>EYES:</strong> {currentSuspect?.EyeColor || '—'}</Typography>
                 </Grid>
                 <Grid size={{ xs: 1, md: 2 }}>
-                  <Typography variant="body2" sx={{ fontWeight: 500, fontSize: '0.70rem' }}><strong>LICENSE PLATE:</strong> {linkedDmvRecords[reports[currentReportIndex]?.id]?.licensePlate || '—'}</Typography>
+                  <Typography variant="body2" sx={{ fontWeight: 500, fontSize: '0.70rem' }}><strong>LICENSE PLATE:</strong> {linkedDmvRecords[reports[currentReportIndex]?.Id]?.licensePlate || '—'}</Typography>
                 </Grid>
               </Grid>
               <Box sx={{ mb: 1 , mt: .5}}>
                 <Typography variant="subtitle2" sx={{ mb: 1, textTransform: 'uppercase', fontWeight: 'bold', fontSize: '0.95rem' }}>Report:</Typography>
-                {currentReport?.details && currentReport.details.length > 220 ? (
+                {currentReport?.Details && currentReport.Details.length > 220 ? (
                   <Box sx={{ maxHeight: { xs: 90, sm: 'none' }, overflowY: { xs: 'auto', sm: 'visible' }, borderRadius: 1, background: 'transparent', p: { xs: 0.5, sm: 0 } }}>
-                    <Typography variant="body2" sx={{ fontSize: '0.85rem' }}>{currentReport.details}</Typography>
+                    <Typography variant="body2" sx={{ fontSize: '0.85rem' }}>{currentReport.Details}</Typography>
                   </Box>
                 ) : (
-                  <Typography variant="body2" sx={{ fontSize: '0.85rem' }}>{currentReport?.details}</Typography>
+                  <Typography variant="body2" sx={{ fontSize: '0.85rem' }}>{currentReport?.Details}</Typography>
                 )}
               </Box>
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: { xs: 0.2, sm: 0.5 }, mt: 3 }}>
@@ -234,7 +233,7 @@ const SuspiciousPersonReportModal = ({ open, onClose, reports, darkMode, current
                   sx={{
                     p: { xs: 1, sm: 2 },
                     backgroundColor: 'transparent',
-                    border: linkedDmvRecords[reports[currentReportIndex]?.id]
+                    border: linkedDmvRecords[reports[currentReportIndex]?.Id]
                       ? theme => `2px solid ${theme.palette.success.main}`
                       : theme => `1px dashed ${theme.palette.error.main}`,
                     transition: 'border 0.2s',
@@ -242,10 +241,10 @@ const SuspiciousPersonReportModal = ({ open, onClose, reports, darkMode, current
                   }}
                 >
                   <Typography variant="h4" sx={{ color: '#000', mb: { xs: 0.7, sm: 1 }, fontWeight: 600, fontSize: { xs: '0.98rem', sm: '1.05rem' } }}>DMV Record</Typography>
-                  {linkedDmvRecords[reports[currentReportIndex]?.id] ? (
+                  {linkedDmvRecords[reports[currentReportIndex]?.Id] ? (
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                       <Typography sx={{ color: '#000', fontWeight: 500, fontSize: { xs: '0.85rem', sm: '0.92rem' } }}>
-                        {linkedDmvRecords[reports[currentReportIndex]?.id].firstName} {linkedDmvRecords[reports[currentReportIndex]?.id].lastName}
+                        {linkedDmvRecords[reports[currentReportIndex]?.Id].firstName} {linkedDmvRecords[reports[currentReportIndex]?.Id].lastName}
                       </Typography>
                       <IconButton size="small" sx={{ color: '#000' }} onClick={removeDmvRecord} aria-label="Remove DMV Record">
                         <CloseIcon fontSize="small" />
@@ -271,11 +270,11 @@ const SuspiciousPersonReportModal = ({ open, onClose, reports, darkMode, current
                   {linkedEvidence.length > 0 ? (
                     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
                       {linkedEvidence.map(item => (
-                        <Box key={item.id} sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <Box key={item.Id} sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                           <Typography sx={{ color: '#000', fontSize: { xs: '0.78rem', sm: '0.82rem' }, fontWeight: 500 }}>
                             <span style={{ fontWeight: 600 }}>{item.type}:</span> {item.content.substring(0, 30)}...
                           </Typography>
-                          <IconButton size="small" sx={{ color: '#000' }} onClick={() => removeEvidence(item.id)} aria-label="Remove Evidence">
+                          <IconButton size="small" sx={{ color: '#000' }} onClick={() => removeEvidence(item.Id)} aria-label="Remove Evidence">
                             <CloseIcon fontSize="small" />
                           </IconButton>
                         </Box>

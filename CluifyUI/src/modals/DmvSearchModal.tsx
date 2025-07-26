@@ -204,7 +204,7 @@ const DmvSearchModal: React.FC<DmvSearchModalProps> = ({ open, onClose, darkMode
 
     return (
         <Box>
-            <DraggablePaper handleId={handleId} centerOnMount modalId="dmvSearchModal">
+            <DraggablePaper handleId={handleId} modalId="dmvSearchModal">
                 <div>
                     <DialogTitle sx={{ minHeight: 36, height: 36, paddingTop: 0, paddingBottom: 0, fontSize: '1rem', backgroundColor: titleBgColor, color: textColor, borderBottom: `1px solid ${borderColor}`, display: 'flex', alignItems: 'center', gap: 1, position: 'relative' }} id={handleId}>
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
