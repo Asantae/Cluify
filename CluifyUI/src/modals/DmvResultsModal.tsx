@@ -41,6 +41,7 @@ const DmvResultsModal: React.FC<DmvResultsModalProps> = ({ isOpen, onClose, resu
     const contentBgColor = darkMode ? '#222' : '#fff';
     const textColor = darkMode ? '#fff' : '#000';
     const borderColor = darkMode ? '#444' : '#ddd';
+    const modalBgColor = darkMode ? '#222' : '#fff';
 
     return (
         <DraggablePaper 
@@ -51,7 +52,8 @@ const DmvResultsModal: React.FC<DmvResultsModalProps> = ({ isOpen, onClose, resu
                     width: { xs: '95vw', sm: '90vw', md: '80vw', lg: '70vw' },
                     maxWidth: '1200px',
                     height: { xs: '80vh', sm: '75vh' },
-                    maxHeight: '800px'
+                    maxHeight: '800px',
+                    backgroundColor: modalBgColor,
                 }
             }}
         >
@@ -61,7 +63,7 @@ const DmvResultsModal: React.FC<DmvResultsModalProps> = ({ isOpen, onClose, resu
                         <CloseIcon />
                     </IconButton>
                 </DialogTitle>
-                <Box sx={{ p: 2, flexGrow: 1, minHeight: 0 }}>
+                <Box sx={{ p: 2, flexGrow: 1, minHeight: 0, backgroundColor: modalBgColor }}>
                     <Typography 
                         variant="body2" 
                         sx={{ 

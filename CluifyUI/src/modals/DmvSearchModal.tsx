@@ -132,8 +132,9 @@ const DmvSearchModal: React.FC<DmvSearchModalProps> = ({ open, onClose, darkMode
     const titleBgColor = darkMode ? '#333' : '#f0f0f0';
     const textColor = darkMode ? '#fff' : '#000';
     const handleId = "dmv-search-handle";
-    const inputBgColor = darkMode ? '#444' : '#f8f8f8';
+    const inputBgColor = darkMode ? '#555' : '#f8f8f8';
     const borderColor = darkMode ? '#444' : '#ddd';
+    const modalBgColor = darkMode ? '#222' : '#fff';
 
     const handleRowClick = (record: DmvRecord) => {
         onSelectDmvRecord(record);
@@ -163,34 +164,77 @@ const DmvSearchModal: React.FC<DmvSearchModalProps> = ({ open, onClose, darkMode
                 fontSize: { xs: '0.82rem', sm: '0.92rem' },
                 paddingLeft: 0,
                 paddingRight: 0,
+                backgroundColor: inputBgColor,
+                color: textColor,
+                '& fieldset': {
+                    borderColor: borderColor,
+                },
+                '&:hover fieldset': {
+                    borderColor: darkMode ? '#666' : '#999',
+                },
+                '&.Mui-focused fieldset': {
+                    borderColor: darkMode ? '#888' : '#1976d2',
+                },
             },
             '& .MuiSelect-select': {
                 overflow: 'visible',
                 paddingLeft: '.4rem',
                 paddingRight: 0,
+                color: textColor,
             },
             '& .MuiOutlinedInput-notchedOutline': { borderRadius: 0 },
             // Hide arrow if value is present
-            '& .MuiSelect-icon': hasValue ? { display: 'none' } : {},
+            '& .MuiSelect-icon': hasValue ? { display: 'none' } : { color: textColor },
         });
 
         return (
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                 <Select value={start} name={`${name}Start`} onChange={handleSelectChange} displayEmpty size="small" sx={selectSx(!!start)}>
-                    {options.map(o => <MenuItem key={o} value={o}>{o}</MenuItem>)}
+                    {options.map(o => <MenuItem key={o} value={o} sx={{ backgroundColor: inputBgColor, color: textColor, '&:hover': { backgroundColor: darkMode ? '#666' : '#f0f0f0' } }}>{o}</MenuItem>)}
                 </Select>
                 <Typography sx={{ color: textColor }}>–</Typography>
                 <Select value={end} name={`${name}End`} onChange={handleSelectChange} displayEmpty disabled={isEndDisabled} size="small" sx={selectSx(!!end)}>
-                    {endOptions.map(o => <MenuItem key={o} value={o}>{o}</MenuItem>)}
+                    {endOptions.map(o => <MenuItem key={o} value={o} sx={{ backgroundColor: inputBgColor, color: textColor, '&:hover': { backgroundColor: darkMode ? '#666' : '#f0f0f0' } }}>{o}</MenuItem>)}
                 </Select>
             </Box>
         );
     };
 
     const renderSingleSelect = (name: string, value: string, options: string[]) => (
-        <Select name={name} value={value} onChange={handleSelectChange} displayEmpty size="small" sx={{ borderRadius: 0, minWidth: { xs: '90px', sm: '110px' }, maxWidth: { xs: '90px', sm: '110px' }, backgroundColor: inputBgColor, color: textColor, height: { xs: '28px', sm: '32px' }, fontSize: { xs: '0.9rem', sm: '1rem' }, '& .MuiOutlinedInput-root': { borderRadius: 0, height: { xs: '28px', sm: '32px' }, fontSize: { xs: '0.9rem', sm: '1rem' } }, '& .MuiOutlinedInput-notchedOutline': { borderRadius: 0 } }}>
-            <MenuItem value="">—</MenuItem>
-            {options.map(o => <MenuItem key={o} value={o}>{o}</MenuItem>)}
+        <Select name={name} value={value} onChange={handleSelectChange} displayEmpty size="small" sx={{ 
+            borderRadius: 0, 
+            minWidth: { xs: '90px', sm: '110px' }, 
+            maxWidth: { xs: '90px', sm: '110px' }, 
+            backgroundColor: inputBgColor, 
+            color: textColor, 
+            height: { xs: '28px', sm: '32px' }, 
+            fontSize: { xs: '0.9rem', sm: '1rem' }, 
+            '& .MuiOutlinedInput-root': { 
+                borderRadius: 0, 
+                height: { xs: '28px', sm: '32px' }, 
+                fontSize: { xs: '0.9rem', sm: '1rem' },
+                backgroundColor: inputBgColor,
+                color: textColor,
+                '& fieldset': {
+                    borderColor: borderColor,
+                },
+                '&:hover fieldset': {
+                    borderColor: darkMode ? '#666' : '#999',
+                },
+                '&.Mui-focused fieldset': {
+                    borderColor: darkMode ? '#888' : '#1976d2',
+                },
+            }, 
+            '& .MuiOutlinedInput-notchedOutline': { borderRadius: 0 },
+            '& .MuiSelect-select': {
+                color: textColor,
+            },
+            '& .MuiSelect-icon': {
+                color: textColor,
+            },
+        }}>
+            <MenuItem value="" sx={{ backgroundColor: inputBgColor, color: textColor, '&:hover': { backgroundColor: darkMode ? '#666' : '#f0f0f0' } }}>—</MenuItem>
+            {options.map(o => <MenuItem key={o} value={o} sx={{ backgroundColor: inputBgColor, color: textColor, '&:hover': { backgroundColor: darkMode ? '#666' : '#f0f0f0' } }}>{o}</MenuItem>)}
         </Select>
     );
 
@@ -204,7 +248,15 @@ const DmvSearchModal: React.FC<DmvSearchModalProps> = ({ open, onClose, darkMode
 
     return (
         <Box>
-            <DraggablePaper handleId={handleId} modalId="dmvSearchModal">
+            <DraggablePaper 
+                handleId={handleId} 
+                modalId="dmvSearchModal"
+                PaperProps={{
+                    sx: {
+                        backgroundColor: modalBgColor,
+                    }
+                }}
+            >
                 <div>
                     <DialogTitle sx={{ minHeight: 36, height: 36, paddingTop: 0, paddingBottom: 0, fontSize: '1rem', backgroundColor: titleBgColor, color: textColor, borderBottom: `1px solid ${borderColor}`, display: 'flex', alignItems: 'center', gap: 1, position: 'relative' }} id={handleId}>
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
@@ -216,13 +268,87 @@ const DmvSearchModal: React.FC<DmvSearchModalProps> = ({ open, onClose, darkMode
                         </IconButton>
                     </DialogTitle>
 
-                    <Box sx={{ flexGrow: 1, minHeight: 0, overflowY: 'auto', p: { xs: 2, sm: 3 }, maxHeight: { xs: '60vh', sm: 'none' } }}>
+                    <Box sx={{ flexGrow: 1, minHeight: 0, overflowY: 'auto', p: { xs: 2, sm: 3 }, maxHeight: { xs: '60vh', sm: 'none' }, backgroundColor: modalBgColor }}>
                         <Box sx={{ mx: 'auto', maxWidth: '350px' }}>
                             <FormField label="First Name:" textColor={textColor}>
-                                <TextField name="firstName" value={searchQuery.firstName} onChange={handleInputChange} variant="outlined" size="small" fullWidth placeholder="Enter first name" sx={{ borderRadius: 0, '& .MuiOutlinedInput-root': { borderRadius: 0, height: { xs: '28px', sm: '32px' }, fontSize: { xs: '0.9rem', sm: '1rem' } }, input: { height: { xs: '28px', sm: '32px' }, fontSize: { xs: '0.9rem', sm: '1rem' }, padding: '0 8px' } }} />
+                                <TextField 
+                                    name="firstName" 
+                                    value={searchQuery.firstName} 
+                                    onChange={handleInputChange} 
+                                    variant="outlined" 
+                                    size="small" 
+                                    fullWidth 
+                                    placeholder="Enter first name" 
+                                    sx={{ 
+                                        borderRadius: 0, 
+                                        '& .MuiOutlinedInput-root': { 
+                                            borderRadius: 0, 
+                                            height: { xs: '28px', sm: '32px' }, 
+                                            fontSize: { xs: '0.9rem', sm: '1rem' },
+                                            backgroundColor: inputBgColor,
+                                            color: textColor,
+                                            '& fieldset': {
+                                                borderColor: borderColor,
+                                            },
+                                            '&:hover fieldset': {
+                                                borderColor: darkMode ? '#666' : '#999',
+                                            },
+                                            '&.Mui-focused fieldset': {
+                                                borderColor: darkMode ? '#888' : '#1976d2',
+                                            },
+                                        }, 
+                                        input: { 
+                                            height: { xs: '28px', sm: '32px' }, 
+                                            fontSize: { xs: '0.9rem', sm: '1rem' }, 
+                                            padding: '0 8px',
+                                            color: textColor,
+                                            '&::placeholder': {
+                                                color: darkMode ? '#aaa' : '#666',
+                                                opacity: 1,
+                                            },
+                                        } 
+                                    }} 
+                                />
                             </FormField>
                             <FormField label="Last Name:" textColor={textColor}>
-                                <TextField name="lastName" value={searchQuery.lastName} onChange={handleInputChange} variant="outlined" size="small" fullWidth placeholder="Enter last name" sx={{ borderRadius: 0, '& .MuiOutlinedInput-root': { borderRadius: 0, height: { xs: '28px', sm: '32px' }, fontSize: { xs: '0.9rem', sm: '1rem' } }, input: { height: { xs: '28px', sm: '32px' }, fontSize: { xs: '0.9rem', sm: '1rem' }, padding: '0 8px' } }} />
+                                <TextField 
+                                    name="lastName" 
+                                    value={searchQuery.lastName} 
+                                    onChange={handleInputChange} 
+                                    variant="outlined" 
+                                    size="small" 
+                                    fullWidth 
+                                    placeholder="Enter last name" 
+                                    sx={{ 
+                                        borderRadius: 0, 
+                                        '& .MuiOutlinedInput-root': { 
+                                            borderRadius: 0, 
+                                            height: { xs: '28px', sm: '32px' }, 
+                                            fontSize: { xs: '0.9rem', sm: '1rem' },
+                                            backgroundColor: inputBgColor,
+                                            color: textColor,
+                                            '& fieldset': {
+                                                borderColor: borderColor,
+                                            },
+                                            '&:hover fieldset': {
+                                                borderColor: darkMode ? '#666' : '#999',
+                                            },
+                                            '&.Mui-focused fieldset': {
+                                                borderColor: darkMode ? '#888' : '#1976d2',
+                                            },
+                                        }, 
+                                        input: { 
+                                            height: { xs: '28px', sm: '32px' }, 
+                                            fontSize: { xs: '0.9rem', sm: '1rem' }, 
+                                            padding: '0 8px',
+                                            color: textColor,
+                                            '&::placeholder': {
+                                                color: darkMode ? '#aaa' : '#666',
+                                                opacity: 1,
+                                            },
+                                        } 
+                                    }} 
+                                />
                             </FormField>
                             <Grid spacing={1} sx={{ mb: 1 }}>
                                 <Grid size={{ xs: 12, sm: 6 }}>
@@ -245,7 +371,48 @@ const DmvSearchModal: React.FC<DmvSearchModalProps> = ({ open, onClose, darkMode
                                 </Grid>
                             </Grid>
                             <FormField label="License Plate:" textColor={textColor}>
-                                <TextField name="licensePlate" value={searchQuery.licensePlate} onChange={handleInputChange} variant="outlined" size="small" fullWidth placeholder="Enter license plate" inputProps={{ maxLength: 12, style: { textTransform: 'uppercase' } }} sx={{ borderRadius: 0, '& .MuiOutlinedInput-root': { borderRadius: 0, height: { xs: '28px', sm: '32px' }, fontSize: { xs: '0.9rem', sm: '1rem' } }, input: { height: { xs: '28px', sm: '32px' }, fontSize: { xs: '0.9rem', sm: '1rem' }, padding: '0 8px' } }} />
+                                <TextField 
+                                    name="licensePlate" 
+                                    value={searchQuery.licensePlate} 
+                                    onChange={handleInputChange} 
+                                    variant="outlined" 
+                                    size="small" 
+                                    fullWidth 
+                                    placeholder="Enter license plate" 
+                                    inputProps={{ 
+                                        maxLength: 12, 
+                                        style: { textTransform: 'uppercase' } 
+                                    }} 
+                                    sx={{ 
+                                        borderRadius: 0, 
+                                        '& .MuiOutlinedInput-root': { 
+                                            borderRadius: 0, 
+                                            height: { xs: '28px', sm: '32px' }, 
+                                            fontSize: { xs: '0.9rem', sm: '1rem' },
+                                            backgroundColor: inputBgColor,
+                                            color: textColor,
+                                            '& fieldset': {
+                                                borderColor: borderColor,
+                                            },
+                                            '&:hover fieldset': {
+                                                borderColor: darkMode ? '#666' : '#999',
+                                            },
+                                            '&.Mui-focused fieldset': {
+                                                borderColor: darkMode ? '#888' : '#1976d2',
+                                            },
+                                        }, 
+                                        input: { 
+                                            height: { xs: '28px', sm: '32px' }, 
+                                            fontSize: { xs: '0.9rem', sm: '1rem' }, 
+                                            padding: '0 8px',
+                                            color: textColor,
+                                            '&::placeholder': {
+                                                color: darkMode ? '#aaa' : '#666',
+                                                opacity: 1,
+                                            },
+                                        } 
+                                    }} 
+                                />
                             </FormField>
                         </Box>
                     </Box>

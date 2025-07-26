@@ -1,6 +1,6 @@
 // If you haven't already, run: npm install @tanstack/react-table
 import { useReactTable, getCoreRowModel, flexRender, ColumnDef, HeaderGroup, Row } from '@tanstack/react-table';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, useTheme } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
 import { DmvRecord } from '../types';
 
 interface DmvSearchResultsTableProps {
@@ -29,12 +29,12 @@ const DmvSearchResultsTable = ({ results, darkMode, onRowClick }: DmvSearchResul
     debugTable: false,
   });
 
-  const theme = useTheme();
-
   const tableHeaderBgColor = darkMode ? '#444' : '#f8f8f8';
   const textColor = darkMode ? '#fff' : '#000';
   const tableBorderColor = darkMode ? '#555' : '#ddd';
   const rowHoverColor = darkMode ? '#333' : '#f0f0f0';
+  const rowBgColor = darkMode ? '#333' : '#fff';
+  const alternateRowBgColor = darkMode ? '#2a2a2a' : '#fafafa';
 
   return (
     <TableContainer component={Paper} sx={{ 
@@ -62,13 +62,12 @@ const DmvSearchResultsTable = ({ results, darkMode, onRowClick }: DmvSearchResul
         </TableHead>
         <TableBody>
           {table.getRowModel().rows.map((row: Row<DmvRecord>, idx: number) => {
-            const darkRowColor = darkMode ? '#222' : theme.palette.action.selected;
             return (
               <TableRow
                 key={row.id}
                 sx={{
                   cursor: 'pointer',
-                  backgroundColor: idx % 2 === 0 ? darkRowColor : undefined,
+                  backgroundColor: idx % 2 === 0 ? rowBgColor : alternateRowBgColor,
                   '&:hover': { backgroundColor: rowHoverColor },
                   '& .MuiTableCell-root': { color: textColor, borderBottom: 'none' },
                 }}

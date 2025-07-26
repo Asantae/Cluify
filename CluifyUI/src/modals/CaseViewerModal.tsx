@@ -2,6 +2,13 @@ import { DialogContent, DialogTitle, IconButton, Typography, Box } from '@mui/ma
 import DraggablePaper from '../components/DraggablePaper';
 import CloseIcon from '@mui/icons-material/Close';
 import { Case } from '../types';
+import { keyframes } from '@mui/system';
+
+// Define the flashing animation
+const flash = keyframes`
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0.3; }
+`;
 
 interface CaseViewerModalProps {
   open: boolean;
@@ -25,21 +32,48 @@ const CaseViewerModal = ({ open, onClose, caseData, darkMode }: CaseViewerModalP
         <DialogTitle
           style={{ cursor: 'move', backgroundColor: titleBgColor, color: titleTextColor }}
           id={handleId}
-          sx={{ borderBottom: '1px solid rgba(0, 0, 0, 0.2)' }}
+          sx={{ 
+            borderBottom: '1px solid rgba(0, 0, 0, 0.2)',
+            py: 1,
+            px: 1.5
+          }}
         >
-          <Typography component="span">Case #{caseData.CaseNumber}</Typography>
-          <IconButton
-            aria-label="close"
-            onClick={onClose}
-            sx={{
-              position: 'absolute',
-              right: 8,
-              top: 8,
-              color: titleTextColor
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
+            <Typography component="span">Case #{caseData.CaseNumber}</Typography>
+            <Typography 
+              variant="caption" 
+              sx={{ 
+                color: darkMode ? '#ccc' : '#666',
+                animation: `${flash} 1.5s ease-in-out infinite`,
+                fontStyle: 'italic',
+                fontSize: '0.8rem',
+                mr: 3,
+              }}
+            >
+              drag to move
+            </Typography>
+            <IconButton
+              aria-label="close"
+              onClick={onClose}
+              sx={{
+                color: titleTextColor,
+                p: 0,
+                minWidth: 'auto'
+              }}
+            >
+              <CloseIcon />
+            </IconButton>
+          </Box>
+          <Typography 
+            variant="body2" 
+            sx={{ 
+              color: titleTextColor,
+              fontSize: '0.8rem',
+              textAlign: 'right'
             }}
           >
-            <CloseIcon />
-          </IconButton>
+            Difficulty: {caseData.Difficulty}
+          </Typography>
         </DialogTitle>
         <DialogContent sx={{
           backgroundColor: contentBgColor,
@@ -52,9 +86,6 @@ const CaseViewerModal = ({ open, onClose, caseData, darkMode }: CaseViewerModalP
           maxHeight: '60vh',
           overflowY: 'auto',
         }}>
-          <Typography variant="body2" sx={{ position: 'absolute', top: 38, right: 16, color: contentTextColor }}>
-            Difficulty: {caseData.Difficulty}
-          </Typography>
           <Box sx={{ pt: 2 }}>
             {caseData.CanBePractice && caseData.Title && (
               <Typography gutterBottom><strong>Title:</strong> {caseData.Title}</Typography>

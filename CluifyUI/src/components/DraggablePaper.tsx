@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { Paper, PaperProps } from '@mui/material';
 import Draggable from 'react-draggable';
 import { useModalStack } from '../contexts/ModalStackContext';
@@ -23,26 +23,46 @@ const DraggablePaper: React.FC<DraggablePaperProps> = ({ children, handleId, mod
 
   const zIndex = getZIndex(modalId);
 
+  // Calculate a reasonable default position that ensures the modal is visible
+  const getDefaultPosition = () => {
+    return {
+      x: -85,
+      y: 0
+    };
+  };
+
+  const handleModalClick = () => {
+    bringToFront(modalId);
+  };
+
   return (
     <Draggable
       nodeRef={nodeRef}
       handle={`#${handleId}`}
       cancel={'[class*="MuiDialogContent-root"], [aria-label="close"], button'}
+      defaultPosition={getDefaultPosition()}
       onStart={() => bringToFront(modalId)}
     >
-      <div ref={nodeRef}>
+      <div 
+        ref={nodeRef}
+        style={{
+          position: 'absolute',
+          zIndex: zIndex,
+        }}
+      >
         <Paper
           {...PaperProps}
           elevation={8}
           onMouseDown={() => bringToFront(modalId)}
           sx={{
             position: 'absolute',
-            zIndex: zIndex, 
             borderRadius: 0,
             ...PaperProps?.sx,
           }}
         >
-          {children}
+          <div onClick={handleModalClick}>
+            {children}
+          </div>
         </Paper>
       </div>
     </Draggable>
