@@ -72,7 +72,7 @@ const CaseViewerModal = ({ open, onClose, caseData, darkMode }: CaseViewerModalP
               textAlign: 'right'
             }}
           >
-            Difficulty: {caseData.Difficulty}
+            {!caseData.IsActive && `Difficulty: ${caseData.Difficulty}`}
           </Typography>
         </DialogTitle>
         <DialogContent sx={{
@@ -87,7 +87,7 @@ const CaseViewerModal = ({ open, onClose, caseData, darkMode }: CaseViewerModalP
           overflowY: 'auto',
         }}>
           <Box sx={{ pt: 2 }}>
-            {caseData.CanBePractice && caseData.Title && (
+            {!caseData.IsActive && caseData.Title && (
               <Typography gutterBottom><strong>Title:</strong> {caseData.Title}</Typography>
             )}
             <Typography gutterBottom><strong>Victim(s):</strong> {caseData.VictimName?.join(', ') || '—'}</Typography>
@@ -95,8 +95,12 @@ const CaseViewerModal = ({ open, onClose, caseData, darkMode }: CaseViewerModalP
             <Typography gutterBottom><strong>Location:</strong> {caseData.Location || '—'}</Typography>
             <Typography sx={{ mt: 2 }} gutterBottom><strong>Details:</strong></Typography>
             <Typography gutterBottom variant="body2">{caseData.Details}</Typography>
-            <Typography sx={{ mt: 2 }} gutterBottom><strong>Objective:</strong></Typography>
-            <Typography gutterBottom variant="body2">{caseData.Objective}</Typography>
+            {caseData.Objective && caseData.Objective.trim() !== '' && (
+              <>
+                <Typography sx={{ mt: 2 }} gutterBottom><strong>Objective:</strong></Typography>
+                <Typography gutterBottom variant="body2">{caseData.Objective}</Typography>
+              </>
+            )}
           </Box>
         </DialogContent>
       </div>

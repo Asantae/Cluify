@@ -144,6 +144,7 @@ namespace CluifyAPI.Services
                         SuspectProfileId = report.SuspectProfileId,
                         Details = report.Details,
                         ReportDate = report.ReportDate,
+                        CaseId = report.CaseId,
                         Suspect = await GetSuspectProfileDtoAsync(report.SuspectProfileId)
                     };
 

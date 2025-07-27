@@ -16,13 +16,37 @@ const LockoutOverlay: React.FC<{ onReturn?: () => void }> = ({ onReturn }) => (
       alignItems: 'center',
       justifyContent: 'center',
       color: 'white',
+      p: 3, // Add padding to prevent text from touching edges
+      boxSizing: 'border-box',
     }}
   >
-    <Typography variant="h3" fontWeight="bold" gutterBottom>
+    <Typography variant="h3" fontWeight="bold" gutterBottom sx={{ textAlign: 'center' }}>
       Thanks for playing today!
     </Typography>
-    <Button variant="contained" color="primary" sx={{ mt: 4 }} onClick={onReturn}>
-      Return
+    <Typography variant="h5" gutterBottom sx={{ textAlign: 'center' }}>
+      Better luck next time!
+    </Typography>
+    <Button
+      variant="contained"
+      size="large"
+      onClick={onReturn}
+      sx={{
+        fontSize: 16,
+        px: 3,
+        py: 1,
+        borderRadius: 50,
+        fontWeight: 600,
+        boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+        letterSpacing: 1,
+        outline: 'none',
+        backgroundColor: '#fff',
+        color: '#000',
+        '&:hover': {
+          backgroundColor: 'rgba(255, 255, 255, 0.9)',
+        },
+      }}
+    >
+      Return to Main Menu
     </Button>
   </Box>
 );

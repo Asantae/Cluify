@@ -26,10 +26,13 @@ interface SuspiciousPersonReportModalProps {
   setCurrentReportIndex: React.Dispatch<React.SetStateAction<number>>;
   linkedDmvRecords: { [reportId: string]: any | null };
   setLinkedDmvRecords: React.Dispatch<React.SetStateAction<{ [reportId: string]: any | null }>>;
+  setAttemptResults: React.Dispatch<React.SetStateAction<{ [caseId: string]: ('correct' | 'incorrect')[] }>>;
   onReportSubmitted?: () => void;
+  onSuccessfulSubmission?: () => void;
+  onFailedSubmission?: () => void;
 }
 
-const SuspiciousPersonReportModal = ({ open, onClose, reports, darkMode, currentReportIndex, setCurrentReportIndex, linkedDmvRecords, setLinkedDmvRecords, onReportSubmitted }: SuspiciousPersonReportModalProps) => {
+const SuspiciousPersonReportModal = ({ open, onClose, reports, darkMode, currentReportIndex, setCurrentReportIndex, linkedDmvRecords, setLinkedDmvRecords, setAttemptResults, onReportSubmitted, onSuccessfulSubmission, onFailedSubmission }: SuspiciousPersonReportModalProps) => {
   const [linkedEvidence, setLinkedEvidence] = useState<EvidenceItem[]>([]);
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
@@ -151,18 +154,41 @@ const SuspiciousPersonReportModal = ({ open, onClose, reports, darkMode, current
                         const result = await submitReport(
                           userId,
                           currentReport?.Id,
-                          linkedDmvRecords[currentReport?.Id]?.Id,
+                          linkedDmvRecords[currentReport?.Id]?.id,
                           currentReport?.CaseId,
                           [] // evidenceIds, empty for now
                         );
-                        if (onReportSubmitted) onReportSubmitted();
-                        if (result.success) {
+                        const isSuccess = result.success === true || result.success === 'true';
+                        if (isSuccess) {
                           setSnackbar({ open: true, message: 'Report submitted!' });
+                          setTimeout(() => {
+                            const currentReport = reports[currentReportIndex];
+                            const caseId = currentReport?.CaseId || '';
+                            setAttemptResults(prev => ({
+                              ...prev,
+                              [caseId]: [...(prev[caseId] || []), 'correct']
+                            }));
+                            if (onSuccessfulSubmission) onSuccessfulSubmission();
+                          }, 0);
+                          // Defer the callback to avoid React state update during render
+                          setTimeout(() => {
+                            if (onReportSubmitted) onReportSubmitted();
+                          }, 0);
                         } else {
                           setSnackbar({ open: true, message: 'Incorrect Submission' });
+                          setTimeout(() => {
+                            const currentReport = reports[currentReportIndex];
+                            const caseId = currentReport?.CaseId || '';
+                            setAttemptResults(prev => ({
+                              ...prev,
+                              [caseId]: [...(prev[caseId] || []), 'incorrect']
+                            }));
+                            if (onFailedSubmission) onFailedSubmission();
+                          }, 0);
                         }
                       } catch (err: any) {
                         setSnackbar({ open: true, message: 'Incorrect Submission' });
+                        if (onFailedSubmission) onFailedSubmission();
                       } finally {
                         setSubmitLoading(false);
                       }

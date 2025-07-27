@@ -34,14 +34,17 @@ const MainPage = ({ darkMode, setDarkMode, settingsOpen, setSettingsOpen, howToP
   const [reports, setReports] = useState<Report[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [attemptsUsed, setAttemptsUsed] = useState(0);
+  const [attemptResults, setAttemptResults] = useState<{ [caseId: string]: ('correct' | 'incorrect')[] }>({});
   const maxAttempts = 5;
 
-  // Helper to build AttemptStatus array
+  // Helper to build AttemptStatus array for current case
   const getAttemptStatusArray = () => {
+    const currentCaseId = activeCase?.Id || '';
+    const currentAttempts = attemptResults[currentCaseId] || [];
+    const remainingSlots = Math.max(0, maxAttempts - currentAttempts.length);
     return [
-      ...Array(attemptsUsed).fill('incorrect'),
-      ...Array(maxAttempts - attemptsUsed).fill('empty')
+      ...currentAttempts.slice(0, maxAttempts), // Only take first maxAttempts results
+      ...Array(remainingSlots).fill('empty')
     ];
   };
 
@@ -104,6 +107,18 @@ const MainPage = ({ darkMode, setDarkMode, settingsOpen, setSettingsOpen, howToP
     proceedToGame();
   };
 
+  const handleReturnToMainMenu = () => {
+    // Only reset tracker for practice cases, never for active case
+    if (activeCase?.Id && activeCase.CanBePractice) {
+      setAttemptResults(prev => {
+        const newResults = { ...prev };
+        delete newResults[activeCase.Id];
+        return newResults;
+      });
+    }
+    setShowGame(false);
+  };
+
   if (showGame) {
     return (
       <>
@@ -117,7 +132,10 @@ const MainPage = ({ darkMode, setDarkMode, settingsOpen, setSettingsOpen, howToP
             isLoading={isLoading} 
             error={error} 
             darkMode={darkMode}
-            setAttemptsUsed={setAttemptsUsed}
+            setAttemptsUsed={() => {}}
+            attemptResults={attemptResults}
+            setAttemptResults={setAttemptResults}
+            onReturnToMainMenu={handleReturnToMainMenu}
         />
         <Footer darkMode={darkMode} />
       </>

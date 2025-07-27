@@ -186,6 +186,7 @@ namespace CluifyAPI.Controllers
                     SuspectProfileId = report.SuspectProfileId,
                     Details = report.Details,
                     ReportDate = report.ReportDate,
+                    CaseId = report.CaseId,
                     Suspect = report.Suspect == null ? null : new DTOs.SuspectProfileDto
                     {
                         Id = report.Suspect.Id,

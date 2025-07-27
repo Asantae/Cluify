@@ -17,6 +17,9 @@ namespace CluifyAPI.DTOs
 
         public DateTime ReportDate { get; set; }
 
+        [BsonRepresentation(BsonType.ObjectId)]
+        public string CaseId { get; set; } = null!;
+
         public SuspectProfileDto? Suspect { get; set; }
     }
 } 

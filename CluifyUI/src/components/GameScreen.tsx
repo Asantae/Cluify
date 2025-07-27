@@ -23,14 +23,19 @@ interface GameScreenProps {
   error: string | null;
   darkMode: boolean;
   setAttemptsUsed: (attempts: number) => void;
+  attemptResults: { [caseId: string]: ('correct' | 'incorrect')[] };
+  setAttemptResults: React.Dispatch<React.SetStateAction<{ [caseId: string]: ('correct' | 'incorrect')[] }>>;
+  onReturnToMainMenu: () => void;
 }
 
-const GameScreen: React.FC<GameScreenProps> = ({ activeCase, reports, isLoading, error, darkMode, setAttemptsUsed }) => {
+const GameScreen: React.FC<GameScreenProps> = ({ activeCase, reports, isLoading, error, darkMode, setAttemptsUsed, attemptResults, setAttemptResults, onReturnToMainMenu }) => {
   const [isCaseViewerOpen, setCaseViewerOpen] = useState(false);
   const [isReportViewerOpen, setReportViewerOpen] = useState(false);
   const [isDmvSearchOpen, setDmvSearchOpen] = useState(false);
   const [currentReportIndex, setCurrentReportIndex] = useState(0);
   const [linkedDmvRecords, setLinkedDmvRecords] = useState<{ [reportId: string]: any | null }>({});
+  const [showWinOverlay, setShowWinOverlay] = useState(false);
+  const [showLoseOverlay, setShowLoseOverlay] = useState(false);
 
   const maxAttempts = 5;
   const userId = isLoggedIn() ? localStorage.getItem('userId') : null;
@@ -66,14 +71,10 @@ const GameScreen: React.FC<GameScreenProps> = ({ activeCase, reports, isLoading,
 
   // Only show overlays for tracked (active) cases (not practice)
   const isTrackedCase = !!activeCase && !activeCase.CanBePractice;
-  const showWin = isTrackedCase && !!progress?.hasWon;
-  const showLockout = isTrackedCase && (isLoggedIn() ? (progress?.attempts ?? 0) >= maxAttempts : localAttempts >= maxAttempts) && !progress?.hasWon;
+  // Show overlays for both tracked (active) cases and practice cases
+  const showWin = (!!progress?.hasWon || showWinOverlay);
+  const showLockout = ((isLoggedIn() ? (progress?.attempts ?? 0) >= maxAttempts : localAttempts >= maxAttempts) && !progress?.hasWon) || showLoseOverlay;
   const showInactive = isTrackedCase && !activeCase.IsActive;
-
-  // Navigation handler for 'Return' button
-  const goToPlayView = () => {
-    window.location.href = '/'; // Replace with your actual play view route if different
-  };
 
   useEffect(() => {
     if (isLoading || error) {
@@ -166,6 +167,7 @@ const GameScreen: React.FC<GameScreenProps> = ({ activeCase, reports, isLoading,
                 setCurrentReportIndex={setCurrentReportIndex}
                 linkedDmvRecords={linkedDmvRecords}
                 setLinkedDmvRecords={setLinkedDmvRecords}
+                setAttemptResults={setAttemptResults}
                 onReportSubmitted={() => {
                   if (activeCase && isLoggedIn() && userId) {
                     getCaseProgress(userId, String(activeCase.Id)).then((data) => {
@@ -182,6 +184,24 @@ const GameScreen: React.FC<GameScreenProps> = ({ activeCase, reports, isLoading,
                       setAttemptsUsed(prev + 1);
                       return prev + 1;
                     });
+                  }
+                }}
+                onSuccessfulSubmission={() => {
+                  // Defer the state update to avoid React render cycle issues
+                  setTimeout(() => {
+                    setShowWinOverlay(true);
+                  }, 0);
+                }}
+                onFailedSubmission={() => {
+                  // Check if we have 4 incorrect attempts (will be 5th after this one)
+                  const currentCaseId = activeCase?.Id || '';
+                  const currentAttempts = attemptResults[currentCaseId] || [];
+                  const incorrectAttempts = currentAttempts.filter(result => result === 'incorrect').length;
+                  if (incorrectAttempts >= 4) {
+                    // Defer the state update to avoid React render cycle issues
+                    setTimeout(() => {
+                      setShowLoseOverlay(true);
+                    }, 0);
                   }
                 }}
             />
@@ -203,9 +223,9 @@ const GameScreen: React.FC<GameScreenProps> = ({ activeCase, reports, isLoading,
             />
         )}
 
-        {showWin && <WinOverlay />}
-        {showLockout && <LockoutOverlay onReturn={goToPlayView} />}
-        {showInactive && <CaseInactiveOverlay onClose={goToPlayView} />}
+        {showWin && <WinOverlay onClose={onReturnToMainMenu} />}
+        {showLockout && <LockoutOverlay onReturn={onReturnToMainMenu} />}
+        {showInactive && <CaseInactiveOverlay onClose={onReturnToMainMenu} />}
     </Box>
   );
 };
