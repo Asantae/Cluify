@@ -39,7 +39,7 @@ const CaseViewerModal = ({ open, onClose, caseData, darkMode }: CaseViewerModalP
           }}
         >
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
-            <Typography component="span">Case #{caseData.CaseNumber}</Typography>
+          <Typography component="span">Case #{caseData.CaseNumber}</Typography>
             <Typography 
               variant="caption" 
               sx={{ 
@@ -52,17 +52,17 @@ const CaseViewerModal = ({ open, onClose, caseData, darkMode }: CaseViewerModalP
             >
               drag to move
             </Typography>
-            <IconButton
-              aria-label="close"
-              onClick={onClose}
-              sx={{
+          <IconButton
+            aria-label="close"
+            onClick={onClose}
+            sx={{
                 color: titleTextColor,
                 p: 0,
                 minWidth: 'auto'
-              }}
-            >
-              <CloseIcon />
-            </IconButton>
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
           </Box>
           <Typography 
             variant="body2" 
@@ -97,8 +97,8 @@ const CaseViewerModal = ({ open, onClose, caseData, darkMode }: CaseViewerModalP
             <Typography gutterBottom variant="body2">{caseData.Details}</Typography>
             {caseData.Objective && caseData.Objective.trim() !== '' && (
               <>
-                <Typography sx={{ mt: 2 }} gutterBottom><strong>Objective:</strong></Typography>
-                <Typography gutterBottom variant="body2">{caseData.Objective}</Typography>
+            <Typography sx={{ mt: 2 }} gutterBottom><strong>Objective:</strong></Typography>
+            <Typography gutterBottom variant="body2">{caseData.Objective}</Typography>
               </>
             )}
           </Box>

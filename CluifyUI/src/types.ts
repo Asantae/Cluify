@@ -50,4 +50,34 @@ export interface DmvRecord {
   eyeColor: string;
   hairColor: string;
   dateOfBirth: string;
+}
+
+export interface PhoneRecord {
+  Id: string;
+  PersonId: string;
+  ToName: string;
+  MessageContent: string;
+  MessageDateTime: string;
+}
+
+export interface SocialMediaPost {
+  Id: string;
+  PersonId: string;
+  Content: string;
+  PostDate: string;
+}
+
+export interface SearchHistory {
+  Id: string;
+  PersonId: string;
+  Query: string;
+  SearchDate: string;
+}
+
+export interface PurchaseRecord {
+  Id: string;
+  PersonId: string;
+  ItemBought: string;
+  Price: number;
+  PurchaseDate: string;
 } 

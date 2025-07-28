@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box } from '@mui/material';
 
-export type AttemptStatus = 'empty' | 'incorrect' | 'correct';
+export type AttemptStatus = 'empty' | 'incorrect' | 'correct' | 'insufficient';
 
 interface AttemptTrackerProps {
   attempts: AttemptStatus[]; // length up to 5
@@ -10,11 +10,13 @@ interface AttemptTrackerProps {
 const getColor = (status: AttemptStatus) => {
   switch (status) {
     case 'correct':
-      return { bg: '#388e3c', border: '#388e3c' };
+      return { bg: '#388e3c', border: '#388e3c' }; // green
     case 'incorrect':
-      return { bg: '#b71c1c', border: '#b71c1c' };
+      return { bg: '#b71c1c', border: '#b71c1c' }; // red
+    case 'insufficient':
+      return { bg: '#f57c00', border: '#f57c00' }; // yellow/orange
     default:
-      return { bg: '#222', border: '#444' };
+      return { bg: '#222', border: '#444' }; // empty
   }
 };
 

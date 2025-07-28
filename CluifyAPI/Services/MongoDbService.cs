@@ -260,7 +260,7 @@ namespace CluifyAPI.Services
                 }).ToList();
             }
 
-            return results;
+            return results.OrderBy(r => r.FirstName).ToList();
         }
 
         // Helper to parse height strings like "5'10\"" to inches

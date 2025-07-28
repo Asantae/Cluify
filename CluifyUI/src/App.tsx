@@ -34,7 +34,7 @@ const MainPage = ({ darkMode, setDarkMode, settingsOpen, setSettingsOpen, howToP
   const [reports, setReports] = useState<Report[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [attemptResults, setAttemptResults] = useState<{ [caseId: string]: ('correct' | 'incorrect')[] }>({});
+  const [attemptResults, setAttemptResults] = useState<{ [caseId: string]: ('correct' | 'incorrect' | 'insufficient')[] }>({});
   const maxAttempts = 5;
 
   // Helper to build AttemptStatus array for current case

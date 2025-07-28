@@ -23,19 +23,28 @@ const HowToPlayModal = ({ open, onClose, darkMode }: {
       </DialogTitle>
       <DialogContent sx={{ pt: 1, pb: 2 }}>
         <Typography sx={{ mb: 2 }}>
-          Solve the daily case by analyzing reports, searching databases, and submitting evidence to identify the culprit.
+          Solve the daily case by analyzing reports, searching databases, and linking evidence to identify the culprit.
         </Typography>
         <ul style={{ margin: 0, paddingLeft: 20, marginBottom: 16 }}>
           <li>Review all available clues and reports to understand the case.</li>
-          <li>Search through evidence records to connect clues to potential suspects.</li>
-          <li>When you've identified the guilty party, submit an accusation with your strongest evidence.</li>
-          <li>You must use between one and four pieces of evidence for each accusation.</li>
-          <li>Be careful—you only have three attempts to correctly identify the suspect!</li>
+          <li>Search through databases to find DMV records and link them to suspects.</li>
+          <li>Access phone records, purchase history, and other evidence to build your case.</li>
+          <li>Link up to 3 pieces of evidence to your report before submitting.</li>
+          <li>Submit your accusation with linked evidence when you're confident.</li>
+          <li>You have 5 attempts to solve the case correctly!</li>
+          <li><strong>Warning:</strong> Hacking 3 different people will cost you an attempt! (Hacking both phone and receipts of the same person is free)</li>
+        </ul>
+        <Typography sx={{ fontWeight: 600, mt: 2, mb: 1 }}>Success Conditions</Typography>
+        <ul style={{ margin: 0, paddingLeft: 20, marginBottom: 16 }}>
+          <li><strong>Green:</strong> Correct suspect with sufficient evidence (≥50 points)</li>
+          <li><strong>Yellow:</strong> Correct suspect but insufficient evidence</li>
+          <li><strong>Red:</strong> Wrong suspect selected</li>
         </ul>
         <Typography sx={{ fontWeight: 600, mt: 2, mb: 1 }}>Tips</Typography>
         <ul style={{ margin: 0, paddingLeft: 20 }}>
-          <li>Use all available clues—some details may be ambiguous.</li>
-          <li>Incorrect or weak evidence will lower your score.</li>
+          <li>Evidence has different point values - choose wisely!</li>
+          <li>You need at least 50 evidence points for a complete success.</li>
+          <li>Both wrong suspects and insufficient evidence count as failed attempts.</li>
           <li>Each day brings a new case to solve!</li>
         </ul>
       </DialogContent>

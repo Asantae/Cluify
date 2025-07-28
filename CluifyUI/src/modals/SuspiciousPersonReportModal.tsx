@@ -10,12 +10,7 @@ import paperTexture from '../assets/paper_texture.png';
 import { submitReport, isLoggedIn } from '../services/api';
 import Snackbar from '@mui/material/Snackbar';
 
-interface EvidenceItem {
-    Id: string;
-    type: 'Social Media Post' | 'Search History' | 'Phone Record' | 'Purchase Record' | 'Police Record';
-    content: string;
-  source: any;
-}
+
 
 interface SuspiciousPersonReportModalProps {
   open: boolean;
@@ -26,14 +21,15 @@ interface SuspiciousPersonReportModalProps {
   setCurrentReportIndex: React.Dispatch<React.SetStateAction<number>>;
   linkedDmvRecords: { [reportId: string]: any | null };
   setLinkedDmvRecords: React.Dispatch<React.SetStateAction<{ [reportId: string]: any | null }>>;
-  setAttemptResults: React.Dispatch<React.SetStateAction<{ [caseId: string]: ('correct' | 'incorrect')[] }>>;
+  linkedEvidence: { [reportId: string]: Array<{ id: string; type: string; content: string }> };
+  setLinkedEvidence: React.Dispatch<React.SetStateAction<{ [reportId: string]: Array<{ id: string; type: string; content: string }> }>>;
+  setAttemptResults: React.Dispatch<React.SetStateAction<{ [caseId: string]: ('correct' | 'incorrect' | 'insufficient')[] }>>;
   onReportSubmitted?: () => void;
   onSuccessfulSubmission?: () => void;
   onFailedSubmission?: () => void;
 }
 
-const SuspiciousPersonReportModal = ({ open, onClose, reports, darkMode, currentReportIndex, setCurrentReportIndex, linkedDmvRecords, setLinkedDmvRecords, setAttemptResults, onReportSubmitted, onSuccessfulSubmission, onFailedSubmission }: SuspiciousPersonReportModalProps) => {
-  const [linkedEvidence, setLinkedEvidence] = useState<EvidenceItem[]>([]);
+const SuspiciousPersonReportModal = ({ open, onClose, reports, darkMode, currentReportIndex, setCurrentReportIndex, linkedDmvRecords, setLinkedDmvRecords, linkedEvidence, setLinkedEvidence, setAttemptResults, onReportSubmitted, onSuccessfulSubmission, onFailedSubmission }: SuspiciousPersonReportModalProps) => {
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const [submitLoading, setSubmitLoading] = useState(false);
@@ -51,10 +47,20 @@ const SuspiciousPersonReportModal = ({ open, onClose, reports, darkMode, current
     const reportId = reports[currentReportIndex]?.Id;
     if (reportId) {
       setLinkedDmvRecords(prev => ({ ...prev, [reportId]: null }));
+      // Also remove all linked evidence when DMV record is removed
+      setLinkedEvidence(prev => ({ ...prev, [reportId]: [] }));
     }
   };
 
-  const removeEvidence = (id: string) => setLinkedEvidence(prev => prev.filter(item => item.Id !== id));
+  const removeEvidence = (evidenceId: string) => {
+    const currentReportId = reports[currentReportIndex]?.Id;
+    if (currentReportId) {
+      setLinkedEvidence(prev => ({
+        ...prev,
+        [currentReportId]: (prev[currentReportId] || []).filter(evidence => evidence.id !== evidenceId)
+      }));
+    }
+  };
 
   const currentReport = reports[currentReportIndex];
   const currentSuspect = currentReport?.Suspect;
@@ -144,22 +150,49 @@ const SuspiciousPersonReportModal = ({ open, onClose, reports, darkMode, current
                   <Button
                     variant="contained"
                     color="primary"
-                    disabled={!linkedDmvRecords[reports[currentReportIndex]?.Id] || submitLoading}
+                    disabled={(() => {
+                      const currentReportId = reports[currentReportIndex]?.Id;
+                      const hasDmvRecord = linkedDmvRecords[currentReportId];
+                      const currentEvidence = currentReportId ? linkedEvidence[currentReportId] || [] : [];
+                      const hasEvidence = currentEvidence.length > 0;
+                      return !hasDmvRecord || !hasEvidence || submitLoading;
+                    })()}
                     onClick={async () => {
                       setSubmitLoading(true);
                       setSnackbar({ open: false, message: '' });
                       try {
                         const userId = isLoggedIn() ? localStorage.getItem('userId') || '' : '';
                         const currentReport = reports[currentReportIndex];
-                        const result = await submitReport(
-                          userId,
-                          currentReport?.Id,
-                          linkedDmvRecords[currentReport?.Id]?.id,
-                          currentReport?.CaseId,
-                          [] // evidenceIds, empty for now
-                        );
-                        const isSuccess = result.success === true || result.success === 'true';
-                        if (isSuccess) {
+                        const currentReportId = currentReport?.Id;
+                        const currentEvidence = currentReportId ? linkedEvidence[currentReportId] || [] : [];
+                                        const evidenceIds = currentEvidence.map(evidence => evidence.id);
+                                const result = await submitReport(
+                  userId,
+                  currentReport?.Id,
+                  linkedDmvRecords[currentReport?.Id]?.id,
+                  currentReport?.CaseId,
+                  evidenceIds
+                );
+                        
+                        // New success logic with 4 conditions:
+                        // 1. Report ID matches suspicious person report
+                        // 2. Suspect on report is guilty
+                        // 3. Evidence has cumulative value over 50
+                        // 4. Evidence IDs are returned (correct evidence)
+                        
+                        // Check if suspect is correct but evidence is insufficient/incorrect
+                        const isCorrectSuspect = result.isCorrectSuspect === true;
+                        const hasSufficientEvidence = result.evidenceValue >= 50;
+                        const hasCorrectEvidence = result.evidenceIds && result.evidenceIds.length > 0;
+                        
+                        // Determine submission type
+                        let submissionType = 'incorrect'; // red
+                        if (isCorrectSuspect && hasSufficientEvidence && hasCorrectEvidence) {
+                          submissionType = 'correct'; // green
+                        } else if (isCorrectSuspect && (!hasSufficientEvidence || !hasCorrectEvidence)) {
+                          submissionType = 'insufficient'; // yellow
+                        }
+                        if (submissionType === 'correct') {
                           setSnackbar({ open: true, message: 'Report submitted!' });
                           setTimeout(() => {
                             const currentReport = reports[currentReportIndex];
@@ -173,6 +206,17 @@ const SuspiciousPersonReportModal = ({ open, onClose, reports, darkMode, current
                           // Defer the callback to avoid React state update during render
                           setTimeout(() => {
                             if (onReportSubmitted) onReportSubmitted();
+                          }, 0);
+                        } else if (submissionType === 'insufficient') {
+                          setSnackbar({ open: true, message: 'Correct suspect but insufficient evidence' });
+                          setTimeout(() => {
+                            const currentReport = reports[currentReportIndex];
+                            const caseId = currentReport?.CaseId || '';
+                            setAttemptResults(prev => ({
+                              ...prev,
+                              [caseId]: [...(prev[caseId] || []), 'insufficient']
+                            }));
+                            if (onFailedSubmission) onFailedSubmission();
                           }, 0);
                         } else {
                           setSnackbar({ open: true, message: 'Incorrect Submission' });
@@ -245,13 +289,29 @@ const SuspiciousPersonReportModal = ({ open, onClose, reports, darkMode, current
               </Grid>
               <Box sx={{ mb: 1 , mt: .5}}>
                 <Typography variant="subtitle2" sx={{ mb: 1, textTransform: 'uppercase', fontWeight: 'bold', fontSize: '0.95rem' }}>Report:</Typography>
-                {currentReport?.Details && currentReport.Details.length > 220 ? (
-                  <Box sx={{ maxHeight: { xs: 90, sm: 'none' }, overflowY: { xs: 'auto', sm: 'visible' }, borderRadius: 1, background: 'transparent', p: { xs: 0.5, sm: 0 } }}>
-                    <Typography variant="body2" sx={{ fontSize: '0.85rem' }}>{currentReport.Details}</Typography>
-                  </Box>
-                ) : (
+                <Box sx={{ 
+                  maxHeight: { xs: 60, sm: 80 }, 
+                  overflowY: 'auto', 
+                  borderRadius: 1, 
+                  background: 'transparent', 
+                  p: { xs: 0.5, sm: 0 },
+                  '&::-webkit-scrollbar': {
+                    width: '8px'
+                  },
+                  '&::-webkit-scrollbar-track': {
+                    backgroundColor: 'rgba(0,0,0,0.1)',
+                    borderRadius: '4px'
+                  },
+                  '&::-webkit-scrollbar-thumb': {
+                    backgroundColor: 'rgba(0,0,0,0.3)',
+                    borderRadius: '4px',
+                    '&:hover': {
+                      backgroundColor: 'rgba(0,0,0,0.5)'
+                    }
+                  }
+                }}>
                   <Typography variant="body2" sx={{ fontSize: '0.85rem' }}>{currentReport?.Details}</Typography>
-                )}
+                </Box>
               </Box>
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: { xs: 0.2, sm: 0.5 }, mt: 3 }}>
                 <Paper
@@ -285,30 +345,53 @@ const SuspiciousPersonReportModal = ({ open, onClose, reports, darkMode, current
                   sx={{
                     p: { xs: 1, sm: 2 },
                     backgroundColor: 'transparent',
-                    border: linkedEvidence.length > 0
-                      ? theme => `2px solid ${theme.palette.success.main}`
-                      : theme => `1px dashed ${theme.palette.error.main}`,
+                    border: (() => {
+                      const currentReportId = reports[currentReportIndex]?.Id;
+                      const currentEvidence = currentReportId ? linkedEvidence[currentReportId] || [] : [];
+                      return currentEvidence.length > 0
+                        ? theme => `2px solid ${theme.palette.success.main}`
+                        : theme => `1px dashed ${theme.palette.error.main}`;
+                    })(),
                     transition: 'border 0.2s',
                     mb: { xs: 0.5, sm: 1 },
+                    maxHeight: '100px',
+                    overflow: 'hidden',
                   }}
                 >
-                  <Typography variant="subtitle2" sx={{ color: '#000', mb: { xs: 0.7, sm: 1 }, fontWeight: 600, fontSize: { xs: '0.98rem', sm: '0.95rem' }, textTransform: 'uppercase' }}>Evidence</Typography>
-                  {linkedEvidence.length > 0 ? (
-                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-                      {linkedEvidence.map(item => (
-                        <Box key={item.Id} sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                          <Typography sx={{ color: '#000', fontSize: { xs: '0.78rem', sm: '0.82rem' }, fontWeight: 500 }}>
-                            <span style={{ fontWeight: 600 }}>{item.type}:</span> {item.content.substring(0, 30)}...
-                          </Typography>
-                          <IconButton size="small" sx={{ color: '#000' }} onClick={() => removeEvidence(item.Id)} aria-label="Remove Evidence">
-                            <CloseIcon fontSize="small" />
-                          </IconButton>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: { xs: 0.7, sm: 1 } }}>
+                    <Typography variant="subtitle2" sx={{ color: '#000', fontWeight: 600, fontSize: { xs: '0.98rem', sm: '0.95rem' }, textTransform: 'uppercase' }}>Evidence</Typography>
+                    {(() => {
+                      const currentReportId = reports[currentReportIndex]?.Id;
+                      const currentEvidence = currentReportId ? linkedEvidence[currentReportId] || [] : [];
+                      return currentEvidence.length > 0 ? (
+                        <Typography variant="body2" sx={{ color: '#555', fontSize: { xs: '0.75rem', sm: '0.8rem' }, fontWeight: 500 }}>
+                          Selected: {currentEvidence.length}/3
+                        </Typography>
+                      ) : null;
+                    })()}
+                  </Box>
+                  <Box sx={{ maxHeight: '60px', overflowY: 'auto', '&::-webkit-scrollbar': { width: '8px' }, '&::-webkit-scrollbar-track': { background: '#f1f1f1' }, '&::-webkit-scrollbar-thumb': { background: '#888', borderRadius: '4px' }, '&::-webkit-scrollbar-thumb:hover': { background: '#555' } }}>
+                    {(() => {
+                      const currentReportId = reports[currentReportIndex]?.Id;
+                      const currentEvidence = currentReportId ? linkedEvidence[currentReportId] || [] : [];
+                      return currentEvidence.length > 0 ? (
+                        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                          {currentEvidence.map(item => (
+                            <Box key={item.id} sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                              <Typography sx={{ color: '#000', fontSize: { xs: '0.78rem', sm: '0.82rem' }, fontWeight: 500 }}>
+                                <span style={{ fontWeight: 600 }}>{item.type}:</span> {item.content.substring(0, 30)}...
+                              </Typography>
+                              <IconButton size="small" sx={{ color: '#000' }} onClick={() => removeEvidence(item.id)} aria-label="Remove Evidence">
+                                <CloseIcon fontSize="small" />
+                              </IconButton>
+                            </Box>
+                          ))}
                         </Box>
-                      ))}
-                    </Box>
-                  ) : (
-                    <Typography variant="body2" sx={{ color: '#555', fontSize: { xs: '0.8rem', sm: '0.92rem' }, fontWeight: 400 }}>No evidence linked.</Typography>
-                  )}
+                      ) : (
+                        <Typography variant="body2" sx={{ color: '#555', fontSize: { xs: '0.8rem', sm: '0.92rem' }, fontWeight: 400 }}>No evidence linked.</Typography>
+                      );
+                    })()}
+                  </Box>
                 </Paper>
               </Box>
             </Box>

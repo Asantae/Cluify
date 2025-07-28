@@ -57,6 +57,100 @@ export async function searchDmvRecords(query: any): Promise<DmvRecord[]> {
     return response.json();
 } 
 
+export async function searchSocialMediaPosts(personId: string) {
+    const response = await fetch(`${API_BASE_URL}/socialmedia/search`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ personId }),
+    });
+
+    if (!response.ok) {
+        throw new Error('Failed to search social media posts');
+    }
+
+    return response.json();
+}
+
+export async function searchPurchaseRecords(personId: string) {
+    const response = await fetch(`${API_BASE_URL}/purchases/search`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ personId }),
+    });
+
+    if (!response.ok) {
+        throw new Error('Failed to search purchase records');
+    }
+
+    return response.json();
+}
+
+export async function searchPurchaseRecordsByDmv(dmvRecordId: string) {
+    const response = await fetch(`${API_BASE_URL}/purchases/search-by-dmv?dmvRecordId=${encodeURIComponent(dmvRecordId)}`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    });
+
+    if (!response.ok) {
+        throw new Error('Failed to search purchase records');
+    }
+
+    return response.json();
+}
+
+export async function searchPhoneRecords(personId: string) {
+    const response = await fetch(`${API_BASE_URL}/phone/search`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ personId }),
+    });
+
+    if (!response.ok) {
+        throw new Error('Failed to search phone records');
+    }
+
+    return response.json();
+}
+
+export async function searchAllPhoneData(dmvRecordId: string) {
+    const response = await fetch(`${API_BASE_URL}/phone/search-all?dmvRecordId=${encodeURIComponent(dmvRecordId)}`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    });
+
+    if (!response.ok) {
+        throw new Error('Failed to search phone data');
+    }
+
+    return response.json();
+}
+
+export async function searchSearchHistory(personId: string) {
+    const response = await fetch(`${API_BASE_URL}/searchhistory/search`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ personId }),
+    });
+
+    if (!response.ok) {
+        throw new Error('Failed to search search history');
+    }
+
+    return response.json();
+}
+
 export async function submitReport(userId: string, reportId: string, dmvRecordId: string, caseId: string, evidenceIds: string[]) {
     const response = await fetch(`${API_BASE_URL}/reports/submit`, {
         method: 'POST',
