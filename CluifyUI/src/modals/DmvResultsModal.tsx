@@ -49,21 +49,30 @@ const DmvResultsModal: React.FC<DmvResultsModalProps> = ({ isOpen, onClose, resu
             handleId={handleId} 
             PaperProps={{
                 sx: {
-                    width: { xs: '95vw', sm: '90vw', md: '80vw', lg: '70vw' },
-                    maxWidth: '1200px',
-                    height: { xs: '80vh', sm: '75vh' },
-                    maxHeight: '800px',
+                    width: { xs: '95vw', sm: 'auto' },
+                    maxWidth: { xs: '95vw', sm: '90vw', md: '80vw' },
+                    height: { xs: '80vh', sm: 'auto' },
+                    maxHeight: { xs: '80vh', sm: '85vh' },
                     backgroundColor: modalBgColor,
+                    borderRadius: '8px',
+                    boxShadow: '0 8px 32px rgba(0,0,0,0.3)'
                 }
             }}
         >
-                <DialogTitle style={{ cursor: 'move', backgroundColor: titleBgColor, color: textColor, borderBottom: `1px solid ${borderColor}` }} id={handleId}>
+                <DialogTitle sx={{ 
+                    cursor: 'move', 
+                    backgroundColor: titleBgColor, 
+                    color: textColor, 
+                    borderBottom: `1px solid ${borderColor}`,
+                    padding: { xs: 2, sm: '12px 16px' },
+                    minHeight: '48px'
+                }} id={handleId}>
                     <Typography sx={{ fontWeight: 'bold' }}>{results.length} Results</Typography>
                     <IconButton aria-label="close" onClick={onClose} sx={{ position: 'absolute', right: 8, top: 8, color: textColor }}>
                         <CloseIcon />
                     </IconButton>
                 </DialogTitle>
-                <Box sx={{ p: 2, flexGrow: 1, minHeight: 0, backgroundColor: modalBgColor }}>
+                <Box sx={{ p: { xs: 2, sm: 2 }, flexGrow: 1, minHeight: 0, maxHeight: '550px', backgroundColor: modalBgColor, display: 'flex', flexDirection: 'column' }}>
                     <Typography 
                         variant="body2" 
                         sx={{ 
@@ -77,9 +86,13 @@ const DmvResultsModal: React.FC<DmvResultsModalProps> = ({ isOpen, onClose, resu
                         Click a name to add a suspect
                     </Typography>
                     <Box sx={{ 
-                        overflowX: 'auto', 
-                        maxWidth: '100%',
+                        width: { xs: '100%', sm: '500px' },
+                        flex: 1,
+                        height: '100%',
+                        overflowY: 'auto',
+                        overflowX: 'auto',
                         '&::-webkit-scrollbar': {
+                            width: '8px',
                             height: '8px'
                         },
                         '&::-webkit-scrollbar-track': {

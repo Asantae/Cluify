@@ -26,7 +26,7 @@ const DraggablePaper: React.FC<DraggablePaperProps> = ({ children, handleId, mod
   // Calculate a reasonable default position that ensures the modal is visible
   const getDefaultPosition = () => {
     return {
-      x: -85,
+      x: 0,
       y: 0
     };
   };

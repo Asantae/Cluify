@@ -80,4 +80,32 @@ export interface PurchaseRecord {
   ItemBought: string;
   Price: number;
   PurchaseDate: string;
-} 
+}
+
+export interface PoliceRecord {
+  Id: string;
+  PersonId: string;
+  PreviousCaseNumber: number;
+  Offense: string;
+  DateOfOffense: string;
+  EvidenceValue: number;
+  SuspectName?: string;
+}
+
+export interface PersonWithPoliceRecords {
+  PersonId: string;
+  FirstName?: string;
+  LastName?: string;
+  Height?: string;
+  Weight?: string;
+  Age?: string;
+  EyeColor?: string;
+  HairColor?: string;
+  Sex?: string;
+  RecordCount: number;
+  Records: PoliceRecord[];
+}
+
+export interface FeatureFlags {
+  ShowLoginButton: boolean;
+}

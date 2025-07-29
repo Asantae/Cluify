@@ -60,6 +60,7 @@ namespace CluifyAPI.Controllers
             
             // Calculate evidence value using the EvidenceValue field from the database
             var evidenceValue = 0;
+            var evidenceIds = new List<string>();
             
             if (req.EvidenceIds != null && req.EvidenceIds.Count > 0)
             {
@@ -69,29 +70,42 @@ namespace CluifyAPI.Controllers
                 var phoneRecords = await _mongoDbService.PhoneRecords.Find(pr => req.EvidenceIds!.Contains(pr.Id)).ToListAsync();
                 var phoneEvidenceValue = phoneRecords.Sum(pr => pr.EvidenceValue);
                 evidenceValue += phoneEvidenceValue;
+                evidenceIds.AddRange(phoneRecords.Select(pr => pr.Id!));
                 Log.Information("Phone records found: {PhoneCount}, Total phone evidence value: {PhoneEvidenceValue}", phoneRecords.Count, phoneEvidenceValue);
                 
                 // Check social media posts
                 var socialMediaPosts = await _mongoDbService.SocialMediaPosts.Find(sm => req.EvidenceIds!.Contains(sm.Id)).ToListAsync();
                 var socialEvidenceValue = socialMediaPosts.Sum(sm => sm.EvidenceValue);
                 evidenceValue += socialEvidenceValue;
+                evidenceIds.AddRange(socialMediaPosts.Select(sm => sm.Id!));
                 Log.Information("Social media posts found: {SocialCount}, Total social evidence value: {SocialEvidenceValue}", socialMediaPosts.Count, socialEvidenceValue);
                 
                 // Check search history
                 var searchHistory = await _mongoDbService.SearchHistories.Find(sh => req.EvidenceIds!.Contains(sh.Id)).ToListAsync();
                 var searchEvidenceValue = searchHistory.Sum(sh => sh.EvidenceValue);
                 evidenceValue += searchEvidenceValue;
+                evidenceIds.AddRange(searchHistory.Select(sh => sh.Id!));
                 Log.Information("Search history found: {SearchCount}, Total search evidence value: {SearchEvidenceValue}", searchHistory.Count, searchEvidenceValue);
                 
                 // Check purchase records
                 var purchaseRecords = await _mongoDbService.PurchaseRecords.Find(pr => req.EvidenceIds!.Contains(pr.Id)).ToListAsync();
                 var purchaseEvidenceValue = purchaseRecords.Sum(pr => pr.EvidenceValue);
                 evidenceValue += purchaseEvidenceValue;
+                evidenceIds.AddRange(purchaseRecords.Select(pr => pr.Id!));
                 Log.Information("Purchase records found: {PurchaseCount}, Total purchase evidence value: {PurchaseEvidenceValue}", purchaseRecords.Count, purchaseEvidenceValue);
+                
+                // Check police records - only count if they match the DMV record's personId
+                var policeRecords = await _mongoDbService.PoliceRecords.Find(pr => req.EvidenceIds!.Contains(pr.Id)).ToListAsync();
+                var matchingPoliceRecords = policeRecords.Where(pr => pr.PersonId == dmv.SuspectProfileId).ToList();
+                var policeEvidenceValue = matchingPoliceRecords.Sum(pr => pr.EvidenceValue);
+                evidenceValue += policeEvidenceValue;
+                evidenceIds.AddRange(matchingPoliceRecords.Select(pr => pr.Id!));
+                Log.Information("Police records found: {PoliceCount}, Matching police records: {MatchingCount}, Total police evidence value: {PoliceEvidenceValue}", 
+                    policeRecords.Count, matchingPoliceRecords.Count, policeEvidenceValue);
             }
 
             var hasSufficientEvidence = evidenceValue >= 50;
-            var hasCorrectEvidence = req.EvidenceIds != null && req.EvidenceIds.Count > 0;
+            var hasCorrectEvidence = evidenceIds.Count > 0;
             
             Log.Information("Evidence calculation complete - Total evidence value: {EvidenceValue}, HasSufficientEvidence: {HasSufficientEvidence}, HasCorrectEvidence: {HasCorrectEvidence}", 
                 evidenceValue, hasSufficientEvidence, hasCorrectEvidence);
@@ -124,7 +138,7 @@ namespace CluifyAPI.Controllers
                         success = true,
                         isCorrectSuspect = true,
                         evidenceValue = evidenceValue,
-                        evidenceIds = req.EvidenceIds
+                        evidenceIds = evidenceIds
                     });
                 }
                 else if (isCorrectSuspect && isGuilty && (!hasSufficientEvidence || !hasCorrectEvidence))
@@ -137,7 +151,7 @@ namespace CluifyAPI.Controllers
                         success = false,
                         isCorrectSuspect = true,
                         evidenceValue = evidenceValue,
-                        evidenceIds = req.EvidenceIds
+                        evidenceIds = evidenceIds
                     });
                 }
                 else
@@ -150,7 +164,7 @@ namespace CluifyAPI.Controllers
                         success = false,
                         isCorrectSuspect = false,
                         evidenceValue = evidenceValue,
-                        evidenceIds = req.EvidenceIds
+                        evidenceIds = evidenceIds
                     });
                 }
             }
@@ -165,7 +179,7 @@ namespace CluifyAPI.Controllers
                             success = true,
                             isCorrectSuspect = true,
                             evidenceValue = evidenceValue,
-                            evidenceIds = req.EvidenceIds
+                            evidenceIds = evidenceIds
                         });
                     }
                     else if (isCorrectSuspect && isGuilty && (!hasSufficientEvidence || !hasCorrectEvidence))
@@ -177,7 +191,7 @@ namespace CluifyAPI.Controllers
                             success = false,
                             isCorrectSuspect = true,
                             evidenceValue = evidenceValue,
-                            evidenceIds = req.EvidenceIds
+                            evidenceIds = evidenceIds
                         });
                     }
                     else
@@ -189,7 +203,7 @@ namespace CluifyAPI.Controllers
                             success = false,
                             isCorrectSuspect = false,
                             evidenceValue = evidenceValue,
-                            evidenceIds = req.EvidenceIds
+                            evidenceIds = evidenceIds
                         });
                     }
                 }

@@ -1,7 +1,9 @@
 using CluifyAPI.Services;
 using CluifyAPI.Middleware;
+using CluifyAPI.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.Extensions.Options;
 using System.Text;
 using Serilog;
 using Serilog.Events;
@@ -75,6 +77,12 @@ builder.Services.Configure<MongoDbSettings>(builder.Configuration.GetSection("Mo
 builder.Services.AddSingleton<MongoDbService>();
 
 Log.Information("MongoDB service configured");
+
+// Configure Feature Flags
+builder.Services.Configure<FeatureFlags>(builder.Configuration.GetSection("FeatureFlags"));
+builder.Services.AddSingleton(sp => sp.GetRequiredService<IOptions<FeatureFlags>>().Value);
+
+Log.Information("Feature flags configured");
 
 // JWT Authentication
 builder.Services.AddAuthentication(options =>

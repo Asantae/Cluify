@@ -1,4 +1,4 @@
-import { Case, Report, DmvRecord } from '../types';
+import { Case, Report, DmvRecord, PersonWithPoliceRecords, FeatureFlags } from '../types';
 
 // Environment variable is injected at build time by Vite
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
@@ -135,6 +135,48 @@ export async function searchAllPhoneData(dmvRecordId: string) {
     return response.json();
 }
 
+export async function searchPoliceRecords(firstName: string, lastName: string): Promise<PersonWithPoliceRecords[]> {
+    const params = new URLSearchParams();
+    if (firstName.trim()) params.append('firstName', firstName.trim());
+    if (lastName.trim()) params.append('lastName', lastName.trim());
+    
+    try {
+        const response = await fetch(`${API_BASE_URL}/police/search-by-name?${params.toString()}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+
+        if (!response.ok) {
+            return []; // Return empty array instead of throwing error
+        }
+
+        return response.json();
+    } catch (error) {
+        return []; // Return empty array on any error
+    }
+}
+
+export async function searchPoliceRecordsByDmv(dmvRecordId: string) {
+    try {
+        const response = await fetch(`${API_BASE_URL}/police/search-by-dmv?dmvRecordId=${encodeURIComponent(dmvRecordId)}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+
+        if (!response.ok) {
+            return []; // Return empty array instead of throwing error
+        }
+
+        return response.json();
+    } catch (error) {
+        return []; // Return empty array on any error
+    }
+}
+
 export async function searchSearchHistory(personId: string) {
     const response = await fetch(`${API_BASE_URL}/searchhistory/search`, {
         method: 'POST',
@@ -229,4 +271,12 @@ export function isLoggedIn() {
     const token = localStorage.getItem('token');
     // Optionally, add more validation (e.g., check expiration)
     return !!token;
+}
+
+export async function getFeatureFlags(): Promise<FeatureFlags> {
+    const response = await fetch(`${API_BASE_URL}/featureflags`);
+    if (!response.ok) {
+        throw new Error('Failed to fetch feature flags');
+    }
+    return response.json();
 } 

@@ -6,6 +6,7 @@ import SuspiciousPersonReportModal from '../modals/SuspiciousPersonReportModal';
 import DmvSearchModal from '../modals/DmvSearchModal';
 import ReceiptsModal from '../modals/ReceiptsModal';
 import PhoneRecordsModal from '../modals/PhoneRecordsModal';
+import PoliceRecordsModal from '../modals/PoliceRecordsModal';
 import WinOverlay from './WinOverlay';
 import LockoutOverlay from './LockoutOverlay';
 import CaseInactiveOverlay from './CaseInactiveOverlay';
@@ -37,6 +38,7 @@ const GameScreen: React.FC<GameScreenProps> = ({ activeCase, reports, isLoading,
   const [isDmvSearchOpen, setDmvSearchOpen] = useState(false);
   const [isPurchaseRecordsOpen, setPurchaseRecordsOpen] = useState(false);
   const [isPhoneRecordsOpen, setPhoneRecordsOpen] = useState(false);
+  const [isPoliceRecordsOpen, setPoliceRecordsOpen] = useState(false);
 
   const [showPhoneHackConfirm, setShowPhoneHackConfirm] = useState(false);
   const [showPhoneHackError, setShowPhoneHackError] = useState(false);
@@ -46,6 +48,7 @@ const GameScreen: React.FC<GameScreenProps> = ({ activeCase, reports, isLoading,
   const [linkedDmvRecords, setLinkedDmvRecords] = useState<{ [key: string]: DmvRecord }>({});
   const [linkedEvidence, setLinkedEvidence] = useState<{ [key: string]: Array<{ id: string; type: string; content: string }> }>({});
   const [hackAttempts, setHackAttempts] = useState<Set<string>>(new Set());
+  const [hackCount, setHackCount] = useState(0);
   const [showWinOverlay, setShowWinOverlay] = useState(false);
   const [showLoseOverlay, setShowLoseOverlay] = useState(false);
   const [evidenceSnackbar, setEvidenceSnackbar] = useState<{ open: boolean; message: string }>({ open: false, message: '' });
@@ -59,15 +62,14 @@ const GameScreen: React.FC<GameScreenProps> = ({ activeCase, reports, isLoading,
       return null;
     }
 
-    // Find the DMV record linked to this suspect's report
-    const suspectReport = reports.find(report => report.Suspect?.Id === suspect.Id);
-    if (!suspectReport) {
+    // Get the DMV record linked to the currently active report
+    const currentReportId = reports && reports.length > 0 ? reports[currentReportIndex]?.Id : undefined;
+    if (!currentReportId) {
       return null;
     }
 
-    // Get the DMV record that was actually linked to this report
-    // The linkedDmvRecords object keys are the DMV record IDs
-    const linkedDmvRecord = Object.values(linkedDmvRecords)[0]; // For now, just get the first one
+    // Get the DMV record that was actually linked to this specific report
+    const linkedDmvRecord = linkedDmvRecords[currentReportId];
     if (linkedDmvRecord) {
       const result = {
         name: `${linkedDmvRecord.firstName} ${linkedDmvRecord.lastName}`,
@@ -116,6 +118,9 @@ const GameScreen: React.FC<GameScreenProps> = ({ activeCase, reports, isLoading,
           newSet.add(phoneHackKey);
           return newSet;
         });
+        
+        // Update hack count
+        updateHackCount();
         
         // Check if this is the 3rd unique DMV record hack
         const newHackAttempts = new Set([...hackAttempts, phoneHackKey]);
@@ -188,6 +193,9 @@ const GameScreen: React.FC<GameScreenProps> = ({ activeCase, reports, isLoading,
           return newSet;
         });
         
+        // Update hack count
+        updateHackCount();
+        
         // Check if this is the 3rd unique DMV record hack
         const newHackAttempts = new Set([...hackAttempts, receiptHackKey]);
         const uniqueDmvHacks = new Set();
@@ -222,6 +230,10 @@ const GameScreen: React.FC<GameScreenProps> = ({ activeCase, reports, isLoading,
       }
       // If we've already hacked this DMV record, it's free (no penalty)
     }
+  };
+
+  const handlePoliceRecordsClick = () => {
+    setPoliceRecordsOpen(true);
   };
 
   const handleEvidenceSelect = (record: any, type: string) => {
@@ -266,6 +278,16 @@ const GameScreen: React.FC<GameScreenProps> = ({ activeCase, reports, isLoading,
 
   const handleEvidenceSnackbarClose = () => setEvidenceSnackbar({ open: false, message: '' });
 
+  const updateHackCount = () => {
+    setHackCount(prev => {
+      const newCount = prev + 1;
+      if (newCount >= 3) {
+        return 0; // Reset to 0 when reaching 3
+      }
+      return newCount;
+    });
+  };
+
   const maxAttempts = 5;
   const userId = isLoggedIn() ? localStorage.getItem('userId') : null;
   const [localAttempts, setLocalAttempts] = useLocalStorage<number>(`case_attempts_${activeCase?.Id || ''}`, 0);
@@ -297,6 +319,8 @@ const GameScreen: React.FC<GameScreenProps> = ({ activeCase, reports, isLoading,
       setCaseViewerOpen(true);
       // Reset hack attempts for new case
       setHackAttempts(new Set());
+      // Reset hack count for new case
+      setHackCount(0);
     }
   }, [activeCase]);
 
@@ -338,8 +362,7 @@ const GameScreen: React.FC<GameScreenProps> = ({ activeCase, reports, isLoading,
         height: 'calc(100vh - 128px)', // Account for header and footer
         overflow: 'auto',
         display: 'flex',
-        flexDirection: 'row',
-        flexWrap: 'nowrap',
+        flexDirection: 'column',
         alignItems: !activeCase ? 'center' : 'flex-start',
         justifyContent: !activeCase ? 'center' : 'flex-start',
         gap: 2,
@@ -347,6 +370,74 @@ const GameScreen: React.FC<GameScreenProps> = ({ activeCase, reports, isLoading,
         ...(activeCase && { minWidth: '600px' }), // Horizontal scroll for smaller screens
       }}
     >
+      {/* Submission Tracker and Hack Counter */}
+      {activeCase && (
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            mb: 0.5,
+            mt: 0.5,
+            px: 3,
+            gap: 4,
+          }}
+        >
+          {/* Submission Tracker */}
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+            {Array.from({ length: 5 }, (_, index) => {
+              const currentCaseId = activeCase?.Id || '';
+              const currentAttempts = attemptResults[currentCaseId] || [];
+              const status = currentAttempts[index] || 'empty';
+              
+              let color = '#666';
+              if (status === 'correct') color = '#4caf50';
+              else if (status === 'incorrect') color = '#f44336';
+              else if (status === 'insufficient') color = '#ff9800';
+              
+              return (
+                <Box
+                  key={index}
+                  sx={{
+                    width: 24,
+                    height: 24,
+                    borderRadius: '4px',
+                    backgroundColor: color,
+                    border: `2px solid ${color === '#666' ? '#444' : color}`,
+                  }}
+                />
+              );
+            })}
+          </Box>
+
+          {/* Hack Counter */}
+          <Typography
+            variant="body2"
+            sx={{
+              color: hackCount === 0 ? '#fff' : hackCount === 1 ? '#ffeb3b' : '#f44336',
+              fontWeight: 500,
+              fontSize: '0.85rem',
+              letterSpacing: '0.5px',
+              textTransform: 'uppercase',
+              opacity: 0.8,
+            }}
+          >
+            {hackCount}/3 hacks
+          </Typography>
+        </Box>
+      )}
+      
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'row',
+          flexWrap: 'nowrap',
+          alignItems: !activeCase ? 'center' : 'flex-start',
+          justifyContent: !activeCase ? 'center' : 'flex-start',
+          gap: 2,
+          flex: 1,
+        }}
+      >
         {!activeCase ? (
             <Box sx={{ p: { xs: 2, sm: 3 }, textAlign: 'center' }}>
                 <Typography variant="h4" component="h2" fontWeight="bold" mb={2}>
@@ -403,13 +494,12 @@ const GameScreen: React.FC<GameScreenProps> = ({ activeCase, reports, isLoading,
                 <DesktopIcon
                     icon={policeRecordsIcon}
                     label="ConvictScan"
-                    onClick={() => {
-                      // TODO: Implement police records modal
-                    }}
+                    onClick={handlePoliceRecordsClick}
                     darkMode={darkMode}
                 />
             </Box>
         )}
+      </Box>
 
 
 
@@ -435,6 +525,8 @@ const GameScreen: React.FC<GameScreenProps> = ({ activeCase, reports, isLoading,
                 linkedEvidence={linkedEvidence}
                 setLinkedEvidence={setLinkedEvidence}
                 setAttemptResults={setAttemptResults}
+                onClosePhoneModal={() => setPhoneRecordsOpen(false)}
+                onCloseReceiptModal={() => setPurchaseRecordsOpen(false)}
                 onReportSubmitted={() => {
                   if (activeCase && isLoggedIn() && userId) {
                     getCaseProgress(userId, String(activeCase.Id)).then((data) => {
@@ -522,6 +614,18 @@ const GameScreen: React.FC<GameScreenProps> = ({ activeCase, reports, isLoading,
                   handleEvidenceSelect(record, 'receipt');
                 }}
             />
+        )}
+
+        {activeCase && (
+                            <PoliceRecordsModal
+                  open={isPoliceRecordsOpen}
+                  onClose={() => setPoliceRecordsOpen(false)}
+                  dmvRecordId={suspectDmvRecordId}
+                  dmvRecord={Object.values(linkedDmvRecords)[0] || null}
+                  onSelectRecord={(record) => {
+                    handleEvidenceSelect(record, 'police');
+                  }}
+                />
         )}
 
         {showWin && <WinOverlay onClose={onReturnToMainMenu} />}

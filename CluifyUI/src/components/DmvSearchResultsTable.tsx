@@ -39,15 +39,37 @@ const DmvSearchResultsTable = ({ results, darkMode, onRowClick }: DmvSearchResul
   return (
     <TableContainer component={Paper} sx={{ 
       flexGrow: 1, 
-      overflow: 'hidden', 
       backgroundColor: 'transparent', 
       boxShadow: 'none',
-      minWidth: '600px' // Reduced minimum width for better responsiveness
+      width: '100%',
+      overflowX: 'scroll',
+      scrollbarGutter: 'stable',
+      '&::-webkit-scrollbar': {
+        height: '8px',
+        display: 'block'
+      },
+      '&::-webkit-scrollbar-track': {
+        backgroundColor: darkMode ? '#333' : '#f0f0f0',
+        display: 'block'
+      },
+      '&::-webkit-scrollbar-thumb': {
+        backgroundColor: darkMode ? '#666' : '#ccc',
+        borderRadius: '4px',
+        display: 'block'
+      }
     }}>
       <Table stickyHeader aria-label="dmv results table" size="small">
         <TableHead>
           {table.getHeaderGroups().map((headerGroup: HeaderGroup<DmvRecord>) => (
-            <TableRow key={headerGroup.id} sx={{ '& .MuiTableCell-root': { backgroundColor: tableHeaderBgColor, color: textColor, fontWeight: 'bold', borderBottom: `2px solid ${tableBorderColor}` } }}>
+            <TableRow key={headerGroup.id} sx={{ 
+              '& .MuiTableCell-root': { 
+                backgroundColor: tableHeaderBgColor, 
+                color: textColor, 
+                fontWeight: 'bold', 
+                borderBottom: `2px solid ${tableBorderColor}`,
+                padding: { xs: '10px 6px', sm: '12px 8px' }
+              } 
+            }}>
               {headerGroup.headers.map((header: any) => (
                 <TableCell
                   key={header.id}
@@ -69,7 +91,11 @@ const DmvSearchResultsTable = ({ results, darkMode, onRowClick }: DmvSearchResul
                   cursor: 'pointer',
                   backgroundColor: idx % 2 === 0 ? rowBgColor : alternateRowBgColor,
                   '&:hover': { backgroundColor: rowHoverColor },
-                  '& .MuiTableCell-root': { color: textColor, borderBottom: 'none' },
+                  '& .MuiTableCell-root': { 
+                    color: textColor, 
+                    borderBottom: 'none',
+                    padding: { xs: '8px 6px', sm: '10px 8px' }
+                  },
                 }}
                 onClick={() => onRowClick(row.original)}
               >

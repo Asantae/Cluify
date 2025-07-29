@@ -27,9 +27,11 @@ interface SuspiciousPersonReportModalProps {
   onReportSubmitted?: () => void;
   onSuccessfulSubmission?: () => void;
   onFailedSubmission?: () => void;
+  onClosePhoneModal?: () => void;
+  onCloseReceiptModal?: () => void;
 }
 
-const SuspiciousPersonReportModal = ({ open, onClose, reports, darkMode, currentReportIndex, setCurrentReportIndex, linkedDmvRecords, setLinkedDmvRecords, linkedEvidence, setLinkedEvidence, setAttemptResults, onReportSubmitted, onSuccessfulSubmission, onFailedSubmission }: SuspiciousPersonReportModalProps) => {
+const SuspiciousPersonReportModal = ({ open, onClose, reports, darkMode, currentReportIndex, setCurrentReportIndex, linkedDmvRecords, setLinkedDmvRecords, linkedEvidence, setLinkedEvidence, setAttemptResults, onReportSubmitted, onSuccessfulSubmission, onFailedSubmission, onClosePhoneModal, onCloseReceiptModal }: SuspiciousPersonReportModalProps) => {
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const [submitLoading, setSubmitLoading] = useState(false);
@@ -49,6 +51,9 @@ const SuspiciousPersonReportModal = ({ open, onClose, reports, darkMode, current
       setLinkedDmvRecords(prev => ({ ...prev, [reportId]: null }));
       // Also remove all linked evidence when DMV record is removed
       setLinkedEvidence(prev => ({ ...prev, [reportId]: [] }));
+      // Close phone and receipt modals when DMV record is removed
+      if (onClosePhoneModal) onClosePhoneModal();
+      if (onCloseReceiptModal) onCloseReceiptModal();
     }
   };
 
@@ -71,7 +76,7 @@ const SuspiciousPersonReportModal = ({ open, onClose, reports, darkMode, current
   if (!open) return null;
 
   return (
-    <Box>
+    <>
       <DraggablePaper
         handleId={handleId}
         modalId="suspiciousPersonReport"
@@ -446,7 +451,7 @@ const SuspiciousPersonReportModal = ({ open, onClose, reports, darkMode, current
           }
         }}
       />
-    </Box>
+    </>
   );
 };
 

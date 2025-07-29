@@ -3,6 +3,7 @@ import {
   Box, 
   Typography, 
   IconButton,
+  DialogTitle,
 } from '@mui/material';
 import DraggablePaper from '../components/DraggablePaper';
 import CloseIcon from '@mui/icons-material/Close';
@@ -35,22 +36,20 @@ const ReceiptsModal: React.FC<ReceiptsModalProps> = ({
   phoneOwnerName,
   personId
 }) => {
-  const [isLoading, setIsLoading] = useState(false);
   const [purchaseRecords, setPurchaseRecords] = useState<PurchaseRecord[]>([]);
-
+  const [textureLoaded, setTextureLoaded] = useState(false);
+  const handleId = 'receiptsModalHandle';
 
   // Load purchase data when modal opens
   useEffect(() => {
     if (open && personId) {
       const loadData = async () => {
-        setIsLoading(true);
         try {
           const results = await searchPurchaseRecordsByDmv(personId);
           setPurchaseRecords(results);
         } catch (error) {
           // Error loading purchase data
         } finally {
-          setIsLoading(false);
         }
       };
       loadData();
@@ -64,9 +63,18 @@ const ReceiptsModal: React.FC<ReceiptsModalProps> = ({
     }
   }, [open]);
 
-  const textColor = '#000'; // Receipt text should always be black
+  // Load texture and set loaded state
+  useEffect(() => {
+    if (open) {
+      const img = new Image();
+      img.onload = () => setTextureLoaded(true);
+      img.src = receiptTexture;
+    } else {
+      setTextureLoaded(false);
+    }
+  }, [open]);
+
   const borderColor = darkMode ? '#555' : '#333';
-  const handleId = "receipts-modal-handle";
 
   const formatPrice = (price: number) => {
     return `$${price.toFixed(2)}`;
@@ -79,184 +87,156 @@ const ReceiptsModal: React.FC<ReceiptsModalProps> = ({
   return (
     <>
       {open && (
-        <DraggablePaper 
+        <DraggablePaper
           modalId="receiptsModal" 
           handleId={handleId}
           PaperProps={{
             sx: {
-              width: { xs: '90vw', sm: 300, md: 350 },
-              maxWidth: '90vw',
-              height: { xs: '70vh', sm: 600, md: 650 },
-              maxHeight: '70vh',
-              overflow: 'hidden',
-              backgroundColor: 'transparent',
-              boxShadow: 'none',
-              backgroundImage: `url(${receiptTexture})`,
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-              backgroundRepeat: 'no-repeat',
               position: 'relative',
-              padding: 0,
+              overflow: 'visible',
+              color: '#000',
+              fontFamily: 'monospace',
+              boxShadow: '0 4px 20px rgba(0,0,0,0.3)',
+              border: '1px solid #ccc',
+              borderRadius: '8px',
+              width: 280,
+              maxWidth: 280,
+              height: 320,
+              maxHeight: 320,
+              display: 'flex',
+              flexDirection: 'column',
+              outline: 'none',
+              zIndex: -999
             }
           }}
         >
-            <Box 
-              id={handleId}
-              sx={{ cursor: 'move', textAlign: 'center', pt: 2, pb: 1, backgroundColor: 'transparent', position: 'relative' }}
-            >
-              <Typography variant="h6" component="div" sx={{ fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '1px', fontSize: '1.05rem', opacity: 0 }}>
-                PurchaseHacker
-              </Typography>
-              {phoneOwnerName && (
-                <Typography sx={{ 
-                  color: textColor, 
-                  fontSize: '1.3rem',
-                  fontWeight: 700,
-                  position: 'absolute',
-                  left: 8,
-                  top: '50%',
-                  transform: 'translateY(-50%)'
-                }}>
-                  {phoneOwnerName}
-                </Typography>
-              )}
-              <IconButton
-                aria-label="close"
-                onClick={onClose}
-                sx={{ position: 'absolute', right: 8, top: '50%', transform: 'translateY(-50%)', color: textColor }}
-              >
-                <CloseIcon />
-              </IconButton>
-            </Box>
-            <Box sx={{ position: 'relative', overflowY: 'auto', p: { xs: 2, sm: 3 }, pt: 0, flexGrow: 1, maxHeight: { xs: '60vh', sm: 'none' }, backgroundColor: 'transparent' }}>
-            {/* Receipt Header */}
-            <Box sx={{ 
-              width: '100%', 
-              maxWidth: '300px',
-              textAlign: 'center',
-              mb: 2,
-              backgroundColor: 'transparent'
-            }}>
-              <Typography sx={{ 
-                color: textColor, 
-                fontSize: '1rem',
-                fontWeight: 600,
-                mb: 1
-              }}>
-                PurchaseHacker
-              </Typography>
+          <div>
+            <Box
+              sx={{
+                position: 'absolute',
+                top: -76,
+                left: -38,
+                width: 360,
+                height: 640,
+                backgroundImage: `url(${receiptTexture})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                backgroundRepeat: 'no-repeat',
+                zIndex: -1
+              }}
+            />
+            {textureLoaded && (
+              <Box sx={{ position: 'relative', zIndex: 1, width: '100%', display: 'flex', flexDirection: 'column', height: '100%' }}>
+                <DialogTitle
+                  sx={{
+                    minHeight: 36,
+                    height: 36,
+                    cursor: 'move',
+                    position: 'relative',
+                    padding: 0,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    px: 2,
+                    mb: 2
+                  }}
+                  id={handleId}
+                >
+                  {phoneOwnerName && (
+                    <Typography sx={{
+                      color: '#000',
+                      fontSize: '1rem',
+                      fontWeight: 700,
+                    }}>
+                      {phoneOwnerName}
+                    </Typography>
+                  )}
+                  <IconButton
+                    aria-label="close"
+                    onClick={onClose}
+                    sx={{ color: '#000' }}
+                  >
+                    <CloseIcon />
+                  </IconButton>
+                </DialogTitle>
 
-            </Box>
-
-            {/* Receipts List */}
-            <Box sx={{ 
-              width: '100%', 
-              maxWidth: '300px',
-              maxHeight: '500px',
-              overflowY: 'auto',
-              backgroundColor: 'transparent'
-            }}>
-              {isLoading ? (
                 <Box sx={{ 
+                  flex: 1, 
                   display: 'flex', 
-                  alignItems: 'center', 
-                  justifyContent: 'center',
-                  py: 4,
-                  backgroundColor: 'transparent'
+                  flexDirection: 'column',
+                  padding: 2,
+                  paddingTop: 1,
+                  minHeight: 0,
+                  overflow: 'hidden'
                 }}>
-                  <Typography sx={{ 
-                    color: textColor, 
-                    fontSize: '1rem'
+                  <Typography sx={{
+                    color: '#000',
+                    fontSize: '0.9rem',
+                    fontWeight: 600,
+                    textAlign: 'center',
+                    mb: 2,
+                    fontFamily: 'monospace',
+                    letterSpacing: '0.1em',
+                    textTransform: 'uppercase',
+                    opacity: 0.8
                   }}>
-                    Loading receipts...
+                    PurchaseHacker
                   </Typography>
-                </Box>
-              ) : purchaseRecords.length > 0 ? (
-                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-                  {purchaseRecords.map((record) => (
-                    <Box
-                      key={record.Id}
-                      sx={{
-                        p: 2,
-                        border: '1px solid',
-                        borderColor: borderColor,
-                        borderRadius: 1,
-                        cursor: 'pointer',
-                        backgroundColor: 'transparent',
-                        '&:hover': {
-                          backgroundColor: 'rgba(255,255,255,0.1)',
-                          boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-                        },
-                      }}
-                      onClick={() => onSelectRecord(record)}
-                    >
-                      {/* Store Header */}
-                      <Box sx={{ 
-                        display: 'flex', 
-                        justifyContent: 'space-between', 
-                        alignItems: 'center', 
-                        mb: 1,
-                        borderBottom: `1px solid ${borderColor}`,
-                        pb: 1
-                      }}>
-                        <Typography sx={{ 
-                          color: textColor, 
-                          fontSize: '1.1rem',
-                          fontWeight: 700
-                        }}>
-                          {record.StoreName}
-                        </Typography>
-                      </Box>
-
-                      {/* Item Details */}
-                      <Box sx={{ mb: 1 }}>
-                        <Typography sx={{ 
-                          color: textColor, 
-                          fontSize: '1rem',
-                          fontWeight: 600,
-                          mb: 0.5
-                        }}>
-                          {record.ItemBought}
-                        </Typography>
-                        <Typography sx={{ 
-                          color: textColor, 
-                          fontSize: '1.2rem',
-                          fontWeight: 700
-                        }}>
+                  <Box sx={{ 
+                    maxHeight: '150px', 
+                    overflowY: 'auto',
+                    '&::-webkit-scrollbar': {
+                      width: '8px',
+                    },
+                    '&::-webkit-scrollbar-track': {
+                      backgroundColor: '#333',
+                    },
+                    '&::-webkit-scrollbar-thumb': {
+                      backgroundColor: '#666',
+                      borderRadius: '4px',
+                    },
+                    '&::-webkit-scrollbar-thumb:hover': {
+                      backgroundColor: '#888',
+                    }
+                  }}>
+                    {purchaseRecords.map((record) => (
+                      <Box
+                        key={record.Id}
+                        onClick={() => onSelectRecord(record)}
+                        sx={{
+                          display: 'grid',
+                          gridTemplateColumns: '1fr auto',
+                          gap: 1,
+                          p: 0.5,
+                          mb: 0.5,
+                          cursor: 'pointer',
+                          borderBottom: `1px solid ${borderColor}`,
+                          '&:hover': {
+                            backgroundColor: 'rgba(0,0,0,0.05)'
+                          }
+                        }}
+                      >
+                        <Box>
+                          <Typography sx={{ fontSize: '0.8rem', fontWeight: 600, color: '#000' }}>
+                            {record.StoreName}
+                          </Typography>
+                          <Typography sx={{ fontSize: '0.7rem', color: '#000' }}>
+                            {record.ItemBought}
+                          </Typography>
+                          <Typography sx={{ fontSize: '0.6rem', color: '#666', mt: 0.5 }}>
+                            {formatDate(record.PurchaseDate)}
+                          </Typography>
+                        </Box>
+                        <Typography sx={{ fontSize: '0.9rem', fontWeight: 700, color: '#000', textAlign: 'right' }}>
                           {formatPrice(record.Price)}
                         </Typography>
                       </Box>
-
-                      {/* Date */}
-                                             <Typography sx={{ 
-                         color: textColor, 
-                         fontSize: '0.8rem',
-                         opacity: darkMode ? 0.5 : 0.7
-                       }}>
-                         {formatDate(record.PurchaseDate)}
-                       </Typography>
-                    </Box>
-                  ))}
+                    ))}
+                  </Box>
                 </Box>
-              ) : (
-                <Box sx={{ 
-                  display: 'flex', 
-                  alignItems: 'center', 
-                  justifyContent: 'center',
-                  py: 4,
-                  backgroundColor: 'transparent'
-                }}>
-                                     <Typography sx={{ 
-                     color: textColor, 
-                     fontSize: '1rem',
-                     opacity: darkMode ? 0.5 : 0.7
-                   }}>
-                     No recent receipts found
-                   </Typography>
-                </Box>
-              )}
-            </Box>
-          </Box>
+              </Box>
+            )}
+          </div>
         </DraggablePaper>
       )}
     </>

@@ -35,18 +35,8 @@ const MainPage = ({ darkMode, setDarkMode, settingsOpen, setSettingsOpen, howToP
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [attemptResults, setAttemptResults] = useState<{ [caseId: string]: ('correct' | 'incorrect' | 'insufficient')[] }>({});
-  const maxAttempts = 5;
 
-  // Helper to build AttemptStatus array for current case
-  const getAttemptStatusArray = () => {
-    const currentCaseId = activeCase?.Id || '';
-    const currentAttempts = attemptResults[currentCaseId] || [];
-    const remainingSlots = Math.max(0, maxAttempts - currentAttempts.length);
-    return [
-      ...currentAttempts.slice(0, maxAttempts), // Only take first maxAttempts results
-      ...Array(remainingSlots).fill('empty')
-    ];
-  };
+
 
   const startGame = async (caseId: string) => {
     setIsLoading(true);
@@ -122,7 +112,7 @@ const MainPage = ({ darkMode, setDarkMode, settingsOpen, setSettingsOpen, howToP
   if (showGame) {
     return (
       <>
-        <Header darkMode={darkMode} onSettings={() => setSettingsOpen(true)} onPractice={() => setPracticeModalOpen(true)} attempts={getAttemptStatusArray()} />
+        <Header darkMode={darkMode} onSettings={() => setSettingsOpen(true)} onPractice={() => setPracticeModalOpen(true)} />
         <SettingsModal open={settingsOpen} onClose={() => setSettingsOpen(false)} darkMode={darkMode} setDarkMode={setDarkMode} />
         <HowToPlayModal open={howToPlayOpen} onClose={() => setHowToPlayOpen(false)} darkMode={darkMode} />
         <PracticeCasesModal open={practiceModalOpen} onClose={() => setPracticeModalOpen(false)} onSelectCase={handleSelectPracticeCase} darkMode={darkMode} />

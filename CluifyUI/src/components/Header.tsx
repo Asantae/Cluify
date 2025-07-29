@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
@@ -8,13 +8,30 @@ import { Box } from '@mui/material';
 import HowToPlayModal from '../modals/HowToPlayModal';
 import investigatorIcon from '../assets/cluify_investigator_icon.png';
 import LoginModal from '../modals/LoginModal';
-import AttemptTracker, { AttemptStatus } from './AttemptTracker';
-import { isLoggedIn } from '../services/api';
 
-const Header = ({ onSettings, onPractice, darkMode, attempts }: { onSettings: () => void; onPractice: () => void; darkMode: boolean; attempts: AttemptStatus[]; }) => {
+import { isLoggedIn, getFeatureFlags } from '../services/api';
+import { FeatureFlags } from '../types';
+
+const Header = ({ onSettings, onPractice, darkMode }: { onSettings: () => void; onPractice: () => void; darkMode: boolean; }) => {
   const [howToOpen, setHowToOpen] = useState(false);
   const [loginOpen, setLoginOpen] = useState(false);
   const [loggedIn, setLoggedIn] = useState(isLoggedIn());
+  const [featureFlags, setFeatureFlags] = useState<FeatureFlags>({ ShowLoginButton: false });
+
+  useEffect(() => {
+    const fetchFeatureFlags = async () => {
+      try {
+        const flags = await getFeatureFlags();
+        setFeatureFlags(flags);
+      } catch (error) {
+        console.error('Failed to fetch feature flags:', error);
+        // Default to false if fetch fails
+        setFeatureFlags({ ShowLoginButton: false });
+      }
+    };
+
+    fetchFeatureFlags();
+  }, []);
 
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -28,7 +45,6 @@ const Header = ({ onSettings, onPractice, darkMode, attempts }: { onSettings: ()
         <Toolbar sx={{ minHeight: 56, px: { xs: 1, sm: 2 }, display: 'flex', justifyContent: 'space-between' }}>
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <img src={investigatorIcon} alt="Cluify Investigator" style={{ width: '32px', height: '32px', marginLeft: '8px', marginRight: '8px' }} />
-            <AttemptTracker attempts={attempts} />
           </Box>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 0.25, sm: 0.5 } }}>
             {/* {user && (
@@ -72,7 +88,7 @@ const Header = ({ onSettings, onPractice, darkMode, attempts }: { onSettings: ()
               >
                 Logout
               </Button>
-            ) : (
+            ) : featureFlags.ShowLoginButton ? (
               <Button
                 variant="outlined"
                 color="inherit"
@@ -89,7 +105,7 @@ const Header = ({ onSettings, onPractice, darkMode, attempts }: { onSettings: ()
               >
                 Login
               </Button>
-            )}
+            ) : null}
           </Box>
         </Toolbar>
       </AppBar>

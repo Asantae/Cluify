@@ -247,192 +247,187 @@ const DmvSearchModal: React.FC<DmvSearchModalProps> = ({ open, onClose, darkMode
     });
 
     return (
-        <Box>
+        <>
             <DraggablePaper 
                 handleId={handleId} 
                 modalId="dmvSearchModal"
-                PaperProps={{
-                    sx: {
-                        backgroundColor: modalBgColor,
-                    }
-                }}
             >
-                <div>
-                    <DialogTitle sx={{ minHeight: 36, height: 36, paddingTop: 0, paddingBottom: 0, fontSize: '1rem', backgroundColor: titleBgColor, color: textColor, borderBottom: `1px solid ${borderColor}`, display: 'flex', alignItems: 'center', gap: 1, position: 'relative' }} id={handleId}>
-                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                            <SearchIcon fontSize='small' />
-                            <Typography fontSize='1rem' fontWeight={600} sx={{ ml: 1 }}>D.M.V. Search</Typography>
-                        </Box>
-                        <IconButton aria-label="close" onClick={onClose} sx={{ position: 'absolute', right: 8, top: '50%', transform: 'translateY(-50%)', color: textColor }}>
-                            <CloseIcon />
-                        </IconButton>
-                    </DialogTitle>
+            <div>
+                <DialogTitle sx={{ minHeight: 36, height: 36, paddingTop: 0, paddingBottom: 0, fontSize: '1rem', backgroundColor: titleBgColor, color: textColor, borderBottom: `1px solid ${borderColor}`, display: 'flex', alignItems: 'center', gap: 1, position: 'relative' }} id={handleId}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        <SearchIcon fontSize='small' />
+                        <Typography fontSize='1rem' fontWeight={600} sx={{ ml: 1 }}>D.M.V. Search</Typography>
+                    </Box>
+                    <IconButton aria-label="close" onClick={onClose} sx={{ position: 'absolute', right: 8, top: '50%', transform: 'translateY(-50%)', color: textColor }}>
+                        <CloseIcon />
+                    </IconButton>
+                </DialogTitle>
 
-                    <Box sx={{ flexGrow: 1, minHeight: 0, overflowY: 'auto', p: { xs: 2, sm: 3 }, maxHeight: { xs: '60vh', sm: 'none' }, backgroundColor: modalBgColor }}>
-                        <Box sx={{ mx: 'auto', maxWidth: '350px' }}>
-                            <FormField label="First Name:" textColor={textColor}>
-                                <TextField 
-                                    name="firstName" 
-                                    value={searchQuery.firstName} 
-                                    onChange={handleInputChange} 
-                                    variant="outlined" 
-                                    size="small" 
-                                    fullWidth 
-                                    placeholder="Enter first name" 
-                                    sx={{ 
+                <Box sx={{ flexGrow: 1, minHeight: 0, overflowY: 'auto', p: { xs: 2, sm: 3 }, maxHeight: { xs: '60vh', sm: 'none' }, backgroundColor: modalBgColor }}>
+                    <Box sx={{ mx: 'auto', maxWidth: '350px' }}>
+                        <FormField label="First Name:" textColor={textColor}>
+                            <TextField 
+                                name="firstName" 
+                                value={searchQuery.firstName} 
+                                onChange={handleInputChange} 
+                                variant="outlined" 
+                                size="small" 
+                                fullWidth 
+                                placeholder="Enter first name" 
+                                sx={{ 
+                                    borderRadius: 0, 
+                                    '& .MuiOutlinedInput-root': { 
                                         borderRadius: 0, 
-                                        '& .MuiOutlinedInput-root': { 
-                                            borderRadius: 0, 
-                                            height: { xs: '28px', sm: '32px' }, 
-                                            fontSize: { xs: '0.9rem', sm: '1rem' },
-                                            backgroundColor: inputBgColor,
-                                            color: textColor,
-                                            '& fieldset': {
-                                                borderColor: borderColor,
-                                            },
-                                            '&:hover fieldset': {
-                                                borderColor: darkMode ? '#666' : '#999',
-                                            },
-                                            '&.Mui-focused fieldset': {
-                                                borderColor: darkMode ? '#888' : '#1976d2',
-                                            },
-                                        }, 
-                                        input: { 
-                                            height: { xs: '28px', sm: '32px' }, 
-                                            fontSize: { xs: '0.9rem', sm: '1rem' }, 
-                                            padding: '0 8px',
-                                            color: textColor,
-                                            '&::placeholder': {
-                                                color: darkMode ? '#aaa' : '#666',
-                                                opacity: 1,
-                                            },
-                                        } 
-                                    }} 
-                                />
-                            </FormField>
-                            <FormField label="Last Name:" textColor={textColor}>
-                                <TextField 
-                                    name="lastName" 
-                                    value={searchQuery.lastName} 
-                                    onChange={handleInputChange} 
-                                    variant="outlined" 
-                                    size="small" 
-                                    fullWidth 
-                                    placeholder="Enter last name" 
-                                    sx={{ 
+                                        height: { xs: '28px', sm: '32px' }, 
+                                        fontSize: { xs: '0.9rem', sm: '1rem' },
+                                        backgroundColor: inputBgColor,
+                                        color: textColor,
+                                        '& fieldset': {
+                                            borderColor: borderColor,
+                                        },
+                                        '&:hover fieldset': {
+                                            borderColor: darkMode ? '#666' : '#999',
+                                        },
+                                        '&.Mui-focused fieldset': {
+                                            borderColor: darkMode ? '#888' : '#1976d2',
+                                        },
+                                    }, 
+                                    input: { 
+                                        height: { xs: '28px', sm: '32px' }, 
+                                        fontSize: { xs: '0.9rem', sm: '1rem' }, 
+                                        padding: '0 8px',
+                                        color: textColor,
+                                        '&::placeholder': {
+                                            color: darkMode ? '#aaa' : '#666',
+                                            opacity: 1,
+                                        },
+                                    } 
+                                }} 
+                            />
+                        </FormField>
+                        <FormField label="Last Name:" textColor={textColor}>
+                            <TextField 
+                                name="lastName" 
+                                value={searchQuery.lastName} 
+                                onChange={handleInputChange} 
+                                variant="outlined" 
+                                size="small" 
+                                fullWidth 
+                                placeholder="Enter last name" 
+                                sx={{ 
+                                    borderRadius: 0, 
+                                    '& .MuiOutlinedInput-root': { 
                                         borderRadius: 0, 
-                                        '& .MuiOutlinedInput-root': { 
-                                            borderRadius: 0, 
-                                            height: { xs: '28px', sm: '32px' }, 
-                                            fontSize: { xs: '0.9rem', sm: '1rem' },
-                                            backgroundColor: inputBgColor,
-                                            color: textColor,
-                                            '& fieldset': {
-                                                borderColor: borderColor,
-                                            },
-                                            '&:hover fieldset': {
-                                                borderColor: darkMode ? '#666' : '#999',
-                                            },
-                                            '&.Mui-focused fieldset': {
-                                                borderColor: darkMode ? '#888' : '#1976d2',
-                                            },
-                                        }, 
-                                        input: { 
-                                            height: { xs: '28px', sm: '32px' }, 
-                                            fontSize: { xs: '0.9rem', sm: '1rem' }, 
-                                            padding: '0 8px',
-                                            color: textColor,
-                                            '&::placeholder': {
-                                                color: darkMode ? '#aaa' : '#666',
-                                                opacity: 1,
-                                            },
-                                        } 
-                                    }} 
-                                />
-                            </FormField>
-                            <Grid spacing={1} sx={{ mb: 1 }}>
-                                <Grid size={{ xs: 12, sm: 6 }}>
-                                    <FormField label="Age:" textColor={textColor}>{renderRangeSelect('age', searchQuery.ageStart, searchQuery.ageEnd, ageOptions)}</FormField>
-                                </Grid>
-                                <Grid size={{ xs: 12, sm: 6 }}>
-                                    <FormField label="Height:" textColor={textColor}>{renderRangeSelect('height', searchQuery.heightStart, searchQuery.heightEnd, heightOptions)}</FormField>
-                                </Grid>
-                                <Grid size={{ xs: 12, sm: 6 }}>
-                                    <FormField label="Weight:" textColor={textColor}>{renderRangeSelect('weight', searchQuery.weightStart, searchQuery.weightEnd, weightOptions)}</FormField>
-                                </Grid>
-                                <Grid size={{ xs: 12, sm: 6 }}>
-                                    <FormField label="Gender:" textColor={textColor}>{renderSingleSelect('gender', searchQuery.gender, ['Male', 'Female'])}</FormField>
-                                </Grid>
-                                <Grid size={{ xs: 12, sm: 6 }}>
-                                    <FormField label="Hair Color:" textColor={textColor}>{renderSingleSelect('hairColor', searchQuery.hairColor, ['Black', 'Brown', 'Blonde', 'Red', 'Gray', 'Bald', 'Other'])}</FormField>
-                                </Grid>
-                                <Grid size={{ xs: 12, sm: 6 }}>
-                                    <FormField label="Eye Color:" textColor={textColor}>{renderSingleSelect('eyeColor', searchQuery.eyeColor, ['Brown', 'Blue', 'Green', 'Hazel', 'Other'])}</FormField>
-                                </Grid>
+                                        height: { xs: '28px', sm: '32px' }, 
+                                        fontSize: { xs: '0.9rem', sm: '1rem' },
+                                        backgroundColor: inputBgColor,
+                                        color: textColor,
+                                        '& fieldset': {
+                                            borderColor: borderColor,
+                                        },
+                                        '&:hover fieldset': {
+                                            borderColor: darkMode ? '#666' : '#999',
+                                        },
+                                        '&.Mui-focused fieldset': {
+                                            borderColor: darkMode ? '#888' : '#1976d2',
+                                        },
+                                    }, 
+                                    input: { 
+                                        height: { xs: '28px', sm: '32px' }, 
+                                        fontSize: { xs: '0.9rem', sm: '1rem' }, 
+                                        padding: '0 8px',
+                                        color: textColor,
+                                        '&::placeholder': {
+                                            color: darkMode ? '#aaa' : '#666',
+                                            opacity: 1,
+                                        },
+                                    } 
+                                }} 
+                            />
+                        </FormField>
+                        <Grid spacing={1} sx={{ mb: 1 }}>
+                            <Grid size={{ xs: 12, sm: 6 }}>
+                                <FormField label="Age:" textColor={textColor}>{renderRangeSelect('age', searchQuery.ageStart, searchQuery.ageEnd, ageOptions)}</FormField>
                             </Grid>
-                            <FormField label="License Plate:" textColor={textColor}>
-                                <TextField 
-                                    name="licensePlate" 
-                                    value={searchQuery.licensePlate} 
-                                    onChange={handleInputChange} 
-                                    variant="outlined" 
-                                    size="small" 
-                                    fullWidth 
-                                    placeholder="Enter license plate" 
-                                    inputProps={{ 
-                                        maxLength: 12, 
-                                        style: { textTransform: 'uppercase' } 
-                                    }} 
-                                    sx={{ 
+                            <Grid size={{ xs: 12, sm: 6 }}>
+                                <FormField label="Height:" textColor={textColor}>{renderRangeSelect('height', searchQuery.heightStart, searchQuery.heightEnd, heightOptions)}</FormField>
+                            </Grid>
+                            <Grid size={{ xs: 12, sm: 6 }}>
+                                <FormField label="Weight:" textColor={textColor}>{renderRangeSelect('weight', searchQuery.weightStart, searchQuery.weightEnd, weightOptions)}</FormField>
+                            </Grid>
+                            <Grid size={{ xs: 12, sm: 6 }}>
+                                <FormField label="Gender:" textColor={textColor}>{renderSingleSelect('gender', searchQuery.gender, ['Male', 'Female'])}</FormField>
+                            </Grid>
+                            <Grid size={{ xs: 12, sm: 6 }}>
+                                <FormField label="Hair Color:" textColor={textColor}>{renderSingleSelect('hairColor', searchQuery.hairColor, ['Black', 'Brown', 'Blonde', 'Red', 'Gray', 'Bald', 'Other'])}</FormField>
+                            </Grid>
+                            <Grid size={{ xs: 12, sm: 6 }}>
+                                <FormField label="Eye Color:" textColor={textColor}>{renderSingleSelect('eyeColor', searchQuery.eyeColor, ['Brown', 'Blue', 'Green', 'Hazel', 'Other'])}</FormField>
+                            </Grid>
+                        </Grid>
+                        <FormField label="License Plate:" textColor={textColor}>
+                            <TextField 
+                                name="licensePlate" 
+                                value={searchQuery.licensePlate} 
+                                onChange={handleInputChange} 
+                                variant="outlined" 
+                                size="small" 
+                                fullWidth 
+                                placeholder="Enter license plate" 
+                                inputProps={{ 
+                                    maxLength: 12, 
+                                    style: { textTransform: 'uppercase' } 
+                                }} 
+                                sx={{ 
+                                    borderRadius: 0, 
+                                    '& .MuiOutlinedInput-root': { 
                                         borderRadius: 0, 
-                                        '& .MuiOutlinedInput-root': { 
-                                            borderRadius: 0, 
-                                            height: { xs: '28px', sm: '32px' }, 
-                                            fontSize: { xs: '0.9rem', sm: '1rem' },
-                                            backgroundColor: inputBgColor,
-                                            color: textColor,
-                                            '& fieldset': {
-                                                borderColor: borderColor,
-                                            },
-                                            '&:hover fieldset': {
-                                                borderColor: darkMode ? '#666' : '#999',
-                                            },
-                                            '&.Mui-focused fieldset': {
-                                                borderColor: darkMode ? '#888' : '#1976d2',
-                                            },
-                                        }, 
-                                        input: { 
-                                            height: { xs: '28px', sm: '32px' }, 
-                                            fontSize: { xs: '0.9rem', sm: '1rem' }, 
-                                            padding: '0 8px',
-                                            color: textColor,
-                                            '&::placeholder': {
-                                                color: darkMode ? '#aaa' : '#666',
-                                                opacity: 1,
-                                            },
-                                        } 
-                                    }} 
-                                />
-                            </FormField>
-                        </Box>
+                                        height: { xs: '28px', sm: '32px' }, 
+                                        fontSize: { xs: '0.9rem', sm: '1rem' },
+                                        backgroundColor: inputBgColor,
+                                        color: textColor,
+                                        '& fieldset': {
+                                            borderColor: borderColor,
+                                        },
+                                        '&:hover fieldset': {
+                                            borderColor: darkMode ? '#666' : '#999',
+                                        },
+                                        '&.Mui-focused fieldset': {
+                                            borderColor: darkMode ? '#888' : '#1976d2',
+                                        },
+                                    }, 
+                                    input: { 
+                                        height: { xs: '28px', sm: '32px' }, 
+                                        fontSize: { xs: '0.9rem', sm: '1rem' }, 
+                                        padding: '0 8px',
+                                        color: textColor,
+                                        '&::placeholder': {
+                                            color: darkMode ? '#aaa' : '#666',
+                                            opacity: 1,
+                                        },
+                                    } 
+                                }} 
+                            />
+                        </FormField>
                     </Box>
+                </Box>
 
-                    <Box sx={{ p: { xs: 1, sm: 2 }, pt: 0.5, borderTop: `1px solid ${borderColor}`, minHeight: 40, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'stretch', borderRadius: 0 }}>
-                        <Button fullWidth variant="contained" onClick={handleSearch} disabled={!isSearchable || isLoading} sx={{ borderRadius: 0 }}>
-                            {isLoading ? <CircularProgress size={20} color="inherit" /> : 'SEARCH'}
-                        </Button>
-                        {error && <Typography color="error" sx={{ mt: 2, textAlign: 'center' }}>{error}</Typography>}
-                    </Box>
-                </div>
-            </DraggablePaper>
+                <Box sx={{ p: { xs: 1, sm: 2 }, pt: 0.5, borderTop: `1px solid ${borderColor}`, minHeight: 40, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'stretch', borderRadius: 0 }}>
+                    <Button fullWidth variant="contained" onClick={handleSearch} disabled={!isSearchable || isLoading} sx={{ borderRadius: 0 }}>
+                        {isLoading ? <CircularProgress size={20} color="inherit" /> : 'SEARCH'}
+                    </Button>
+                    {error && <Typography color="error" sx={{ mt: 2, textAlign: 'center' }}>{error}</Typography>}
+                </Box>
+            </div>
+        </DraggablePaper>
 
-            {isResultsModalOpen && results && (
-                <DmvResultsModal isOpen={isResultsModalOpen} onClose={handleCloseResults} results={results} darkMode={darkMode} onRowClick={handleRowClick} />
-            )}
+        {isResultsModalOpen && results && (
+            <DmvResultsModal isOpen={isResultsModalOpen} onClose={handleCloseResults} results={results || []} darkMode={darkMode} onRowClick={handleRowClick} />
+        )}
 
-            <Snackbar open={snackbar.open} autoHideDuration={3000} onClose={handleSnackbarClose} message={snackbar.message} anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }} ContentProps={{ sx: { backgroundColor: darkMode ? '#333' : '#fff', color: darkMode ? '#fff' : '#000', fontWeight: 600 } }} />
-        </Box>
-    );
+        <Snackbar open={snackbar.open} autoHideDuration={3000} onClose={handleSnackbarClose} message={snackbar.message} anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }} ContentProps={{ sx: { backgroundColor: darkMode ? '#333' : '#fff', color: darkMode ? '#fff' : '#000', fontWeight: 600 } }} />
+    </>
+);
 };
 
 export default DmvSearchModal;
