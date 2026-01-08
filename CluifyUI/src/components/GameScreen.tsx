@@ -70,7 +70,7 @@ const GameScreen: React.FC<GameScreenProps> = ({ activeCase, reports, isLoading,
 
     // Get the DMV record that was actually linked to this specific report
     const linkedDmvRecord = linkedDmvRecords[currentReportId];
-    if (linkedDmvRecord) {
+    if (linkedDmvRecord) { 
       const result = {
         name: `${linkedDmvRecord.firstName} ${linkedDmvRecord.lastName}`,
         dmvRecordId: linkedDmvRecord.id
@@ -94,7 +94,7 @@ const GameScreen: React.FC<GameScreenProps> = ({ activeCase, reports, isLoading,
       }
     } else {
       // Show error message or handle no suspect case
-      alert('Must have added a culprit to search their phone');
+      alert('Must have added a culprit to search their phone!');
     }
   };
 
